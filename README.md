@@ -2,10 +2,10 @@
 
 ## Team Members:
  > CONTACT US @:
- > [Filip](filip_kierzenka@brown.edu) |
-   [John](john_w_wu@brown.edu) |
-   [Austin](austin_lang@brown.edu) |
-   [Raymond](raymond_dai@brown.edu)
+ > [Filip](mailto:filip_kierzenka@brown.edu) |
+   [John](mailto:john_w_wu@brown.edu) |
+   [Austin](mailto:austin_lang@brown.edu) |
+   [Raymond](mailto:raymond_dai@brown.edu)
 
 ### Team Strengths and Weaknesses:
 
