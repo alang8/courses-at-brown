@@ -5,22 +5,29 @@
 **Team Strengths and Weaknesses:** 
 
 Filip. 
+
 -Pros:   
 Good at seeing problems from different perspectives, thinking about repercussions of design decisions. 
 -Cons:  
 Bad at taking charge and focusing on incremental improvements. 
+
 John  
+
 -Pros:  
 I’m somewhat decent at breaking down larger problems into more manageable and actionable smaller chunks   
 -Cons:  
 I’m pretty bad at important yet tedious processes like testwriting, and to some extent planning if it drags on too long.   
 Also, still trying to figure out a good Github workflow with multiple people.   
-Austin   
+
+Austin  
+
 -Pros:  
 Good at integrating and organizing code from multiple coders together, teamwork  
 -Cons:  
 Bad at planning out approaches to complex tasks/algorithms  
+
 Raymond   
+
 -Pros:   
 Good at finding opportunities for abstraction and planning out class and package structure.  
 -Cons:  
