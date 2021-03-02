@@ -1,21 +1,21 @@
 # cs0320 Term Project 2021
 
-##Team Members:
+## Team Members:
  > CONTACT US @:
  > [Filip](filip_kierzenka@brown.edu) |
    [John](john_w_wu@brown.edu) |
    [Austin](austin_lang@brown.edu) |
    [Raymond](raymond_dai@brown.edu)
 
-###Team Strengths and Weaknesses:
+### Team Strengths and Weaknesses:
 
-####Filip
+#### Filip
 - **Pros:**   
   - Good at seeing problems from different perspectives, thinking about repercussions of design decisions.
 - **Cons:**  
   - Bad at taking charge and focusing on incremental improvements. 
 
-####John  
+#### John  
 
 - **Pros:**  
   - I’m somewhat decent at breaking down larger problems into more manageable and actionable smaller chunks   
@@ -24,14 +24,14 @@
   long.   
   - Also, still trying to figure out a good Github workflow with multiple people.   
 
-####Austin  
+#### Austin  
 
 - **Pros:**  
 Good at integrating and organizing code from multiple coders together, teamwork  
 - **Cons:**  
 Bad at planning out approaches to complex tasks/algorithms  
 
-####Raymond   
+#### Raymond   
 
 - **Pros:**  
   - Good at finding opportunities for abstraction and planning out class and package structure.  
@@ -40,7 +40,7 @@ Bad at planning out approaches to complex tasks/algorithms
   - Also not very good with time management and organization  
 
 
-##Project Idea(s): 
+## Project Idea(s): 
 ### Idea 1 - Program Function Testing Assistant  
 Testing program functionality is pretty difficult and time-consuming/boring. It’s very tedious to keep track of all the 
 possible edge cases for a given function and also to write all of those tests as you go (or all at the very end…). 
