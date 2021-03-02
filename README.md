@@ -53,8 +53,9 @@ functions! <br>
   out these outputs as something you should test for!
     -  It will probably be most difficult to identify the many different paths that an input can take through a function
     /its helpers and how/why those paths might be taken, making it hard to identify the important outputs to consider in 
-    a complex function.  
-  <br>
+    a complex function.
+    
+
   - **Input-Based Suggestions:** 
   <br>
   The program will look at the input types and automatically generate test suggestions based on encoded common edge 
@@ -63,7 +64,7 @@ functions! <br>
   to please add those common edge cases to the file containing all the encoded edge cases
     - Again similar to above. If the input is not a standard data-type, it might be challenging to parse the code and 
     identify what properties of the arguments would lead to unique edge cases.
-  
+      
 
   - **Complex Function Test Reminder:** Ideally when you are just forming the function, it'll create a small expandable 
   popup at the side of the function where you can outline the more complex tests for the function, and which should be 
