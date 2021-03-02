@@ -56,8 +56,7 @@ functions! <br>
     a complex function.
     
 
-  - **Input-Based Suggestions:** 
-  <br>
+  - **Input-Based Suggestions:** <br>
   The program will look at the input types and automatically generate test suggestions based on encoded common edge 
   cases for that input type. For example: if one of the inputs is an integer it'll remind you to test for the case when 
   the input is NEGATIVE, ZERO, or POSITIVE. If the type is something that hasn't been encoded yet then it'll remind you 
