@@ -27,9 +27,9 @@
 #### Austin  
 
 - **Pros:**  
-Good at integrating and organizing code from multiple coders together, teamwork  
+  - Good at integrating and organizing code from multiple coders together, teamwork  
 - **Cons:**  
-Bad at planning out approaches to complex tasks/algorithms  
+  - Bad at planning out approaches to complex tasks/algorithms  
 
 #### Raymond   
 
