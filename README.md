@@ -84,6 +84,7 @@ This would ideally end up becoming an Intellij extension if we don't need to lea
 otherwise could also be a dynamic text editor kind of thing. The hardest part of this would be learning and executing 
 what an intellij plugin needs to work properly (hopefully in a language that we know!).
   
+TA Approval (dlichen): I don't think this is feasible for a variety of reasons, but if you are confident that it is, this is an acceptable level of complexity for a 32 project. I would go talk to Tim about this idea if you are serious about pursuing it and have concrete ideas of how to implement it.
 
 ### Idea 2 - Urban Exploration Yelp Platform 
 One idea is a centralized location to rate and review urban exploration locations. 
@@ -108,6 +109,7 @@ People could post pictures, reviews, and log their adventures/interact with othe
   - Again just a ton of data to keep track of - could be cool to have some sort of “routing” where it shows the path on a map to get to whatever site.  
   - Maybe we could cycle through different challenges every month or so (like Strava), so maybe like visiting a certain amount of tunnels within a month or completing a certain areas (like visiting all the urban landmarks in that neighborhood)  
 
+TA Approval (dlichen): I don't think this has any algorithmic complexity in it, so rejected for that reason but if there was some significant algorithmic focus you could put into this idea it could work. 
 
 ### Idea 3 - Course-At-Brown Extension  
 This idea was inspired by our own and other students' struggles with the current CAB website. We feel as if an extension 
@@ -131,6 +133,9 @@ Based on the courses already added into the student's cart and some other inform
 
 The overall difficulty of this project is learning about website extensions and how to code a working one. Also, making the user interface friendly, appealing, and easy to use is an important challenge.  
 
+TA Approval (dlichen): I don't think there's an algorithmic complexity to this. You could definitely add an algorithmic focus to this idea though. Rejected until you come up with a significant central algorithm.
+
+As none of your ideas have been approved, please resubmit either an edit to your existing ideas or a new idea by the end of the week! 
 
 **Mentor TA:** _Put your mentor TA's name and email here once you're assigned one!_
 
