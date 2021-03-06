@@ -137,7 +137,7 @@ TA Approval (dlichen): I don't think there's an algorithmic complexity to this. 
 
 As none of your ideas have been approved, please resubmit either an edit to your existing ideas or a new idea by the end of the week! 
 
-***::::NEW IDEAS::::**
+### New Ideas!:
 
 ### Idea - Artify
 We want to make a program which will "artify" inputted images. The idea comes from on an artist's work seen here: https://external-preview.redd.it/P4rzcYo5BBXQHwAzobCSSPsaxQTbniPrBDOZid-dO6k.jpg?auto=webp&s=ed51a21ceb08653c12b6c6e2a47e516385208396
