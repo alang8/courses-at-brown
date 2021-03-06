@@ -137,6 +137,22 @@ TA Approval (dlichen): I don't think there's an algorithmic complexity to this. 
 
 As none of your ideas have been approved, please resubmit either an edit to your existing ideas or a new idea by the end of the week! 
 
+***::::NEW IDEAS::::**
+
+### Idea - Artify
+We want to make a program which will "artify" inputted images. The idea comes from on an artist's work seen here: https://external-preview.redd.it/P4rzcYo5BBXQHwAzobCSSPsaxQTbniPrBDOZid-dO6k.jpg?auto=webp&s=ed51a21ceb08653c12b6c6e2a47e516385208396
+Features include:
+- **Uploading your own photos and having the algorithm artify the image according to the selected style.:** <br>
+- Difficulty would come from dealing with photos and efficient pixel manipulation of photos in Java, storing those photos somewhere in a DB.
+- **Support for translating into various styles.:** <br>
+-  Support for approximating the image with ellipses (seen in the linked photo), support for arbitrary shapes. Time permitting maybe an algorithm which will make an image look like a pencil drawing, into ASCII art, or a painting by having the "shapes" used in approximation look like brush strokes (experimentation needed).
+-  This is the "algorithmic complexity" of this project. How can we optimize an algorithm which will make this kind of art effectively. The difficulty will come from dealing with realtively large photos and processing them quickly/effectively to make the desired output. Also, obviously, making sure that the algorithm is effective in making the art that we want!
+- **Support for displaying your artified photos for others to view/like/comment, etc:** <br>
+- Difficulty coming from hosting all of this information and creating a UI for people to use easily.
+
+### Idea Edit - Courses at Brown
+We could implement an algorithm here (some sort of path-finding algorithm) which would find the "easiest" path through a concentration at Brown. It would take information from the Critical Review into account (avg hours spent, overall difficulty, etc.) in order to construct the most balanced series of semesters to complete the requirements for a given concentration. You could input classes that you certainly want to take ("lock in" certain course for certain years) as well as other info specific to you ("I want a course with XYZ professor") - the algorithm will be constructing "nodes" in the graph of courses based on the metadata for those courses and then generating an optimal path through that graph based on the inputted constraints. This would be the algorithmic complexity behind this project.
+
 **Mentor TA:** _Put your mentor TA's name and email here once you're assigned one!_
 
 ## Meetings
