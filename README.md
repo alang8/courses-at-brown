@@ -153,6 +153,8 @@ Features include:
 ### Idea Edit - Courses at Brown
 We could implement an algorithm here (some sort of path-finding algorithm) which would find the "easiest" path through a concentration at Brown. It would take information from the Critical Review into account (avg hours spent, overall difficulty, etc.) in order to construct the most balanced series of semesters to complete the requirements for a given concentration. You could input classes that you certainly want to take ("lock in" certain course for certain years) as well as other info specific to you ("I want a course with XYZ professor") - the algorithm will be constructing "nodes" in the graph of courses based on the metadata for those courses and then generating an optimal path through that graph based on the inputted constraints. This would be the algorithmic complexity behind this project.
 
+TA Approval for resubmission: Both are approved. I'm concerned that the artify algorithm will become ML or DL rather than something you can implement but if you can come up with an algorithm that doesn't rely on external algorithms and is not trivial that sounds fine! Also for the CAB idea, it may be difficult to scrape cab (people have had issues in the past) so I would start seeing if that's possibel first but the algorithm sounds good!
+
 **Mentor TA:** _Put your mentor TA's name and email here once you're assigned one!_
 
 ## Meetings
