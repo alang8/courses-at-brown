@@ -12,7 +12,7 @@ const CourseTile: React.FC<Props> = (props) => {
     return (
         <Card className="class-card" color={GetColor(props.department)}>
             <Card.Content>
-                <Grid columns={2} >
+                <Grid columns={2}>
                     <Grid.Row >
                         <Grid.Column floated='left' textAlign='left'>
                             <Card.Header>
@@ -28,7 +28,7 @@ const CourseTile: React.FC<Props> = (props) => {
                     </Grid.Row>
                     <Grid.Row textAlign='right'>
                         <Grid.Column />
-                        <Grid.Column floated='right'>
+                        <Grid.Column floated='right' verticalAlign='bottom'>
                             <Card.Meta>{props.title}</Card.Meta>
                         </Grid.Column>
                     </Grid.Row>

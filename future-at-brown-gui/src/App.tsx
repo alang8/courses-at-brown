@@ -3,18 +3,20 @@ import {
   BrowserRouter as Router,
   Route,
   Switch,
-  Link
+  Link,
+  Redirect
 } from "react-router-dom";
 import './css/App.css';
 import { Button, Card, Container, Header, Icon } from 'semantic-ui-react';
 import FormInput from './FormInput'
 import CourseTile from './CourseTile';
+import SplashPage from './SplashPage';
 
 const testComponent: React.FC<void> = () => (
   <div className="App">
-    
+
     <Header as="h1" className="logo">Future @ Brown</Header>
-    <Link to="/test"><Button content="test" /></Link>
+    <Link to="/test-route"><Button content="test" /></Link>
     <FormInput label="Texte" />
     <FormInput label="Username" type="username" />
     <FormInput label="Password" type="password" error={["You fucked up", "more meesages"]} />
@@ -33,18 +35,18 @@ const testComponent: React.FC<void> = () => (
       <CourseTile code="0320" department="ECuON" title="Introduction to Software Engineering" />
       <CourseTile code="0320" department="ECgON" title="Introduction to Software Engineering" />
       <CourseTile code="0320" department="EChON" title="Introduction to Software Engineering" />
-      <CourseTile code="0320" department="EChON" title="Introduction to Software Engineering" />
+      <CourseTile code="0320" department="EChON" title="g" />
     </Card.Group>
 
   </div>
 );
 
 const testComponent2: React.FC<void> = () => (
-  <Header as="h1"> Page 2 <Link to="/"><Button content="let me out" /></Link></Header>
+  <Header as="h1"> Page 2 <Link to="/test-components"><Button content="let me out" /></Link></Header>
 );
 
 const notFound: React.FC<void> = () => (
-  <Container className="not-found">
+  <Container className="total-page">
     <Icon name='question' size='massive' />
     <Header as="h1">Error 404</Header>
     <Header as="h3">The page you requested does not exist</Header>
@@ -53,12 +55,20 @@ const notFound: React.FC<void> = () => (
 )
 
 function App() {
+
+  const [user, setUser] = useState<String | undefined>(undefined);
+
   return (
     <Router>
       <Switch>
-      <Route path="/test" component={testComponent2} />
-      <Route exact path="/" component={testComponent} />
-      <Route path="*" component={notFound} />
+        <Route path="/test-components" component={testComponent} />
+        <Route path="/test-route" component={testComponent2} />
+        <Route exact path="/">
+          {(user) ? <Redirect to="/profile" /> : <Redirect to="/splash" />}
+        </Route>
+        <Route path="/search"/>
+        <Route path="/splash" component={SplashPage} />
+        <Route path="*" component={notFound} />
       </Switch>
     </Router>
   )
