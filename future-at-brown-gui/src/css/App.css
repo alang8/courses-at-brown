@@ -1,4 +1,30 @@
-@import-normalize;
+/* @import url('https://fonts.googleapis.com/css2?family=Josefin+Sans:ital,wght@0,300;0,400;0,700;1,200;1,400;1,700&display=swap'); */
+
+.input-box {
+  font-size: large;
+  width: 80%;
+  align-self: center;
+}
+
+.input-box .underline{
+  text-align: right;
+  font-weight: bold;
+}
+
+.input-box .underline.selected {
+  border-top: 3px #008db8 solid;
+  color: #008db8;
+}
+
+.input-box .underline.unselected {
+  border-top: 3px #636363 solid;
+  color: #636363;
+}
+
+.input-box .underline.error {
+  border-top: 3px #db8a8a solid;
+  color: #db8a8a;
+}
 
 .App {
   text-align: center;

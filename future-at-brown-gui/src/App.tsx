@@ -1,25 +1,23 @@
-import React from 'react';
+import React, { useState } from 'react';
 import logo from './logo.svg';
 import './css/App.css';
-import { Button } from 'semantic-ui-react';
+import { Button, Header } from 'semantic-ui-react';
+import FormInput from './FormInput'
 
 function App() {
+
+  const [text, setText] = useState<string>("test");
+  const errorSet = (inp: string) => {
+    console.log("set", inp);
+    setText(inp)};
+
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <Button content="test" />
+      <FormInput label="Texte"/>
+      <FormInput label="Username" textChange={errorSet} type="username"/>
+      <FormInput label="Password" type="password" error={["You fucked up", "more meesages"]}/>
+      <Header as="h1">{text}</Header>
     </div>
   );
 }
