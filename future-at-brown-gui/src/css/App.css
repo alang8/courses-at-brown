@@ -2,17 +2,9 @@
   font-family: 'Crimson Text', serif;
 }
 
-.card.class-card{
-  border-radius: 2vh !important;
-}
-
 .card.class-card:hover{
   transform: scale(1.05);
   cursor: pointer;
-}
-
-.card.class-card > .icon:hover {
-  transform: scale(1.1);
 }
 
 .input-box {
@@ -44,7 +36,7 @@
 .ui.button {
   background: rgb(0,230,96);
   background: linear-gradient(30deg, rgba(0,230,96,1) 0%, rgba(0,212,255,1) 100%);
-  transition: ease-in-out 0.5s;
+  transition: ease-in-out 0.2s;
   color: white !important;
 }
 
@@ -54,6 +46,14 @@
   background: rgb(0,230,96);
   background: linear-gradient(30deg, rgba(0,230,96,1) 0%, rgba(0,212,255,1) 100%);
   font-weight: bold;
+}
+
+.container.not-found{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  height: 100vh;
 }
 
 .App {
