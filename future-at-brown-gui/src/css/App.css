@@ -1,4 +1,19 @@
-/* @import url('https://fonts.googleapis.com/css2?family=Josefin+Sans:ital,wght@0,300;0,400;0,700;1,200;1,400;1,700&display=swap'); */
+.header.logo {
+  font-family: 'Crimson Text', serif;
+}
+
+.card.class-card{
+  border-radius: 2vh !important;
+}
+
+.card.class-card:hover{
+  transform: scale(1.05);
+  cursor: pointer;
+}
+
+.card.class-card > .icon:hover {
+  transform: scale(1.1);
+}
 
 .input-box {
   font-size: large;
@@ -24,6 +39,21 @@
 .input-box .underline.error {
   border-top: 3px #db8a8a solid;
   color: #db8a8a;
+}
+
+.ui.button {
+  background: rgb(0,230,96);
+  background: linear-gradient(30deg, rgba(0,230,96,1) 0%, rgba(0,212,255,1) 100%);
+  transition: ease-in-out 0.5s;
+  color: white !important;
+}
+
+.ui.button:hover {
+  filter: hue-rotate(60deg);
+  transform: scale(1.1);
+  background: rgb(0,230,96);
+  background: linear-gradient(30deg, rgba(0,230,96,1) 0%, rgba(0,212,255,1) 100%);
+  font-weight: bold;
 }
 
 .App {
