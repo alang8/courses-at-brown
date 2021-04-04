@@ -1,0 +1,175 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>CRadius2.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">stars</a> &gt; <a href="index.source.html" class="el_package">edu.brown.cs.ebussman.stars</a> &gt; <span class="el_source">CRadius2.java</span></div><h1>CRadius2.java</h1><pre class="source lang-java linenums">package edu.brown.cs.ebussman.stars;
+
+import java.util.LinkedList;
+import java.util.Map;
+import java.util.List;
+import java.util.Iterator;
+import java.util.ArrayList;
+import java.util.HashMap;
+
+/**
+ * CRadius class: class used for functionality related
+ * to finding items within a specified radius of a target.
+ */
+public class CRadius2&lt;T extends Coordinate&gt; implements Command {
+
+  private int maxDepth;
+  private LinkedList&lt;Coordinate&gt; radiusList;
+  private int goalRadius;
+  private Map&lt;Coordinate, Double&gt; neighborDistances;
+  private KDTree&lt;Coordinate&gt; tree;
+  private List&lt;Double&gt; target;
+  private Application app;
+  private String targetName;
+
+<span class="fc" id="L25">  public CRadius2() {</span>
+<span class="fc" id="L26">  }</span>
+
+  /**
+   * execute: finds the specified number of elements within a given radius of a target
+   * using an advanced, n-dimensional tree-based algorithm.
+   *
+   * @param inputs the search criteria for the radius search (name, radius value, etc)
+   * @param appl   the application holding the data the user wishes to search through
+   * @return a list of strings representing items within a given radius of a target
+   */
+  public List&lt;String&gt; execute(String[] inputs, Application appl) {
+
+<span class="fc" id="L38">    this.radiusList = new LinkedList&lt;&gt;();</span>
+<span class="fc" id="L39">    this.app = appl;</span>
+<span class="fc" id="L40">    List&lt;String&gt; results = new ArrayList&lt;&gt;();</span>
+<span class="fc" id="L41">    this.target = new ArrayList&lt;&gt;();</span>
+    // do all error-checking inside this function
+<span class="pc bpc" id="L43" title="1 of 2 branches missed.">    if (!app.isDataLoaded()) {</span>
+<span class="nc" id="L44">      System.out.println(&quot;ERROR: no loaded data&quot;);</span>
+<span class="nc" id="L45">      results.add(&quot;ERROR: no loaded data&quot;);</span>
+<span class="nc" id="L46">      return results;</span>
+<span class="pc bpc" id="L47" title="3 of 4 branches missed.">    } else if (!(inputs.length == 5 || inputs.length == 3)) {</span>
+<span class="nc" id="L48">      System.out.println(&quot;ERROR: incorrect number of arguments for naive_radius&quot;);</span>
+<span class="nc" id="L49">      results.add(&quot;ERROR: incorrect number of arguments for naive_radius&quot;);</span>
+<span class="nc" id="L50">      return results;</span>
+<span class="fc bfc" id="L51" title="All 2 branches covered.">    } else if (Integer.parseInt(inputs[1]) &lt; 0) {</span>
+<span class="fc" id="L52">      System.out.println(&quot;ERROR: radius must be non-negative&quot;);</span>
+<span class="fc" id="L53">      results.add(&quot;ERROR: radius must be non-negative&quot;);</span>
+<span class="fc" id="L54">      return results;</span>
+    }
+<span class="pc bpc" id="L56" title="1 of 2 branches missed.">    if (inputs.length == 5) {</span>
+      try {
+<span class="fc" id="L58">        target.add(Double.parseDouble(inputs[2]));</span>
+<span class="fc" id="L59">        target.add(Double.parseDouble(inputs[3]));</span>
+<span class="fc" id="L60">        target.add(Double.parseDouble(inputs[4]));</span>
+<span class="nc" id="L61">      } catch (Exception e) {</span>
+<span class="nc" id="L62">        System.out.println(&quot;ERROR: coordinates must be numeric values&quot;);</span>
+<span class="nc" id="L63">        results.add(&quot;ERROR: coordinates must be numeric values&quot;);</span>
+<span class="nc" id="L64">        return results;</span>
+<span class="fc" id="L65">      }</span>
+<span class="fc" id="L66">      targetName = &quot;nothing&quot;;</span>
+    } else {
+<span class="nc" id="L68">      Coordinate coord = app.findTargetByName(inputs[2]);</span>
+<span class="nc bnc" id="L69" title="All 2 branches missed.">      if (coord != null) {</span>
+<span class="nc" id="L70">        target = coord.getCoords();</span>
+<span class="nc" id="L71">        this.targetName = coord.getName();</span>
+      } else {
+<span class="nc" id="L73">        System.out.println(&quot;ERROR: cannot find this star by name&quot;);</span>
+<span class="nc" id="L74">        results.add(&quot;ERROR: cannot find this star by name&quot;);</span>
+<span class="nc" id="L75">        return results;</span>
+      }
+    }
+
+<span class="fc" id="L79">    this.tree = app.getData();</span>
+<span class="fc" id="L80">    this.neighborDistances = new HashMap&lt;Coordinate, Double&gt;();</span>
+<span class="fc" id="L81">    this.app = appl;</span>
+<span class="fc" id="L82">    this.maxDepth = app.getDimension() - 1;</span>
+<span class="fc" id="L83">    this.goalRadius = Integer.parseInt(inputs[1]);</span>
+<span class="fc" id="L84">    radius(this.tree, maxDepth);</span>
+
+<span class="fc bfc" id="L86" title="All 2 branches covered.">    for (Coordinate item : radiusList) {</span>
+<span class="fc" id="L87">      System.out.println(item.getID());</span>
+<span class="fc" id="L88">      results.add(item.toString());</span>
+<span class="fc" id="L89">    }</span>
+
+<span class="fc" id="L91">    return results;</span>
+  }
+
+  /**
+   * radius: recursive algorithm that finds all items within a given radius of the current data (tree).
+   *
+   * @param currentTree the current KD-tree through which to search for
+   *                    *               items within a radius
+   * @param depth       the current axes on which to compare coordinates
+   *                    *             (x is depth 0, y is depth 1, z is depth 2, for example)
+   */
+  public void radius(KDTree&lt;Coordinate&gt; currentTree, int depth) {
+
+<span class="fc bfc" id="L104" title="All 2 branches covered.">    if (currentTree == null) {</span>
+<span class="fc" id="L105">      return;</span>
+    }
+
+<span class="fc bfc" id="L108" title="All 2 branches covered.">    if (depth == -1) {</span>
+<span class="fc" id="L109">      depth = this.maxDepth;</span>
+    }
+
+<span class="fc" id="L112">    double straightDist = app.distance(currentTree.getVal().getCoords(), target);</span>
+
+<span class="pc bpc" id="L114" title="1 of 2 branches missed.">    if (!targetName.equals(currentTree.getVal().getName())) {</span>
+<span class="pc bpc" id="L115" title="1 of 2 branches missed.">      if (straightDist &lt;= goalRadius) {</span>
+
+<span class="fc" id="L117">        neighborDistances.put(currentTree.getVal(), straightDist);</span>
+
+<span class="fc bfc" id="L119" title="All 4 branches covered.">        if (radiusList.size() == 0 || straightDist &gt; neighborDistances.get(radiusList.getLast())) {</span>
+<span class="fc" id="L120">          radiusList.add(currentTree.getVal());</span>
+        } else {
+<span class="fc" id="L122">          addToList(currentTree.getVal(), straightDist);</span>
+        }
+      }
+    }
+
+<span class="fc" id="L127">    double axialDist = Math.abs(target.get(depth) - currentTree.getVal().getCoords().get(depth));</span>
+
+<span class="pc bpc" id="L129" title="1 of 2 branches missed.">    if (axialDist &lt;= goalRadius) {</span>
+<span class="fc" id="L130">      radius(currentTree.getLeft(), depth - 1);</span>
+<span class="fc" id="L131">      radius(currentTree.getRight(), depth - 1);</span>
+    } else {
+
+<span class="nc bnc" id="L134" title="All 2 branches missed.">      if (target.get(depth) &gt;= currentTree.getVal().getCoords().get(depth)) {</span>
+<span class="nc" id="L135">        radius(currentTree.getRight(), depth - 1);</span>
+      } else {
+<span class="nc" id="L137">        radius(currentTree.getLeft(), depth - 1);</span>
+      }
+    }
+
+
+<span class="fc" id="L142">  }</span>
+
+  /**
+   * addToList: adds a coordinate to radius list in the correct (sorted) position.
+   *
+   * @param node the current node to be added to the list of neighbors
+   * @param nodeDist the distance from the current node to the target node
+   */
+  public void addToList(Coordinate node, Double nodeDist) {
+
+<span class="fc" id="L152">    boolean added = false;</span>
+<span class="fc" id="L153">    Iterator&lt;Coordinate&gt; it = radiusList.iterator();</span>
+<span class="fc" id="L154">    int i = 0;</span>
+
+<span class="pc bpc" id="L156" title="1 of 4 branches missed.">    while (!added &amp;&amp; it.hasNext()) {</span>
+<span class="fc bfc" id="L157" title="All 2 branches covered.">      if (nodeDist &lt;= neighborDistances.get(it.next())) {</span>
+<span class="fc" id="L158">        radiusList.add(i, node);</span>
+<span class="fc" id="L159">        added = true;</span>
+      } else {
+<span class="fc" id="L161">        i++;</span>
+      }
+    }
+<span class="fc" id="L164">  }</span>
+
+  public void setTarget(List&lt;Double&gt; coords) {
+<span class="fc" id="L167">    this.target = coords;</span>
+<span class="fc" id="L168">  }</span>
+
+  public List&lt;Coordinate&gt; getResults() {
+<span class="fc" id="L171">    return this.radiusList;</span>
+  }
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.5.201910111838</span></div></body></html>

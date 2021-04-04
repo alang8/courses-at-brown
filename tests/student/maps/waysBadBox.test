@@ -1,0 +1,5 @@
+INPUT
+ways 0 20 20 0
+OUTPUT
+ERROR: ways first coor pair to be northwest of second coor pair.
+END

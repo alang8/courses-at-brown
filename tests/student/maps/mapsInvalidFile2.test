@@ -1,0 +1,5 @@
+INPUT
+map data/stars/zero-stars.csv
+OUTPUT
+ERROR: map expects a valid SQL file.
+END

@@ -1,0 +1,7 @@
+INPUT
+map data/maps/empty.sqlite3
+route "Thayer St" "Hope St" "Meeting St" "Prospect St"
+OUTPUT
+map set to data/maps/empty.sqlite3
+ERROR: Intersection not found.
+END

@@ -1,0 +1,26 @@
+INPUT
+map data/maps/smallMaps.sqlite3
+nearest 41.82 -71.4
+nearest 41.8203 -71.4003
+nearest 100 100
+map data/maps/maps.sqlite3
+nearest 41.705386 -71.57843
+nearest 41.318210 -71.837310
+map data/maps/nontravnodes.sqlite3
+nearest 10 10
+nearest 9.99 9.99
+map data/maps/empty.sqlite3
+nearest 0 0
+OUTPUT
+map set to data/maps/smallMaps.sqlite3
+/n/0
+/n/4
+/n/2
+map set to data/maps/maps.sqlite3
+/n/4170.7157.201247239
+/n/4131.7183.201672165
+map set to data/maps/nontravnodes.sqlite3
+/n/1
+/n/1
+map set to data/maps/empty.sqlite3
+END

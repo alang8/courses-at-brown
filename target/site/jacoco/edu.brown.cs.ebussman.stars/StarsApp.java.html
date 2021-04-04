@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>StarsApp.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">stars</a> &gt; <a href="index.source.html" class="el_package">edu.brown.cs.ebussman.stars</a> &gt; <span class="el_source">StarsApp.java</span></div><h1>StarsApp.java</h1><pre class="source lang-java linenums">package edu.brown.cs.ebussman.stars;
+
+import java.util.List;
+
+/**
+ * StarsApp class: holds star-related data and functionality
+ * common to multiple stars commands.
+ */
+public class StarsApp&lt;T extends Coordinate&gt; implements Application {
+
+  private List&lt;Coordinate&gt; itemList;
+  private Coordinate target;
+  private String[] inputs;
+  private boolean dataLoaded;
+  private KDTree&lt;Coordinate&gt; tree;
+  private List&lt;Star&gt; results;
+  private int dimension;
+
+
+<span class="fc" id="L20">  public StarsApp(int dimension) {</span>
+<span class="fc" id="L21">    this.dimension = dimension;</span>
+<span class="fc" id="L22">    this.results = null;</span>
+<span class="fc" id="L23">  }</span>
+
+
+  /**
+   * distance method: calculates the Euclidean distance between an input star and the origin star.
+   *
+   * @param a star from which to calculate distance
+   * @param b star from which to calculate distance
+   * @return double representing the distance between the two stars
+   */
+
+  public double distance(List&lt;Double&gt; a, List&lt;Double&gt; b) {
+
+<span class="fc" id="L36">    double diff = 0.0;</span>
+
+<span class="fc bfc" id="L38" title="All 2 branches covered.">    for (int i = 0; i &lt; a.size(); i++) {</span>
+<span class="fc" id="L39">      diff += (a.get(i) - b.get(i)) * (a.get(i) - b.get(i));</span>
+    }
+<span class="fc" id="L41">    return Math.sqrt(diff);</span>
+  }
+
+  /**
+   * findStarByName: given an list of stars, finds the star corresponding to a given input name, if
+   * it exists, and sets corresponding fields accordingly.
+   *
+   * @param targetName name of target Star to be searched for
+   * @return a Star matching the name inputted by the user
+   */
+  public Coordinate findTargetByName(String targetName) {
+
+    // gets rid of quotation marks in star name
+<span class="fc" id="L54">    String name = targetName.replaceAll(&quot;^\&quot;|\&quot;$&quot;, &quot;&quot;);</span>
+
+<span class="fc bfc" id="L56" title="All 2 branches covered.">    if (name.equals(&quot;&quot;)) {</span>
+<span class="fc" id="L57">      System.out.println(&quot;ERROR: Cannot search for nearest neighbors with empty name&quot;);</span>
+<span class="fc" id="L58">      return null;</span>
+    }
+    // need to find star with this name
+<span class="fc" id="L61">    int i = 0;</span>
+<span class="fc bfc" id="L62" title="All 2 branches covered.">    while (i &lt; itemList.size()) {</span>
+<span class="fc bfc" id="L63" title="All 2 branches covered.">      if (itemList.get(i).getName().equals(name)) {</span>
+<span class="fc" id="L64">        Coordinate match = itemList.get(i);</span>
+<span class="fc" id="L65">        List&lt;Double&gt; coords = match.getCoords();</span>
+<span class="fc" id="L66">        return itemList.get(i);</span>
+      } else {
+<span class="fc" id="L68">        i++;</span>
+      }
+    }
+    // match wasn't found
+<span class="fc" id="L72">    System.out.println(&quot;ERROR: cannot find this star by name&quot;);</span>
+<span class="fc" id="L73">    return null;</span>
+  }
+
+
+  public boolean isDataLoaded() {
+<span class="fc" id="L78">    return this.dataLoaded;</span>
+  }
+
+  public List&lt;Coordinate&gt; getItemList() {
+<span class="fc" id="L82">    return itemList;</span>
+  }
+
+  public int getDimension() {
+<span class="fc" id="L86">    return this.dimension;</span>
+  }
+
+  public KDTree&lt;Coordinate&gt; getData() {
+<span class="fc" id="L90">    return this.tree;</span>
+  }
+
+  public void setData(KDTree&lt;Coordinate&gt; tree1) {
+<span class="fc" id="L94">    this.tree = tree1;</span>
+<span class="fc" id="L95">  }</span>
+
+  public String[] getArgs() {
+<span class="fc" id="L98">    return this.inputs;</span>
+  }
+
+  public void setArgs(String[] inputs1) {
+<span class="fc" id="L102">    this.inputs = inputs1;</span>
+<span class="fc" id="L103">  }</span>
+
+  public void setItemList(List&lt;Coordinate&gt; items) {
+<span class="fc" id="L106">    this.itemList = items;</span>
+<span class="fc" id="L107">  }</span>
+
+  public void setDataLoaded() {
+<span class="fc" id="L110">    this.dataLoaded = true;</span>
+<span class="fc" id="L111">  }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.5.201910111838</span></div></body></html>

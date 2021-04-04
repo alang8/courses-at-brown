@@ -1,0 +1,7 @@
+INPUT
+map data/maps/empty.sqlite3
+route 0 0 10 10
+OUTPUT
+map set to data/maps/empty.sqlite3
+ERROR: No valid start/end node.
+END

@@ -1,0 +1,10 @@
+INPUT
+stars data/stars/more-stars.csv
+naive_neighbors 4 "Divine"
+OUTPUT
+Read 6 stars from data/stars/more-stars.csv
+2
+3
+4
+5
+END

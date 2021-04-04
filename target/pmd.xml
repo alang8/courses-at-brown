@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<pmd xmlns="http://pmd.sourceforge.net/report/2.0.0"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://pmd.sourceforge.net/report/2.0.0 http://pmd.sourceforge.net/report_2_0_0.xsd"
+    version="6.13.0" timestamp="2021-02-23T15:39:05.713">
+<file name="/Users/filip/Desktop/CS/CS32/maps-1-2-ebussman-fkierzen/src/main/java/edu/brown/cs/ebussmanfkierzen/stars/CMap.java">
+<violation beginline="45" endline="45" begincolumn="34" endcolumn="41" rule="UnusedFormalParameter" ruleset="Best Practices" package="edu.brown.cs.ebussmanfkierzen.stars" class="CMap" method="createTree" variable="pathToDB" externalInfoUrl="https://pmd.github.io/pmd-6.13.0/pmd_rules_java_bestpractices.html#unusedformalparameter" priority="3">
+Avoid unused method parameters such as 'pathToDB'.
+</violation>
+</file>
+<file name="/Users/filip/Desktop/CS/CS32/maps-1-2-ebussman-fkierzen/src/main/java/edu/brown/cs/ebussmanfkierzen/stars/CNearest.java">
+<violation beginline="47" endline="47" begincolumn="5" endcolumn="11" rule="UnnecessaryReturn" ruleset="Code Style" package="edu.brown.cs.ebussmanfkierzen.stars" class="CNearest" method="setTarget" externalInfoUrl="https://pmd.github.io/pmd-6.13.0/pmd_rules_java_codestyle.html#unnecessaryreturn" priority="3">
+Avoid unnecessary return statements
+</violation>
+</file>
+<file name="/Users/filip/Desktop/CS/CS32/maps-1-2-ebussman-fkierzen/src/main/java/edu/brown/cs/ebussmanfkierzen/stars/CNeighbors.java">
+<violation beginline="113" endline="113" begincolumn="25" endcolumn="130" rule="UselessParentheses" ruleset="Code Style" package="edu.brown.cs.ebussmanfkierzen.stars" class="CNeighbors" method="execute" externalInfoUrl="https://pmd.github.io/pmd-6.13.0/pmd_rules_java_codestyle.html#uselessparentheses" priority="4">
+Useless parentheses.
+</violation>
+</file>
+<file name="/Users/filip/Desktop/CS/CS32/maps-1-2-ebussman-fkierzen/src/main/java/edu/brown/cs/ebussmanfkierzen/stars/CRadius2.java">
+<violation beginline="119" endline="128" begincolumn="7" endcolumn="7" rule="CollapsibleIfStatements" ruleset="Design" package="edu.brown.cs.ebussmanfkierzen.stars" class="CRadius2" method="radius" externalInfoUrl="https://pmd.github.io/pmd-6.13.0/pmd_rules_java_design.html#collapsibleifstatements" priority="3">
+These nested if statements could be combined
+</violation>
+</file>
+<file name="/Users/filip/Desktop/CS/CS32/maps-1-2-ebussman-fkierzen/src/main/java/edu/brown/cs/ebussmanfkierzen/stars/CRoute.java">
+<violation beginline="17" endline="17" begincolumn="10" endcolumn="18" rule="UnusedLocalVariable" ruleset="Best Practices" package="edu.brown.cs.ebussmanfkierzen.stars" class="CRoute" method="execute" variable="startNode" externalInfoUrl="https://pmd.github.io/pmd-6.13.0/pmd_rules_java_bestpractices.html#unusedlocalvariable" priority="3">
+Avoid unused local variables such as 'startNode'.
+</violation>
+<violation beginline="18" endline="18" begincolumn="10" endcolumn="16" rule="UnusedLocalVariable" ruleset="Best Practices" package="edu.brown.cs.ebussmanfkierzen.stars" class="CRoute" method="execute" variable="endNode" externalInfoUrl="https://pmd.github.io/pmd-6.13.0/pmd_rules_java_bestpractices.html#unusedlocalvariable" priority="3">
+Avoid unused local variables such as 'endNode'.
+</violation>
+<violation beginline="21" endline="23" begincolumn="29" endcolumn="5" rule="EmptyIfStmt" ruleset="Error Prone" package="edu.brown.cs.ebussmanfkierzen.stars" class="CRoute" method="execute" externalInfoUrl="https://pmd.github.io/pmd-6.13.0/pmd_rules_java_errorprone.html#emptyifstmt" priority="3">
+Avoid empty if statements
+</violation>
+<violation beginline="33" endline="35" begincolumn="26" endcolumn="11" rule="EmptyIfStmt" ruleset="Error Prone" package="edu.brown.cs.ebussmanfkierzen.stars" class="CRoute" method="execute" externalInfoUrl="https://pmd.github.io/pmd-6.13.0/pmd_rules_java_errorprone.html#emptyifstmt" priority="3">
+Avoid empty if statements
+</violation>
+<violation beginline="54" endline="54" begincolumn="20" endcolumn="21" rule="UnusedLocalVariable" ruleset="Best Practices" package="edu.brown.cs.ebussmanfkierzen.stars" class="CRoute" method="execute" variable="id" externalInfoUrl="https://pmd.github.io/pmd-6.13.0/pmd_rules_java_bestpractices.html#unusedlocalvariable" priority="3">
+Avoid unused local variables such as 'id'.
+</violation>
+<violation beginline="55" endline="55" begincolumn="20" endcolumn="22" rule="UnusedLocalVariable" ruleset="Best Practices" package="edu.brown.cs.ebussmanfkierzen.stars" class="CRoute" method="execute" variable="lat" externalInfoUrl="https://pmd.github.io/pmd-6.13.0/pmd_rules_java_bestpractices.html#unusedlocalvariable" priority="3">
+Avoid unused local variables such as 'lat'.
+</violation>
+<violation beginline="56" endline="56" begincolumn="20" endcolumn="22" rule="UnusedLocalVariable" ruleset="Best Practices" package="edu.brown.cs.ebussmanfkierzen.stars" class="CRoute" method="execute" variable="lon" externalInfoUrl="https://pmd.github.io/pmd-6.13.0/pmd_rules_java_bestpractices.html#unusedlocalvariable" priority="3">
+Avoid unused local variables such as 'lon'.
+</violation>
+<violation beginline="93" endline="95" begincolumn="9" endcolumn="7" rule="EmptyCatchBlock" ruleset="Error Prone" package="edu.brown.cs.ebussmanfkierzen.stars" class="CRoute" method="execute" externalInfoUrl="https://pmd.github.io/pmd-6.13.0/pmd_rules_java_errorprone.html#emptycatchblock" priority="3">
+Avoid empty catch blocks
+</violation>
+<violation beginline="95" endline="97" begincolumn="9" endcolumn="7" rule="EmptyCatchBlock" ruleset="Error Prone" package="edu.brown.cs.ebussmanfkierzen.stars" class="CRoute" method="execute" externalInfoUrl="https://pmd.github.io/pmd-6.13.0/pmd_rules_java_errorprone.html#emptycatchblock" priority="3">
+Avoid empty catch blocks
+</violation>
+</file>
+<file name="/Users/filip/Desktop/CS/CS32/maps-1-2-ebussman-fkierzen/src/main/java/edu/brown/cs/ebussmanfkierzen/stars/CStars.java">
+<violation beginline="3" endline="3" begincolumn="1" endcolumn="28" rule="UnusedImports" ruleset="Best Practices" package="edu.brown.cs.ebussmanfkierzen.stars" class="CStars" externalInfoUrl="https://pmd.github.io/pmd-6.13.0/pmd_rules_java_bestpractices.html#unusedimports" priority="4">
+Avoid unused imports such as 'java.util.Comparator'
+</violation>
+</file>
+<file name="/Users/filip/Desktop/CS/CS32/maps-1-2-ebussman-fkierzen/src/main/java/edu/brown/cs/ebussmanfkierzen/stars/CWays.java">
+<violation beginline="13" endline="13" begincolumn="12" endcolumn="15" rule="UnusedLocalVariable" ruleset="Best Practices" package="edu.brown.cs.ebussmanfkierzen.stars" class="CWays" method="execute" variable="mapp" externalInfoUrl="https://pmd.github.io/pmd-6.13.0/pmd_rules_java_bestpractices.html#unusedlocalvariable" priority="3">
+Avoid unused local variables such as 'mapp'.
+</violation>
+</file>
+<file name="/Users/filip/Desktop/CS/CS32/maps-1-2-ebussman-fkierzen/src/main/java/edu/brown/cs/ebussmanfkierzen/stars/KDLeaf.java">
+<violation beginline="24" endline="24" begincolumn="5" endcolumn="11" rule="UnnecessaryReturn" ruleset="Code Style" package="edu.brown.cs.ebussmanfkierzen.stars" class="KDLeaf" method="print" externalInfoUrl="https://pmd.github.io/pmd-6.13.0/pmd_rules_java_codestyle.html#unnecessaryreturn" priority="3">
+Avoid unnecessary return statements
+</violation>
+</file>
+<file name="/Users/filip/Desktop/CS/CS32/maps-1-2-ebussman-fkierzen/src/main/java/edu/brown/cs/ebussmanfkierzen/stars/KDNode.java">
+<violation beginline="3" endline="3" begincolumn="1" endcolumn="27" rule="UnusedImports" ruleset="Best Practices" package="edu.brown.cs.ebussmanfkierzen.stars" class="KDNode" externalInfoUrl="https://pmd.github.io/pmd-6.13.0/pmd_rules_java_bestpractices.html#unusedimports" priority="4">
+Avoid unused imports such as 'java.util.ArrayList'
+</violation>
+<violation beginline="79" endline="79" begincolumn="26" endcolumn="96" rule="UselessParentheses" ruleset="Code Style" package="edu.brown.cs.ebussmanfkierzen.stars" class="KDNode" method="buildTree" externalInfoUrl="https://pmd.github.io/pmd-6.13.0/pmd_rules_java_codestyle.html#uselessparentheses" priority="4">
+Useless parentheses.
+</violation>
+<violation beginline="82" endline="82" begincolumn="20" endcolumn="36" rule="UselessParentheses" ruleset="Code Style" package="edu.brown.cs.ebussmanfkierzen.stars" class="KDNode" method="buildTree" externalInfoUrl="https://pmd.github.io/pmd-6.13.0/pmd_rules_java_codestyle.html#uselessparentheses" priority="4">
+Useless parentheses.
+</violation>
+</file>
+<file name="/Users/filip/Desktop/CS/CS32/maps-1-2-ebussman-fkierzen/src/main/java/edu/brown/cs/ebussmanfkierzen/stars/Main.java">
+<violation beginline="134" endline="134" begincolumn="53" endcolumn="103" rule="UselessParentheses" ruleset="Code Style" package="edu.brown.cs.ebussmanfkierzen.stars" class="Main$NeighborHandler" method="handle" externalInfoUrl="https://pmd.github.io/pmd-6.13.0/pmd_rules_java_codestyle.html#uselessparentheses" priority="4">
+Useless parentheses.
+</violation>
+<violation beginline="175" endline="175" begincolumn="47" endcolumn="97" rule="UselessParentheses" ruleset="Code Style" package="edu.brown.cs.ebussmanfkierzen.stars" class="Main$RadiusHandler" method="handle" externalInfoUrl="https://pmd.github.io/pmd-6.13.0/pmd_rules_java_codestyle.html#uselessparentheses" priority="4">
+Useless parentheses.
+</violation>
+</file>
+<file name="/Users/filip/Desktop/CS/CS32/maps-1-2-ebussman-fkierzen/src/main/java/edu/brown/cs/ebussmanfkierzen/stars/MapApp.java">
+<violation beginline="9" endline="9" begincolumn="18" endcolumn="25" rule="UnusedPrivateField" ruleset="Best Practices" package="edu.brown.cs.ebussmanfkierzen.stars" class="MapApp" variable="pathToDB" externalInfoUrl="https://pmd.github.io/pmd-6.13.0/pmd_rules_java_bestpractices.html#unusedprivatefield" priority="3">
+Avoid unused private fields such as 'pathToDB'.
+</violation>
+<violation beginline="12" endline="12" begincolumn="19" endcolumn="28" rule="UnusedPrivateField" ruleset="Best Practices" package="edu.brown.cs.ebussmanfkierzen.stars" class="MapApp" variable="dataLoaded" externalInfoUrl="https://pmd.github.io/pmd-6.13.0/pmd_rules_java_bestpractices.html#unusedprivatefield" priority="3">
+Avoid unused private fields such as 'dataLoaded'.
+</violation>
+</file>
+<file name="/Users/filip/Desktop/CS/CS32/maps-1-2-ebussman-fkierzen/src/main/java/edu/brown/cs/ebussmanfkierzen/stars/Node.java">
+<violation beginline="40" endline="40" begincolumn="24" endcolumn="56" rule="UselessParentheses" ruleset="Code Style" package="edu.brown.cs.ebussmanfkierzen.stars" class="Node" method="distanceFrom" externalInfoUrl="https://pmd.github.io/pmd-6.13.0/pmd_rules_java_codestyle.html#uselessparentheses" priority="4">
+Useless parentheses.
+</violation>
+</file>
+<file name="/Users/filip/Desktop/CS/CS32/maps-1-2-ebussman-fkierzen/src/main/java/edu/brown/cs/ebussmanfkierzen/stars/Star.java">
+<violation beginline="59" endline="59" begincolumn="24" endcolumn="55" rule="UselessParentheses" ruleset="Code Style" package="edu.brown.cs.ebussmanfkierzen.stars" class="Star" method="distanceFrom" externalInfoUrl="https://pmd.github.io/pmd-6.13.0/pmd_rules_java_codestyle.html#uselessparentheses" priority="4">
+Useless parentheses.
+</violation>
+</file>
+<file name="/Users/filip/Desktop/CS/CS32/maps-1-2-ebussman-fkierzen/src/main/java/edu/brown/cs/ebussmanfkierzen/stars/StarsApp.java">
+<violation beginline="12" endline="12" begincolumn="22" endcolumn="27" rule="UnusedPrivateField" ruleset="Best Practices" package="edu.brown.cs.ebussmanfkierzen.stars" class="StarsApp" variable="target" externalInfoUrl="https://pmd.github.io/pmd-6.13.0/pmd_rules_java_bestpractices.html#unusedprivatefield" priority="3">
+Avoid unused private fields such as 'target'.
+</violation>
+<violation beginline="16" endline="16" begincolumn="22" endcolumn="28" rule="UnusedPrivateField" ruleset="Best Practices" package="edu.brown.cs.ebussmanfkierzen.stars" class="StarsApp" variable="results" externalInfoUrl="https://pmd.github.io/pmd-6.13.0/pmd_rules_java_bestpractices.html#unusedprivatefield" priority="3">
+Avoid unused private fields such as 'results'.
+</violation>
+<violation beginline="65" endline="65" begincolumn="22" endcolumn="27" rule="UnusedLocalVariable" ruleset="Best Practices" package="edu.brown.cs.ebussmanfkierzen.stars" class="StarsApp" method="findTargetByName" variable="coords" externalInfoUrl="https://pmd.github.io/pmd-6.13.0/pmd_rules_java_bestpractices.html#unusedlocalvariable" priority="3">
+Avoid unused local variables such as 'coords'.
+</violation>
+</file>
+</pmd>
