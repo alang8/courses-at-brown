@@ -8,11 +8,14 @@ import {
 } from "react-router-dom";
 import './css/App.css';
 import { Button, Card, Container, Header, Icon } from 'semantic-ui-react';
-import FormInput from './modules/FormInput'
+import FormattedInput from './modules/FormattedInput'
 import CourseTile from './modules/CourseTile';
 import SplashPage from './pages/SplashPage';
 import Login from './pages/Login';
 import Signup from './pages/Signup';
+import { User, getUser } from './modules/Data';
+import Search from './pages/Search';
+import Profile from './pages/Profile';
 
 const TestComponent: React.FC<{}> = () => {
 
@@ -21,25 +24,25 @@ const TestComponent: React.FC<{}> = () => {
   return <div className="App">
     <Header as="h1" className="logo">Future @ Brown</Header>
     <Link to="/test-route"><Button content="test" /></Link>
-    <FormInput label="Texte" />
-    <FormInput label="Username" type="username" />
-    <FormInput label="Password" type="password" error={{messages: error, resolve: () => setError([])}} />
+    <FormattedInput label="Texte" />
+    <FormattedInput label="Username" type="username" />
+    <FormattedInput label="Password" type="password" error={{ messages: error, resolve: () => setError([]) }} />
     <Card.Group>
-      <CourseTile code="0320" department="APMA" title="Introduction to Software Engineering" />
-      <CourseTile code="0320" department="CSCI" title="Introduction to Software Engineering" />
-      <CourseTile code="0320" department="1ECON" title="Introduction to Software Engineering" />
-      <CourseTile code="0320" department="E2CON" title="Introduction to Software Engineering" />
-      <CourseTile code="0320" department="ECreO3N" title="Introduction to Software Engineering" />
-      <CourseTile code="0320" department="EC42ON" title="Introduction to Software Engineering" />
-      <CourseTile code="0320" department="EqCO3N" title="Introduction to Software Engineering" />
-      <CourseTile code="0320" department="EwCON" title="Introduction to Software Engineering" />
-      <CourseTile code="0320" department="ECeON" title="Introduction to Software Engineering" />
-      <CourseTile code="0320" department="ECtrON" title="Introduction to Software Engineering" />
-      <CourseTile code="0320" department="ECyON" title="Introduction to Software Engineering" />
-      <CourseTile code="0320" department="ECuON" title="Introduction to Software Engineering" />
-      <CourseTile code="0320" department="ECgON" title="Introduction to Software Engineering" />
-      <CourseTile code="0320" department="EChON" title="Introduction to Software Engineering" />
-      <CourseTile code="0320" department="EChON" title="g" />
+      <CourseTile code="0320" dept="APMA" name="Introduction to Software Engineering" />
+      <CourseTile code="0320" dept="CSCI" name="Introduction to Software Engineering" />
+      <CourseTile code="0320" dept="1ECON" name="Introduction to Software Engineering" />
+      <CourseTile code="0320" dept="E2CON" name="Introduction to Software Engineering" />
+      <CourseTile code="0320" dept="ECreO3N" name="Introduction to Software Engineering" />
+      <CourseTile code="0320" dept="EC42ON" name="Introduction to Software Engineering" />
+      <CourseTile code="0320" dept="EqCO3N" name="Introduction to Software Engineering" />
+      <CourseTile code="0320" dept="EwCON" name="Introduction to Software Engineering" />
+      <CourseTile code="0320" dept="ECeON" name="Introduction to Software Engineering" />
+      <CourseTile code="0320" dept="ECtrON" name="Introduction to Software Engineering" />
+      <CourseTile code="0320" dept="ECyON" name="Introduction to Software Engineering" />
+      <CourseTile code="0320" dept="ECuON" name="Introduction to Software Engineering" />
+      <CourseTile code="0320" dept="ECgON" name="Introduction to Software Engineering" />
+      <CourseTile code="0320" dept="EChON" name="Introduction to Software Engineering" />
+      <CourseTile code="0320" dept="EChON" name="g" />
     </Card.Group>
   </div>
 }
@@ -59,22 +62,33 @@ const NotFound: React.FC<void> = () => (
 
 function App() {
 
-  const [user, setUser] = useState<String | undefined>(undefined);
+  const [user, setUser] = useState<User | undefined>(undefined);
+
+  const setUserByName = async (user: string) => setUser(await getUser(user));
+
+  // routes to be used if the user is not logged in (profile page otherwise)
+  const InauthenticatedRoute = (route: string, loginProcess: JSX.Element): JSX.Element =>
+    <Route exact path={route}>
+      {(user) ? <Redirect to="/profile" /> : loginProcess}
+    </Route>
+
+  // routes to be used if the user is logged in (splash page otherwise)
+  const AuthenticatedRoute = (route: string, protectedContent: JSX.Element): JSX.Element =>
+    <Route exact path={route}>
+      {(user) ? protectedContent : <Redirect to="/splash" />}
+    </Route>
 
   return (
     <Router>
       <Switch>
         <Route path="/test-components" component={TestComponent} />
         <Route path="/test-route" component={TestComponent2} />
-        <Route exact path="/">
-          {(user) ? <Redirect to="/profile" /> : <Redirect to="/splash" />}
-        </Route>
-        <Route path="/search"/>
-        <Route path="/splash" component={SplashPage} />
-        <Route path="/login">
-          <Login setLogin={setUser} />
-        </Route>
-        <Route path="/signup" component={Signup}/>
+        {InauthenticatedRoute("/", <Redirect to ="/splash" />)}
+        {AuthenticatedRoute("/search", <Search user={user!} />)}
+        {AuthenticatedRoute("/profile", <Profile user={user!} />)}
+        {InauthenticatedRoute("/splash", <SplashPage />)}
+        {InauthenticatedRoute("/login", <Login setLogin={setUserByName} />)}
+        {InauthenticatedRoute("/signup", <Signup setLogin={setUserByName} />)}
         <Route path="*" component={NotFound} />
       </Switch>
     </Router>

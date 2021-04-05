@@ -11,7 +11,6 @@ export const GetColor = (code: string): SemanticCOLORS => {
     if (cycle.indexOf(lowerCode) === -1) {
         cycle.push(lowerCode);
     }
-    console.log(cycle);
     return colorCycle[cycle.indexOf(lowerCode) % colorCycle.length];
 }
 

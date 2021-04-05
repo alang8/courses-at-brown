@@ -14,19 +14,15 @@ interface Props {
     error?: Error;
 }
 
-const FormInput: React.FC<Props> = (props) => {
+const FormattedInput: React.FC<Props> = (props) => {
 
     const [selected, setSelected] = useState<boolean | undefined | null>(false);
 
     const inError: boolean = props.error !== undefined && props.error!.messages.length > 0;
 
     const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-        console.log(props.error);
         props.error?.resolve();
-        if (props.textChange) {
-            console.log(event.target.value);
-            props.textChange!(event.target.value);
-        }
+        if (props.textChange) props.textChange!(event.target.value);
     }
 
     const getError = (): JSX.Element | null => {
@@ -64,7 +60,6 @@ const FormInput: React.FC<Props> = (props) => {
         }
     }
 
-    console.log("errors", inError, props.error);
     return (
         <Form.Field className={"input-box"} id={props.id}>
             {getError()}
@@ -88,5 +83,5 @@ const FormInput: React.FC<Props> = (props) => {
     );
 }
 
-export default FormInput;
+export default FormattedInput;
 

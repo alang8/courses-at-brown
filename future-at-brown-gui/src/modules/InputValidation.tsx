@@ -73,8 +73,11 @@ export const ValidUser = (user: string): string[] => {
 }
 
 export const ValidLogin = async (user: string, pass: string): Promise<string[]> => {
-    const syncTests = ValidPass(pass);
-    if (syncTests.length === 0) syncTests.push(await matchingLogin(user, pass));
+    const syncTests = ValidPass(pass).concat(ValidUser(user));
+    if (syncTests.length === 0) {
+        const valid = await matchingLogin(user, pass);
+        if (valid.length > 0) syncTests.push(valid);
+    }
     return syncTests;
 }
 
@@ -82,9 +85,7 @@ export const ValidNewUser = async (user: string): Promise<string[]> => {
     const syncTests = ValidUser(user);
     if (syncTests.length === 0) {
         const valid = await takenUsername(user);
-        console.log("valid", valid);
-        if (valid.length > 0)
-            syncTests.push(await takenUsername(user));
+        if (valid.length > 0) syncTests.push(valid);
     }
     return syncTests;
 }

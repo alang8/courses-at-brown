@@ -1,9 +1,13 @@
 import React, { useRef, useState } from "react";
 import { Container, Form, Header, Button, Segment } from "semantic-ui-react";
-import FormInput from "../modules/FormInput";
-import { ValidNewUser, ValidPass } from "../modules/InputValidation";
+import FormattedInput from "../modules/FormattedInput";
+import { ValidNewUser, ValidPass, ValidUser } from "../modules/InputValidation";
 
-const Signup: React.FC<{}> = () => {
+interface Props {
+    setLogin: (user: string) => Promise<any>;
+}
+
+const Signup: React.FC<Props> = (props) => {
 
     const username = useRef<string>("");
     const password = useRef<string>("");
@@ -16,38 +20,45 @@ const Signup: React.FC<{}> = () => {
     const [confError, setConfError] = useState<Array<string>>([]);
 
     const handleSubmit = () => {
-        console.log("submitted");
+        const passErr: string[] = ValidPass(password.current);
+        const confErr: string[] =
+            (password.current !== confPass.current) ? ["passwords much match"] : [];
         setLoading(true);
-        setPassError(ValidPass(password.current));
-        setConfError((password.current !== confPass.current) ? ["passwords much match"] : []);
+        setPassError(passErr);
+        setConfError(confErr);
+        if (passErr.length === 0
+            && confErr.length === 0) {
         ValidNewUser(username.current)
-            .then((errors: string[]) => {
-                setUserError(errors);
-                setLoading(false);
+            .then((userErr: string[]) => {
+                setUserError(userErr);
+                if (userErr.length === 0) {
+                    props.setLogin(username.current)
+                        .then(() => setLoading(false));
+                } else {
+                    setLoading(false);
+                }
             })
+        } else {
+            setLoading(false);
+        }
     }
-
-    const checkSuccess = () => {
-
-    }
-
 
     return (
         <Container className="total-page">
             <Segment style={{ width: '50%' }}>
                 <Header as="h1" content="Sign up" />
                 <Form onSubmit={handleSubmit} loading={isLoading}>
-                    <FormInput
+                    <FormattedInput
                         label="username"
                         type="username"
                         textChange={(user: string) => username.current = user}
                         error={{ messages: userError, resolve: () => setUserError([]) }} />
-                    <FormInput
+                    <FormattedInput
                         label="password"
                         type="password"
                         textChange={(pass: string) => password.current = pass}
                         error={{ messages: passError, resolve: () => setPassError([]) }} />
-                    <FormInput
+                    <FormattedInput
                         label="confirm password"
                         type="password"
                         textChange={(pass: string) => confPass.current = pass}
@@ -57,7 +68,6 @@ const Signup: React.FC<{}> = () => {
             </Segment>
         </Container>
     );
-
 }
 
 export default Signup;
