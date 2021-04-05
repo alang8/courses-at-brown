@@ -1,7 +1,7 @@
-package edu.brown.cs.student.finproject.course;
+package edu.brown.cs.futureatbrown.termproject.course;
 
-import edu.brown.cs.student.finproject.graph.GraphEdge;
-import edu.brown.cs.student.finproject.graph.GraphNode;
+import edu.brown.cs.futureatbrown.termproject.graph.GraphEdge;
+import edu.brown.cs.futureatbrown.termproject.graph.GraphNode;
 
 /**
  * Specific edge implementation that links a start CourseNode to an end CourseNode.

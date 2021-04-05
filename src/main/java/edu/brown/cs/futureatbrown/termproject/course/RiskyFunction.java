@@ -1,4 +1,4 @@
-package edu.brown.cs.student.finproject.course;
+package edu.brown.cs.futureatbrown.termproject.course;
 
 /**
  * A RiskyFunction accepts a single argument and returns a value, optionally throwing an Exception.

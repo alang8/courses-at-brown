@@ -1,4 +1,4 @@
-package edu.brown.cs.student.finproject.repl;
+package edu.brown.cs.futureatbrown.termproject.repl;
 
 import java.io.PrintStream;
 import java.util.HashMap;

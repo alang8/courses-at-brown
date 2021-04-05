@@ -1,4 +1,4 @@
-package edu.brown.cs.student.finproject.kdtree;
+package edu.brown.cs.futureatbrown.termproject.kdtree;
 
 import java.util.ArrayList;
 import java.util.List;

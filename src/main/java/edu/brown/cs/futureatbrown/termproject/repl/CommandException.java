@@ -1,4 +1,4 @@
-package edu.brown.cs.student.finproject.repl;
+package edu.brown.cs.futureatbrown.termproject.repl;
 
 /**
  * A CommandException is thrown when a message should be printed to the user.

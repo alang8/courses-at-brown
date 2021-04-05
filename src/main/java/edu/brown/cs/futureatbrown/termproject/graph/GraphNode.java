@@ -1,4 +1,4 @@
-package edu.brown.cs.student.finproject.graph;
+package edu.brown.cs.futureatbrown.termproject.graph;
 
 import java.util.List;
 

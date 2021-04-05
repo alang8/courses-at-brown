@@ -1,7 +1,7 @@
-package edu.brown.cs.student.finproject.repl;
+package edu.brown.cs.futureatbrown.termproject.repl;
 
-import edu.brown.cs.student.finproject.util.FruitTree;
-import edu.brown.cs.student.finproject.util.PathNotFoundException;
+import edu.brown.cs.futureatbrown.termproject.util.FruitTree;
+import edu.brown.cs.futureatbrown.termproject.util.PathNotFoundException;
 
 import java.io.PrintStream;
 import java.util.ArrayList;

@@ -1,4 +1,4 @@
-package edu.brown.cs.student.finproject.util;
+package edu.brown.cs.futureatbrown.termproject.util;
 
 /**
  * A PathNotFoundException can be thrown when a path is not found on a tree.

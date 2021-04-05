@@ -1,4 +1,4 @@
-package edu.brown.cs.student.finproject.kdtree;
+package edu.brown.cs.futureatbrown.termproject.kdtree;
 
 /**
  * The locatable interface allows objects to have positions with common methods. The positions

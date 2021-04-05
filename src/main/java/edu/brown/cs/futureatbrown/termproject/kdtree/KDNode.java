@@ -1,4 +1,4 @@
-package edu.brown.cs.student.finproject.kdtree;
+package edu.brown.cs.futureatbrown.termproject.kdtree;
 
 /**
  * Creates a KD Tree that can be used to search for data more efficiently than a normal list.

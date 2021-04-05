@@ -1,4 +1,4 @@
-package edu.brown.cs.student.finproject.course;
+package edu.brown.cs.futureatbrown.termproject.course;
 
 import com.google.common.collect.Iterators;
 
@@ -9,8 +9,8 @@ import java.util.Iterator;
 import java.util.NoSuchElementException;
 import java.util.Set;
 
-import static edu.brown.cs.student.finproject.course.SQLRuntimeException.unwrap;
-import static edu.brown.cs.student.finproject.course.SQLRuntimeException.wrap;
+import static edu.brown.cs.futureatbrown.termproject.course.SQLRuntimeException.unwrap;
+import static edu.brown.cs.futureatbrown.termproject.course.SQLRuntimeException.wrap;
 
 /**
  * Converts CourseNode and CourseEdge data from results.

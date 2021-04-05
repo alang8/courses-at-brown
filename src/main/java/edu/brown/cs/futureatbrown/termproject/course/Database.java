@@ -1,4 +1,4 @@
-package edu.brown.cs.student.finproject.course;
+package edu.brown.cs.futureatbrown.termproject.course;
 
 import java.sql.Connection;
 import java.sql.DriverManager;

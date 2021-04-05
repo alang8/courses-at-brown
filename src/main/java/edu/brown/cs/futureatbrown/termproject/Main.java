@@ -1,7 +1,7 @@
-package edu.brown.cs.student.finproject;
+package edu.brown.cs.futureatbrown.termproject;
 
-import edu.brown.cs.student.finproject.repl.CommandParser;
-import edu.brown.cs.student.finproject.repl.REPL;
+import edu.brown.cs.futureatbrown.termproject.repl.CommandParser;
+import edu.brown.cs.futureatbrown.termproject.repl.REPL;
 
 /**
  * The Main class of our project. This is where execution begins.

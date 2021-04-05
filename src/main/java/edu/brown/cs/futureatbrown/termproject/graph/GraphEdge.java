@@ -1,4 +1,4 @@
-package edu.brown.cs.student.finproject.graph;
+package edu.brown.cs.futureatbrown.termproject.graph;
 
 /**
  * The graph Edge interface represents a general Edge in a graph

@@ -1,4 +1,4 @@
-package edu.brown.cs.student.finproject.repl;
+package edu.brown.cs.futureatbrown.termproject.repl;
 
 /**
  * A CommandAlreadyExistsException signifies that a command with a certain order of arguments has

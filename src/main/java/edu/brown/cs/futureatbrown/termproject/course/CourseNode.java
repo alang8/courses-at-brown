@@ -1,8 +1,8 @@
-package edu.brown.cs.student.finproject.course;
+package edu.brown.cs.futureatbrown.termproject.course;
 
-import edu.brown.cs.student.finproject.graph.GraphEdge;
-import edu.brown.cs.student.finproject.graph.GraphNode;
-import edu.brown.cs.student.finproject.kdtree.Locatable;
+import edu.brown.cs.futureatbrown.termproject.graph.GraphEdge;
+import edu.brown.cs.futureatbrown.termproject.graph.GraphNode;
+import edu.brown.cs.futureatbrown.termproject.kdtree.Locatable;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -68,7 +68,7 @@ public class CourseNode implements Locatable, GraphNode<GraphNode, GraphEdge> {
     this.visited = false;
     this.prevPath = new ArrayList<>();
 
-    coordinates = new double[] {course_rating, prof_rating};
+    coordinates = new double[] {course_rating, prof_rating}; // Change this after creating scoring
   }
 
   /**

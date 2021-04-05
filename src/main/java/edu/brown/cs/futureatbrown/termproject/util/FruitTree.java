@@ -1,4 +1,4 @@
-package edu.brown.cs.student.finproject.util;
+package edu.brown.cs.futureatbrown.termproject.util;
 
 import java.util.ArrayDeque;
 import java.util.ArrayList;

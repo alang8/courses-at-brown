@@ -44,9 +44,6 @@ public class UserDataHandlers {
 
         String alphanumRegex = "^[a-zA-Z0-9_]+$";
 
-
-
-
         Base64.Encoder coder = Base64.getEncoder();
         String hashedUsername = coder.encodeToString(inputtedUsername.getBytes());
         String hashedPassword = coder.encodeToString(inputtedPassword.getBytes());

@@ -1,4 +1,4 @@
-package edu.brown.cs.student.finproject.repl;
+package edu.brown.cs.futureatbrown.termproject.repl;
 
 /**
  * A CommandParseException indicates that a command or its arguments could not be parsed.
