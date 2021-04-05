@@ -31,9 +31,7 @@ const Login: React.FC<Params> = (props) => {
                 setPassError(loginErr);
                 console.log(loginErr);
                 if (loginErr.length === 0) {
-                    console.log("validated");
                     props.setLogin(username.current)
-                        .then(() => setLoading(false));
                 } else {
                     setLoading(false);
                 }
@@ -44,7 +42,9 @@ const Login: React.FC<Params> = (props) => {
     }
 
     return (
+        <div className="total-grad">
         <Container className="total-page">
+            <Header as="h1" className="logo" content="Future @ Brown" />
             <Segment style={{ width: '50%' }}>
                 <Header as="h1" content="Log in" />
                 <Form onSubmit={handleSubmit} loading={isLoading}>
@@ -62,6 +62,7 @@ const Login: React.FC<Params> = (props) => {
                 </Form>
             </Segment>
         </Container>
+        </div>
     );
 }
 

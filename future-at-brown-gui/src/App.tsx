@@ -13,9 +13,9 @@ import CourseTile from './modules/CourseTile';
 import SplashPage from './pages/SplashPage';
 import Login from './pages/Login';
 import Signup from './pages/Signup';
-import { User, getUser } from './modules/Data';
 import Search from './pages/Search';
 import Profile from './pages/Profile';
+import { getUser, User } from './modules/Data';
 
 const TestComponent: React.FC<{}> = () => {
 
@@ -27,6 +27,7 @@ const TestComponent: React.FC<{}> = () => {
     <FormattedInput label="Texte" />
     <FormattedInput label="Username" type="username" />
     <FormattedInput label="Password" type="password" error={{ messages: error, resolve: () => setError([]) }} />
+
     <Card.Group>
       <CourseTile code="0320" dept="APMA" name="Introduction to Software Engineering" />
       <CourseTile code="0320" dept="CSCI" name="Introduction to Software Engineering" />

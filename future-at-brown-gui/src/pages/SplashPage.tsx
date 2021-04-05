@@ -4,7 +4,7 @@ import { Button, Container, Header } from 'semantic-ui-react';
 
 const SplashPage: React.FC<{}> = () => {
     return (
-        <div className="total">
+        <div className="total-image">
             <Container className="total-page">
                 <div className="content">
                     <div>

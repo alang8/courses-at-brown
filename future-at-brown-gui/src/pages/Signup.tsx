@@ -1,7 +1,7 @@
 import React, { useRef, useState } from "react";
 import { Container, Form, Header, Button, Segment } from "semantic-ui-react";
 import FormattedInput from "../modules/FormattedInput";
-import { ValidNewUser, ValidPass, ValidUser } from "../modules/InputValidation";
+import { ValidNewUser, ValidPass } from "../modules/InputValidation";
 
 interface Props {
     setLogin: (user: string) => Promise<any>;
@@ -33,7 +33,6 @@ const Signup: React.FC<Props> = (props) => {
                 setUserError(userErr);
                 if (userErr.length === 0) {
                     props.setLogin(username.current)
-                        .then(() => setLoading(false));
                 } else {
                     setLoading(false);
                 }
@@ -44,7 +43,9 @@ const Signup: React.FC<Props> = (props) => {
     }
 
     return (
+        <div className="total-grad">
         <Container className="total-page">
+            <Header as="h1" className="logo" content="Future @ Brown" />
             <Segment style={{ width: '50%' }}>
                 <Header as="h1" content="Sign up" />
                 <Form onSubmit={handleSubmit} loading={isLoading}>
@@ -67,6 +68,7 @@ const Signup: React.FC<Props> = (props) => {
                 </Form>
             </Segment>
         </Container>
+        </div>
     );
 }
 
