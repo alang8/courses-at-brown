@@ -18,8 +18,7 @@ const CourseTile: React.FC<Props> = (props) => {
                             <Card.Header>
                                 <Header as="h3" color={GetColor(props.department)}>
                                 {props.department + props.code}
-                                </Header>
-                                
+                                </Header>                              
                             </Card.Header>
                         </Grid.Column>
                         <Grid.Column floated='right' textAlign='right'>

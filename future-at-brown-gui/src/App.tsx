@@ -8,18 +8,22 @@ import {
 } from "react-router-dom";
 import './css/App.css';
 import { Button, Card, Container, Header, Icon } from 'semantic-ui-react';
-import FormInput from './FormInput'
-import CourseTile from './CourseTile';
-import SplashPage from './SplashPage';
+import FormInput from './modules/FormInput'
+import CourseTile from './modules/CourseTile';
+import SplashPage from './pages/SplashPage';
+import Login from './pages/Login';
+import Signup from './pages/Signup';
 
-const testComponent: React.FC<void> = () => (
-  <div className="App">
+const TestComponent: React.FC<{}> = () => {
 
+  const [error, setError] = useState<Array<String>>(["Uhoh", "more meesages"]);
+
+  return <div className="App">
     <Header as="h1" className="logo">Future @ Brown</Header>
     <Link to="/test-route"><Button content="test" /></Link>
     <FormInput label="Texte" />
     <FormInput label="Username" type="username" />
-    <FormInput label="Password" type="password" error={["You fucked up", "more meesages"]} />
+    <FormInput label="Password" type="password" error={{messages: error, resolve: () => setError([])}} />
     <Card.Group>
       <CourseTile code="0320" department="APMA" title="Introduction to Software Engineering" />
       <CourseTile code="0320" department="CSCI" title="Introduction to Software Engineering" />
@@ -37,15 +41,14 @@ const testComponent: React.FC<void> = () => (
       <CourseTile code="0320" department="EChON" title="Introduction to Software Engineering" />
       <CourseTile code="0320" department="EChON" title="g" />
     </Card.Group>
-
   </div>
-);
+}
 
-const testComponent2: React.FC<void> = () => (
+const TestComponent2: React.FC<void> = () => (
   <Header as="h1"> Page 2 <Link to="/test-components"><Button content="let me out" /></Link></Header>
 );
 
-const notFound: React.FC<void> = () => (
+const NotFound: React.FC<void> = () => (
   <Container className="total-page">
     <Icon name='question' size='massive' />
     <Header as="h1">Error 404</Header>
@@ -61,14 +64,18 @@ function App() {
   return (
     <Router>
       <Switch>
-        <Route path="/test-components" component={testComponent} />
-        <Route path="/test-route" component={testComponent2} />
+        <Route path="/test-components" component={TestComponent} />
+        <Route path="/test-route" component={TestComponent2} />
         <Route exact path="/">
           {(user) ? <Redirect to="/profile" /> : <Redirect to="/splash" />}
         </Route>
         <Route path="/search"/>
         <Route path="/splash" component={SplashPage} />
-        <Route path="*" component={notFound} />
+        <Route path="/login">
+          <Login setLogin={setUser} />
+        </Route>
+        <Route path="/signup" component={Signup}/>
+        <Route path="*" component={NotFound} />
       </Switch>
     </Router>
   )

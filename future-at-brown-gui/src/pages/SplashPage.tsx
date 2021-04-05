@@ -1,7 +1,8 @@
 import React from "react";
-import { Button, Container, Divider, Grid, Header, Segment } from 'semantic-ui-react';
+import { Link } from "react-router-dom";
+import { Button, Container, Header } from 'semantic-ui-react';
 
-const SplashPage: React.FC<{}> = (props: {}) => {
+const SplashPage: React.FC<{}> = () => {
     return (
         <div className="total">
             <Container className="total-page">
@@ -13,11 +14,15 @@ const SplashPage: React.FC<{}> = (props: {}) => {
                             </Header>
                     </div>
                     <Button.Group size="massive">
-                        <Button content="Sign Up" />
+                        <Link to="/signup">
+                            <Button content="Sign Up" />
+                        </Link>
                         <Button.Or />
-                        <Button content="Log In" />
+                        <Link to="/login">
+                            <Button content="Log In" />
+                        </Link>
                     </Button.Group>
-                    </div>
+                </div>
             </Container>
         </div>
     )
