@@ -16,6 +16,7 @@ import Signup from './pages/Signup';
 import Search from './pages/Search';
 import Profile from './pages/Profile';
 import { getUser, User } from './modules/Data';
+import ExpandableCourses from './modules/ExpandableCourses';
 
 const TestComponent: React.FC<{}> = () => {
 
@@ -23,27 +24,30 @@ const TestComponent: React.FC<{}> = () => {
 
   return <div className="App">
     <Header as="h1" className="logo">Future @ Brown</Header>
-    <Link to="/test-route"><Button content="test" /></Link>
+    <Link to="/test-route"><Button content="test" className="gradient"/></Link>
     <FormattedInput label="Texte" />
     <FormattedInput label="Username" type="username" />
     <FormattedInput label="Password" type="password" error={{ messages: error, resolve: () => setError([]) }} />
 
+    <ExpandableCourses courses={[{code: "0320", dept: "CSCI", name: "Introduction to Software Engineering"}]} title="Test" />
+    {/* <ExpandableCourses courses={[{code: "0320", dept: "CSCI", name: "Introduction to Software Engineering"}, {code: "0320", dept: "CSCI", name: "Introduction to Software Engineering"}, {code: "0320", dept: "CSCI", name: "Introduction to Software Engineering"}, {code: "0320", dept: "CSCI", name: "Introduction to Software Engineering"}]} title="Test" />
+    <ExpandableCourses courses={[{code: "0320", dept: "CSCI", name: "Introduction to Software Engineering"}, {code: "0320", dept: "CSCI", name: "Introduction to Software Engineering"}, {code: "0320", dept: "CSCI", name: "Introduction to Software Engineering"}, {code: "0320", dept: "CSCI", name: "Introduction to Software Engineering"}, {code: "0320", dept: "CSCI", name: "Introduction to Software Engineering"}, {code: "0320", dept: "CSCI", name: "Introduction to Software Engineering"}, {code: "0320", dept: "CSCI", name: "Introduction to Software Engineering"}, {code: "0320", dept: "CSCI", name: "Introduction to Software Engineering"}]} title="Test" /> */}
     <Card.Group>
-      <CourseTile code="0320" dept="APMA" name="Introduction to Software Engineering" />
-      <CourseTile code="0320" dept="CSCI" name="Introduction to Software Engineering" />
-      <CourseTile code="0320" dept="1ECON" name="Introduction to Software Engineering" />
-      <CourseTile code="0320" dept="E2CON" name="Introduction to Software Engineering" />
-      <CourseTile code="0320" dept="ECreO3N" name="Introduction to Software Engineering" />
-      <CourseTile code="0320" dept="EC42ON" name="Introduction to Software Engineering" />
-      <CourseTile code="0320" dept="EqCO3N" name="Introduction to Software Engineering" />
-      <CourseTile code="0320" dept="EwCON" name="Introduction to Software Engineering" />
-      <CourseTile code="0320" dept="ECeON" name="Introduction to Software Engineering" />
-      <CourseTile code="0320" dept="ECtrON" name="Introduction to Software Engineering" />
-      <CourseTile code="0320" dept="ECyON" name="Introduction to Software Engineering" />
-      <CourseTile code="0320" dept="ECuON" name="Introduction to Software Engineering" />
-      <CourseTile code="0320" dept="ECgON" name="Introduction to Software Engineering" />
-      <CourseTile code="0320" dept="EChON" name="Introduction to Software Engineering" />
-      <CourseTile code="0320" dept="EChON" name="g" />
+      <CourseTile course={{code: "0320", dept: "APMA", name: "Introduction to Software Engineering"}} />
+      <CourseTile course={{code: "0320", dept: "CSCI", name: "Introduction to Software Engineering"}} />
+      <CourseTile course={{code: "0320", dept: "1ECON", name: "Introduction to Software Engineering"}} />
+      <CourseTile course={{code: "0320", dept: "E2CON", name: "Introduction to Software Engineering"}} />
+      <CourseTile course={{code: "0320", dept: "ECreO3N", name: "Introduction to Software Engineering"}} />
+      <CourseTile course={{code: "0320", dept: "EC42ON", name: "Introduction to Software Engineering"}} />
+      <CourseTile course={{code: "0320", dept: "EqCO3N", name: "Introduction to Software Engineering"}} />
+      <CourseTile course={{code: "0320", dept: "EwCON", name: "Introduction to Software Engineering"}} />
+      <CourseTile course={{code: "0320", dept: "ECeON", name: "Introduction to Software Engineering"}} />
+      <CourseTile course={{code: "0320", dept: "ECtrON", name: "Introduction to Software Engineering"}} />
+      <CourseTile course={{code: "0320", dept: "ECyON", name: "Introduction to Software Engineering"}} />
+      <CourseTile course={{code: "0320", dept: "ECuON", name: "Introduction to Software Engineering"}} />
+      <CourseTile course={{code: "0320", dept: "ECgON", name: "Introduction to Software Engineering"}} />
+      <CourseTile course={{code: "0320", dept: "EChON", name: "Introduction to Software Engineering"}} />
+      <CourseTile course={{code: "0320", dept: "EChON", name: "g"}} />
     </Card.Group>
   </div>
 }
@@ -62,7 +66,6 @@ const NotFound: React.FC<void> = () => (
 )
 
 function App() {
-
   const [user, setUser] = useState<User | undefined>(undefined);
 
   const setUserByName = async (user: string) => setUser(await getUser(user));

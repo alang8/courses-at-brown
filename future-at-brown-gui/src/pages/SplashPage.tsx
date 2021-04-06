@@ -15,11 +15,11 @@ const SplashPage: React.FC<{}> = () => {
                     </div>
                     <Button.Group size="massive">
                         <Link to="/signup">
-                            <Button content="Sign Up" />
+                            <Button content="Sign Up" className="gradient"/>
                         </Link>
                         <Button.Or />
                         <Link to="/login">
-                            <Button content="Log In" />
+                            <Button content="Log In" className="gradient"/>
                         </Link>
                     </Button.Group>
                 </div>

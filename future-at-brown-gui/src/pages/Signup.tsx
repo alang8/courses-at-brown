@@ -64,7 +64,7 @@ const Signup: React.FC<Props> = (props) => {
                         type="password"
                         textChange={(pass: string) => confPass.current = pass}
                         error={{ messages: confError, resolve: () => setConfError([]) }} />
-                    <Button type="submit" content="Submit" />
+                    <Button type="submit" content="Submit" className="gradient"/>
                 </Form>
             </Segment>
         </Container>

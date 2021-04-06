@@ -11,9 +11,8 @@ ul {
 
 /* Splash page */
 
-.button.fill {
+.fill {
     height: 100%;
-    width: 100%;
 }
 
 div.total-image {
@@ -83,6 +82,8 @@ div.total-grad .header.logo {
 
 .card.class-card .content .grid {
     height: calc(100% + 2em);
+    word-wrap: normal;
+    text-overflow: ellipsis;
 }
 
 .input-box {
@@ -112,28 +113,27 @@ div.total-grad .header.logo {
     color: #db8a8a;
 }
 
-.ui.button {
+.ui.button.gradient {
     background: rgb(0, 215, 52);
     background: -moz-linear-gradient(87deg, rgba(0, 215, 52, 1) 0%, rgba(1, 178, 120, 1) 47%, rgba(0, 172, 169, 1) 100%);
     background: -webkit-linear-gradient(87deg, rgba(0, 215, 52, 1) 0%, rgba(1, 178, 120, 1) 47%, rgba(0, 172, 169, 1) 100%);
     background: linear-gradient(87deg, rgba(0, 215, 52, 1) 0%, rgba(1, 178, 120, 1) 47%, rgba(0, 172, 169, 1) 100%);
     filter: progid: DXImageTransform.Microsoft.gradient(startColorstr="#00d734", endColorstr="#00aca9", GradientType=1);
     filter: progid: DXImageTransform.Microsoft.gradient(startColorstr="#09791f", endColorstr="#00accf", GradientType=1);
+    color: white;
+}
+
+.ui.button {
     transition: ease-in-out 0.3s;
-    color: white !important;
 }
 
 .ui.button:hover {
-    filter: hue-rotate(180deg) brightness(0.9);
     transform: scale(1.1);
-    background: rgb(0, 215, 52);
-    background: -moz-linear-gradient(87deg, rgba(0, 215, 52, 1) 0%, rgba(1, 178, 120, 1) 47%, rgba(0, 172, 169, 1) 100%);
-    background: -webkit-linear-gradient(87deg, rgba(0, 215, 52, 1) 0%, rgba(1, 178, 120, 1) 47%, rgba(0, 172, 169, 1) 100%);
-    background: linear-gradient(87deg, rgba(0, 215, 52, 1) 0%, rgba(1, 178, 120, 1) 47%, rgba(0, 172, 169, 1) 100%);
-    filter: progid: DXImageTransform.Microsoft.gradient(startColorstr="#00d734", endColorstr="#00aca9", GradientType=1);
-    filter: progid: DXImageTransform.Microsoft.gradient(startColorstr="#09791f", endColorstr="#00accf", GradientType=1);
-    filter: progid: DXImageTransform.Microsoft.gradient(startColorstr="#00a4ff", endColorstr="#00ff84", GradientType=1);
     font-weight: bold;
+}
+
+.ui.button.gradient:hover {
+    filter: hue-rotate(180deg) brightness(0.9);
 }
 
 .container.total-page {

@@ -1,6 +1,5 @@
 import React from "react";
-import { useParams } from "react-router";
-import { Button, Card, Grid, GridRow, Header, Icon, Modal } from 'semantic-ui-react';
+import { Button, Grid, Header, Icon, Modal } from 'semantic-ui-react';
 import { GetColor } from './Colors'
 import { Course } from "./Data";
 
@@ -12,7 +11,7 @@ interface Params {
 
 const CourseInfo: React.FC<Params> = (props) => {
     const course: Course = props.course;
-    console.log("display", props.shouldDisplay);
+    const color = GetColor(course.dept)
     return (
         <Modal
             closeIcon
@@ -22,7 +21,7 @@ const CourseInfo: React.FC<Params> = (props) => {
                 <Header
                     icon='graduation'
                     content={course.dept + course.code}
-                    color={GetColor(course.dept)} />
+                    color={color} />
             </Modal.Header>
 
             <Modal.Content>
@@ -37,7 +36,7 @@ const CourseInfo: React.FC<Params> = (props) => {
 
                     </Grid.Row>
                     <Grid.Row divided>
-                        <Grid.Column width={12}>
+                        <Grid.Column width={10}>
                             <Grid.Row>
                                 <p>
                                     <Icon name="star" />
@@ -47,37 +46,37 @@ const CourseInfo: React.FC<Params> = (props) => {
                             </Grid.Row>
                             <Grid.Row>
                                 <p>
-                                <Icon name="graduation" />
+                                    <Icon name="user circle" />
                                     <strong>Latest Professor: </strong>
                                     {course.latestProf ?? "N/A"}
                                 </p>
                             </Grid.Row>
                             <Grid.Row>
                                 <p>
-                                <Icon name="heart" />
+                                    <Icon name="heart" />
                                     <strong>Professor Rating: </strong>
                                     {course.latestProfRating ?? "N/A"}
                                 </p>
                             </Grid.Row>
                             <Grid.Row>
                                 <p>
-                                <Icon name="clock" />
+                                    <Icon name="clock" />
                                     <strong>Average Hours: </strong>
                                     {course.avgHours ?? "N/A"}
                                 </p>
                             </Grid.Row>
                             <Grid.Row>
                                 <p>
-                                <Icon name="hourglass" />
+                                    <Icon name="hourglass" />
                                     <strong>Maximum Hours: </strong>
                                     {course.maxHours ?? "N/A"}
                                 </p>
                             </Grid.Row>
                         </Grid.Column>
-                        <Grid.Column width={4} textAlign="center">
+                        <Grid.Column width={6} textAlign="center">
                             <Grid.Row centered>
-                                <Button icon labelPosition='left' className="fill">
-                                    <Icon name='plus'/>
+                                <Button icon labelPosition='left' className="fill" color={color}>
+                                    <Icon name='plus' />
                                     {"Save Course"}
                                 </Button>
                             </Grid.Row>
