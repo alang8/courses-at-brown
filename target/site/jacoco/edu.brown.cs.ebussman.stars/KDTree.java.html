@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>KDTree.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">stars</a> &gt; <a href="index.source.html" class="el_package">edu.brown.cs.ebussman.stars</a> &gt; <span class="el_source">KDTree.java</span></div><h1>KDTree.java</h1><pre class="source lang-java linenums">package edu.brown.cs.ebussman.stars;
+
+import java.util.List;
+import java.util.Comparator;
+import java.util.Collections;
+
+/**
+ * KDTree class: recursively creates a k-dimensional tree of the given type.
+ */
+public class KDTree&lt;T extends Coordinate&gt; {
+
+  //this is the &quot;node&quot;
+  private T val;
+  private int depth;
+  private KDTree&lt;T&gt; left;
+  private KDTree&lt;T&gt; right;
+  private List&lt;Comparator&lt;T&gt;&gt; comparators;
+
+
+  // list of n-dimensional coordinates, current dimension/axis, max dimension
+<span class="fc" id="L21">  public KDTree(List&lt;T&gt; coords, int depth, int maxDepth) {</span>
+
+    //base cases
+<span class="fc bfc" id="L24" title="All 2 branches covered.">    if (coords.size() == 1) {</span>
+<span class="fc" id="L25">      this.val = coords.get(0);</span>
+
+<span class="fc" id="L27">      this.left = null;</span>
+<span class="fc" id="L28">      this.right = null;</span>
+    } else {
+
+      //find splitting axis
+<span class="fc bfc" id="L32" title="All 2 branches covered.">      if (depth == -1) {</span>
+<span class="fc" id="L33">        depth = maxDepth;</span>
+      }
+
+      // sort coordinates by axis (ie. by the depth-th element of getCoords)
+<span class="fc" id="L37">      DynamicComparator c = new DynamicComparator(depth);</span>
+<span class="fc" id="L38">      Collections.sort(coords, c);</span>
+
+      // get median, set val
+      // list size is even
+<span class="fc" id="L42">      int length = coords.size();</span>
+      int middleElem;
+
+      // length is even
+<span class="fc bfc" id="L46" title="All 2 branches covered.">      if (length % 2 == 0) {</span>
+<span class="fc" id="L47">        middleElem = (length / 2) - 1;</span>
+      } else {
+        // length is odd
+<span class="fc" id="L50">        middleElem = (length - 1) / 2;</span>
+      }
+      //checking for duplicate values near middle, always choose leftmost duplicate for consistency
+<span class="pc bpc" id="L53" title="1 of 4 branches missed.">      if (middleElem != 0 &amp;&amp; coords.get(middleElem).getCoords().get(depth) == coords.get(middleElem - 1).getCoords().get(depth)) {</span>
+        //System.out.println(&quot;loop&quot;);
+<span class="nc bnc" id="L55" title="All 2 branches missed.">        while (coords.get(middleElem).getCoords().get(depth) == coords.get(middleElem - 1).getCoords().get(depth)) {</span>
+<span class="nc" id="L56">          middleElem--;</span>
+        }
+      }
+
+<span class="fc" id="L60">      int upper = middleElem;</span>
+<span class="fc" id="L61">      this.val = coords.get(middleElem);</span>
+
+      //adjust middle element for 0-indexing
+<span class="fc bfc" id="L64" title="All 2 branches covered.">      if (middleElem == 0) {</span>
+<span class="fc" id="L65">        upper++;</span>
+      }
+
+      //one leftover element, choose to put it on right subtree
+<span class="fc bfc" id="L69" title="All 2 branches covered.">      if (coords.size() == 2) {</span>
+<span class="fc" id="L70">        this.left = null;</span>
+<span class="fc" id="L71">        this.right = new KDTree&lt;&gt;(coords.subList(middleElem + 1, length), depth - 1, maxDepth);</span>
+      } else {
+        // recur on left/right subtree
+<span class="fc" id="L74">        this.left = new KDTree&lt;&gt;(coords.subList(0, upper), depth - 1, maxDepth);</span>
+<span class="fc" id="L75">        this.right = new KDTree&lt;&gt;(coords.subList(middleElem + 1, length), depth - 1, maxDepth);</span>
+      }
+    }
+<span class="fc" id="L78">  }</span>
+
+  /**
+   * @return left subtree of the given KDTree
+   */
+  public KDTree&lt;T&gt; getLeft() {
+<span class="fc" id="L84">    return this.left;</span>
+  }
+
+  /**
+   * @return right subtree of the given KDTree
+   */
+  public KDTree&lt;T&gt; getRight() {
+<span class="fc" id="L91">    return this.right;</span>
+  }
+
+  /**
+   * @return value of root node of the given KDTree
+   */
+  public T getVal() {
+<span class="fc" id="L98">    return this.val;</span>
+  }
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.5.201910111838</span></div></body></html>

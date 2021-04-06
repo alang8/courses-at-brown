@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>CNeighbors2.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">stars</a> &gt; <a href="index.source.html" class="el_package">edu.brown.cs.ebussmanfkierzen.stars</a> &gt; <span class="el_source">CNeighbors2.java</span></div><h1>CNeighbors2.java</h1><pre class="source lang-java linenums">package edu.brown.cs.ebussmanfkierzen.stars;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
+import java.util.PriorityQueue;
+
+/**
+ * Class representing the neighbors command.
+ * @param &lt;T&gt; - the object w/ coordinates we are considering for neighbors.
+ */
+<span class="fc" id="L13">public class CNeighbors2&lt;T extends Coordinate&gt; implements Command {</span>
+
+  private List&lt;Coordinate&gt; neighborList;
+  private int k;
+  private IKDTree&lt;Coordinate&gt; tree;
+  private List&lt;String&gt; results;
+  private List&lt;Double&gt; target;
+  private String targetName;
+  private Application app;
+
+  /**
+   * execute: method which finds the n nearest neighbors to a given origin star.
+   *
+   * @param inputs an array of search criteria inputted by user
+   * @param appl   the application holding the data the user wishes to search through
+   * @return A list of strings representing the Star objects that are nearest
+   * to the origin and fit the requirements of &quot;inputs&quot;
+   **/
+  public List&lt;String&gt; execute(String[] inputs, Application appl) {
+<span class="fc" id="L32">    boolean searchByName = false;</span>
+<span class="fc" id="L33">    this.app = appl;</span>
+<span class="fc" id="L34">    this.target = new ArrayList&lt;&gt;();</span>
+<span class="fc" id="L35">    this.results = new ArrayList&lt;&gt;();</span>
+<span class="pc bpc" id="L36" title="1 of 2 branches missed.">    if (!app.isDataLoaded()) {</span>
+<span class="nc" id="L37">      System.out.println(&quot;ERROR: no loaded data&quot;);</span>
+<span class="nc" id="L38">      results.add(&quot;ERROR: no loaded data&quot;);</span>
+<span class="nc" id="L39">      return results;</span>
+<span class="pc bpc" id="L40" title="1 of 4 branches missed.">    } else if (!(inputs.length == 5 || inputs.length == 3)) {</span>
+<span class="nc" id="L41">      System.out.println(&quot;ERROR: incorrect number of arguments for naive_neighbors&quot;);</span>
+<span class="nc" id="L42">      results.add(&quot;ERROR: incorrect number of arguments for naive_neighbors&quot;);</span>
+<span class="nc" id="L43">      return results;</span>
+<span class="pc bpc" id="L44" title="1 of 2 branches missed.">    } else if (Integer.parseInt(inputs[1]) &lt; 0) {</span>
+<span class="nc" id="L45">      System.out.println(&quot;ERROR: neighbors must be non-negative&quot;);</span>
+<span class="nc" id="L46">      results.add(&quot;ERROR: neighbors must be non-negative&quot;);</span>
+<span class="nc" id="L47">      return results;</span>
+    }
+<span class="fc bfc" id="L49" title="All 2 branches covered.">    if (inputs.length == 5) {</span>
+      try {
+<span class="fc" id="L51">        target.add(Double.parseDouble(inputs[2]));</span>
+<span class="fc" id="L52">        target.add(Double.parseDouble(inputs[3]));</span>
+<span class="fc" id="L53">        target.add(Double.parseDouble(inputs[4]));</span>
+<span class="nc" id="L54">      } catch (Exception e) {</span>
+<span class="nc" id="L55">        System.out.println(&quot;ERROR: coordinates must be numeric values&quot;);</span>
+<span class="nc" id="L56">        results.add(&quot;ERROR: coordinates must be numeric values&quot;);</span>
+<span class="nc" id="L57">        return results;</span>
+<span class="fc" id="L58">      }</span>
+<span class="fc" id="L59">      targetName = &quot;nothing&quot;;</span>
+    } else {
+<span class="fc" id="L61">      Coordinate coord = app.findTargetByName(inputs[2]);</span>
+<span class="pc bpc" id="L62" title="1 of 2 branches missed.">      if (coord != null) {</span>
+<span class="fc" id="L63">        searchByName = true;</span>
+<span class="fc" id="L64">        this.targetName = coord.getName();</span>
+<span class="fc" id="L65">        target = coord.getCoords();</span>
+      } else {
+<span class="nc" id="L67">        System.out.println(&quot;ERROR: cannot find this star by name&quot;);</span>
+<span class="nc" id="L68">        results.add(&quot;ERROR: cannot find this star by name&quot;);</span>
+<span class="nc" id="L69">        return results;</span>
+      }
+    }
+
+<span class="fc" id="L73">    this.k = Integer.parseInt(inputs[1]);</span>
+<span class="fc" id="L74">    this.tree = this.app.getData();</span>
+<span class="fc" id="L75">    Comparator&lt;Coordinate&gt; myDoubleComp = Comparator.comparingDouble(s -&gt; s.distanceFrom(target));</span>
+<span class="fc" id="L76">    Comparator&lt;Coordinate&gt; starComp = Collections.reverseOrder(myDoubleComp);</span>
+<span class="fc" id="L77">    PriorityQueue&lt;Coordinate&gt; pq = new PriorityQueue&lt;Coordinate&gt;(k + 1, starComp);</span>
+<span class="fc" id="L78">    KDNode.kdnAlg(pq, this.tree, target, 0, k + 1);</span>
+
+<span class="fc" id="L80">    List&lt;Coordinate&gt; neighbors = new ArrayList(Arrays.asList(pq.toArray()));</span>
+
+<span class="fc bfc" id="L82" title="All 2 branches covered.">    if (searchByName) {</span>
+<span class="fc" id="L83">      neighbors.remove(app.findTargetByName(this.targetName));</span>
+    }
+
+<span class="fc" id="L86">    Collections.shuffle(neighbors);</span>
+<span class="fc" id="L87">    neighbors.sort(Comparator.comparingDouble(s -&gt; s.distanceFrom(target)));</span>
+
+<span class="fc" id="L89">    neighbors = new ArrayList(neighbors.subList(0, Math.min(k, neighbors.size())));</span>
+
+<span class="fc bfc" id="L91" title="All 2 branches covered.">    for (Coordinate item : neighbors) {</span>
+<span class="fc" id="L92">      System.out.println(item.getID());</span>
+<span class="fc" id="L93">      results.add(item.toString());</span>
+<span class="fc" id="L94">    }</span>
+<span class="fc" id="L95">    this.neighborList = neighbors;</span>
+<span class="fc" id="L96">    return results;</span>
+  }
+
+  @Override
+  public void setTarget(List&lt;Double&gt; coords) {
+<span class="nc" id="L101">    this.target = coords;</span>
+<span class="nc" id="L102">  }</span>
+
+  @Override
+  public List&lt;Coordinate&gt; getResults() {
+<span class="fc" id="L106">    return this.neighborList;</span>
+  }
+
+  @Override
+  public String forApp() {
+<span class="nc" id="L111">    return &quot;stars&quot;;</span>
+  }
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.5.201910111838</span></div></body></html>

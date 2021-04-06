@@ -1,0 +1,5 @@
+INPUT
+map
+OUTPUT
+ERROR: map expects 1 argument, received 0
+END

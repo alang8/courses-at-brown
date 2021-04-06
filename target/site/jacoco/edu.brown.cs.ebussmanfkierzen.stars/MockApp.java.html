@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>MockApp.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">stars</a> &gt; <a href="index.source.html" class="el_package">edu.brown.cs.ebussmanfkierzen.stars</a> &gt; <span class="el_source">MockApp.java</span></div><h1>MockApp.java</h1><pre class="source lang-java linenums">package edu.brown.cs.ebussmanfkierzen.stars;
+
+import java.util.List;
+
+public class MockApp {
+
+<span class="nc" id="L7">  public MockApp() {</span>
+<span class="nc" id="L8">  }</span>
+
+  /**
+   * execute method: handles commands related to mock persons.
+   *
+   * @param input a list of Strings representing components of command-line input
+   */
+  public void execute(String[] input) {
+<span class="nc bnc" id="L16" title="All 2 branches missed.">    if (input.length != 2) {</span>
+<span class="nc" id="L17">      System.out.println(&quot;ERROR: incorrect number of arguments for mock&quot;);</span>
+<span class="nc bnc" id="L18" title="All 2 branches missed.">    } else if (input[0].equals(&quot;mock&quot;)) {</span>
+<span class="nc" id="L19">      parseCSV(input[1]);</span>
+    }
+<span class="nc" id="L21">  }</span>
+
+  /**
+   * parseCSV method: handles parsing of CSV files related to human data.
+   *
+   * @param filename the name of the CSV file to be parsed
+   */
+  public void parseCSV(String filename) {
+
+<span class="nc" id="L30">    CSVParse parser = new CSVParse();</span>
+<span class="nc" id="L31">    List&lt;String[]&gt; personList = parser.csvParse(filename);</span>
+
+<span class="nc bnc" id="L33" title="All 2 branches missed.">    for (String[] item : personList) {</span>
+<span class="nc" id="L34">      MockPerson newPerson = new MockPerson(item[0], item[1], item[2], item[3], item[4], item[5]);</span>
+<span class="nc" id="L35">      System.out.println(newPerson.toString());</span>
+<span class="nc" id="L36">    }</span>
+<span class="nc" id="L37">  }</span>
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.5.201910111838</span></div></body></html>

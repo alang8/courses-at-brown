@@ -1,0 +1,7 @@
+INPUT
+map data/maps/empty.sqlite3
+route a b c d
+OUTPUT
+map set to data/maps/empty.sqlite3
+ERROR: Route command with coordinates expects doubles as arguments.
+END

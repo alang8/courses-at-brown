@@ -1,0 +1,11 @@
+INPUT
+stars data/stars/zero-stars.csv
+stars data/stars/malformed_lines.csv
+stars data/stars/bad_header.csv
+stars data/stars/file-doesnt-exist.csv
+OUTPUT
+Read 0 stars from data/stars/zero-stars.csv
+ERROR: malformed CSV file
+ERROR: improper file header
+ERROR: file does not exist
+END

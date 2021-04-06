@@ -1,0 +1,188 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>CNeighbors.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">stars</a> &gt; <a href="index.source.html" class="el_package">edu.brown.cs.ebussmanfkierzen.stars</a> &gt; <span class="el_source">CNeighbors.java</span></div><h1>CNeighbors.java</h1><pre class="source lang-java linenums">package edu.brown.cs.ebussmanfkierzen.stars;
+
+import java.util.Collections;
+import java.util.List;
+import java.util.ArrayList;
+
+/**
+ * CNeighbors class: class dedicated to nearest-neighbors commands
+ * with a naive, list-based algorithm.
+ */
+public class CNeighbors implements MapCommand {
+
+  //true if user is searching for star by name, false otherwise
+  private boolean searchByName;
+  //coordinates of target star
+  private List&lt;Double&gt; target;
+  //list of potential nearest neighbors
+  private List&lt;Coordinate&gt; candidates;
+
+<span class="fc" id="L20">  public CNeighbors() {</span>
+<span class="fc" id="L21">  }</span>
+
+
+  /**
+   * execute: method which finds the n nearest neighbors to a given origin star.
+   *
+   * @param inputs: an array of search criteria inputted by user
+   * @param app:    the application holding the data the user wishes to search through
+   * @return A list of strings representing the Star objects that are nearest
+   * to the origin and fit the requirements of &quot;inputs&quot;
+   **/
+  @Override
+  public List&lt;String&gt; execute(String[] inputs, Application app) {
+
+<span class="fc" id="L35">    List&lt;String&gt; results = new ArrayList&lt;&gt;();</span>
+<span class="fc" id="L36">    this.target = new ArrayList&lt;&gt;();</span>
+    //reset search by name (in case of previous command where star was searched for by name
+<span class="fc" id="L38">    searchByName = false;</span>
+
+    // Error checking for malformed inputs
+<span class="pc bpc" id="L41" title="1 of 2 branches missed.">    if (!app.isDataLoaded()) {</span>
+<span class="nc" id="L42">      System.out.println(&quot;ERROR: no loaded data&quot;);</span>
+<span class="nc" id="L43">      results.add(&quot;ERROR: no loaded data&quot;);</span>
+<span class="nc" id="L44">      return results;</span>
+<span class="pc bpc" id="L45" title="1 of 4 branches missed.">    } else if (!(inputs.length == 5 || inputs.length == 3)) {</span>
+<span class="nc" id="L46">      System.out.println(&quot;ERROR: incorrect number of arguments for naive_neighbors&quot;);</span>
+<span class="nc" id="L47">      results.add(&quot;ERROR: incorrect number of arguments for naive_neighbors&quot;);</span>
+<span class="nc" id="L48">      return results;</span>
+<span class="pc bpc" id="L49" title="1 of 2 branches missed.">    } else if (Integer.parseInt(inputs[1]) &lt; 0) {</span>
+<span class="nc" id="L50">      System.out.println(&quot;ERROR: neighbors must be non-negative&quot;);</span>
+<span class="nc" id="L51">      results.add(&quot;ERROR: neighbors must be non-negative&quot;);</span>
+<span class="nc" id="L52">      return results;</span>
+    }
+<span class="fc bfc" id="L54" title="All 2 branches covered.">    if (inputs.length == 5) {</span>
+      try {
+<span class="fc" id="L56">        target.add(Double.parseDouble(inputs[2]));</span>
+<span class="fc" id="L57">        target.add(Double.parseDouble(inputs[3]));</span>
+<span class="fc" id="L58">        target.add(Double.parseDouble(inputs[4]));</span>
+<span class="nc" id="L59">      } catch (Exception e) {</span>
+<span class="nc" id="L60">        System.out.println(&quot;ERROR: coordinates must be numeric values&quot;);</span>
+<span class="nc" id="L61">        results.add(&quot;ERROR: coordinates must be numeric values&quot;);</span>
+<span class="nc" id="L62">        return results;</span>
+<span class="fc" id="L63">      }</span>
+    } else {
+<span class="fc" id="L65">      Coordinate coord = app.findTargetByName(inputs[2]);</span>
+<span class="pc bpc" id="L66" title="1 of 2 branches missed.">      if (coord != null) {</span>
+<span class="fc" id="L67">        searchByName = true;</span>
+<span class="fc" id="L68">        target = coord.getCoords();</span>
+      } else {
+<span class="nc" id="L70">        System.out.println(&quot;ERROR: cannot find this star by name&quot;);</span>
+<span class="nc" id="L71">        results.add(&quot;ERROR: cannot find this star by name&quot;);</span>
+<span class="nc" id="L72">        return results;</span>
+      }
+    }
+
+    //retrieve list of stars in database
+<span class="fc" id="L77">    List&lt;Coordinate&gt; itemList = app.getItemList();</span>
+<span class="fc" id="L78">    int k = Integer.parseInt(inputs[1]);</span>
+
+    // sort list of stars according to their distance away from origin star
+<span class="fc" id="L81">    Collections.sort(itemList, new CoordComparator(app, target));</span>
+    // represents candidate stars for final sorted list
+<span class="fc" id="L83">    this.candidates = new ArrayList&lt;&gt;();</span>
+    // represents stars that are equidistant from origin (in case of ties)
+<span class="fc" id="L85">    List&lt;Coordinate&gt; duplicates = new ArrayList&lt;&gt;();</span>
+<span class="fc" id="L86">    int numDuplicates = 0;</span>
+<span class="fc" id="L87">    int i = 0;</span>
+<span class="fc" id="L88">    int duplicateIndex = 0;</span>
+<span class="fc" id="L89">    boolean done = false;</span>
+
+    //star was found by name, don't want this star in results
+<span class="fc" id="L92">    Coordinate removed = null;</span>
+<span class="fc bfc" id="L93" title="All 2 branches covered.">    if (searchByName) {</span>
+      // item at top of list should be the star we searched for (closest to itself)
+<span class="fc" id="L95">      removed = app.getItemList().get(0);</span>
+<span class="fc" id="L96">      app.getItemList().remove(0);</span>
+    }
+
+    // so k is an index
+<span class="fc" id="L100">    k = k - 1;</span>
+
+    // # of items we want is greater than # of total items, so print all items in list
+<span class="fc bfc" id="L103" title="All 2 branches covered.">    if (k &gt;= itemList.size()) {</span>
+<span class="fc" id="L104">      candidates = itemList;</span>
+      // # of stars we want is less than # of total stars
+    } else {
+<span class="fc bfc" id="L107" title="All 2 branches covered.">      while (!done) {</span>
+<span class="fc bfc" id="L108" title="All 2 branches covered.">        if (i &lt;= k) {</span>
+
+<span class="fc" id="L110">          candidates.add(itemList.get(i));</span>
+          // check if last star is same distance from origin as this star to see if we'll need
+          // a tiebreaker later
+<span class="pc bpc" id="L113" title="1 of 4 branches missed.">          if (i &gt; 0 &amp;&amp; (app.distance(itemList.get(i).getCoords(), target) == app.distance(itemList.get(i - 1).getCoords(), target))) {</span>
+<span class="nc" id="L114">            duplicates.add(candidates.get(i));</span>
+<span class="nc bnc" id="L115" title="All 2 branches missed.">            if (numDuplicates == 0) {</span>
+<span class="nc" id="L116">              duplicateIndex = i;</span>
+            }
+<span class="nc" id="L118">            numDuplicates++;</span>
+
+            // if consecutive distances aren't equal we don't need to continue keeping track
+            // of duplicates
+          } else {
+<span class="fc" id="L123">            duplicates.clear();</span>
+<span class="fc" id="L124">            numDuplicates = 0;</span>
+          }
+<span class="fc" id="L126">          i++;</span>
+          // if we're above k but have non-zero number of running duplicates
+<span class="pc bpc" id="L128" title="1 of 2 branches missed.">        } else if (numDuplicates != 0) {</span>
+          // keep searching for duplicates
+<span class="nc bnc" id="L130" title="All 2 branches missed.">          while (app.distance(candidates.get(i).getCoords(), target) == app.distance(candidates.get(i - 1).getCoords(), target)) {</span>
+<span class="nc" id="L131">            duplicates.add(candidates.get(i));</span>
+<span class="nc" id="L132">            numDuplicates++;</span>
+<span class="nc" id="L133">            i++;</span>
+          }
+<span class="nc" id="L135">          done = true;</span>
+        } else {
+<span class="fc" id="L137">          done = true;</span>
+        }
+      }
+
+      //past k and no more duplicates-- replace ordered duplicates with random duplicates
+<span class="pc bpc" id="L142" title="1 of 2 branches missed.">      if (numDuplicates &gt; 0) {</span>
+<span class="nc" id="L143">        Collections.shuffle(duplicates);</span>
+<span class="nc" id="L144">        int index = 0;</span>
+<span class="nc bnc" id="L145" title="All 2 branches missed.">        for (int j = duplicateIndex; j &lt;= k; j++) {</span>
+<span class="nc" id="L146">          candidates.set(j, duplicates.get(index));</span>
+<span class="nc" id="L147">          index++;</span>
+        }
+      }
+    }
+
+    //print the nearest neighbors
+<span class="fc bfc" id="L153" title="All 2 branches covered.">    for (Coordinate coord : candidates) {</span>
+<span class="fc" id="L154">      System.out.println(coord.getID());</span>
+<span class="fc" id="L155">      results.add(coord.toString());</span>
+<span class="fc" id="L156">    }</span>
+
+    // need to add a star back to the star list if we removed it earlier because
+    // it was searched for my name (so it can be used in future commands)
+<span class="fc bfc" id="L160" title="All 2 branches covered.">    if (searchByName) {</span>
+      // item at top of list should be the star we searched for (closest to itself)
+<span class="fc" id="L162">      itemList.add(removed);</span>
+<span class="fc" id="L163">      candidates = itemList.subList(0, itemList.size() - 1);</span>
+    }
+
+<span class="fc" id="L166">    return results;</span>
+  }
+
+  public void setTarget(List&lt;Double&gt; coords) {
+<span class="nc" id="L170">    this.target = coords;</span>
+<span class="nc" id="L171">  }</span>
+
+  /**
+   * getResults: returns the nearest neighbors as a list of candidates (for testing purposes).
+   *
+   * @return List of Coordinates
+   */
+  public List&lt;Coordinate&gt; getResults() {
+<span class="fc" id="L179">    return this.candidates;</span>
+  }
+
+  @Override
+  public String forApp() {
+<span class="nc" id="L184">    return &quot;stars&quot;;</span>
+  }
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.5.201910111838</span></div></body></html>
