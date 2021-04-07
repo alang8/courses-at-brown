@@ -4,36 +4,36 @@ import java.util.HashMap;
 import java.util.Set;
 
 /**
- * The node based graph interface
+ * The node based graph interface.
  * @param <Edge> is an object that extends graph edge
- * @param <Node> is an objct that extends graph node
+ * @param <Node> is an object that extends graph node
  */
 public interface Graph<Node extends GraphNode, Edge extends GraphEdge> {
+
   /**
-   * Map that contains all the nodes
+   * Map that contains all the Nodes.
    *
-   * @return the HashMap of Node sets
+   * @return the HashMap of Nodes
    */
-  HashMap<String, Node> getNodeSet();
+  HashMap<String, Node> getNodeMap();
 
   /**
-   * Map that contains all the Edges from the Node with the NodeID
-   * The first String is the ID of the From Node
-   * The second String is the ID of the To Node
-   * The reason for the second hashmap is just for easy editing of the edge weights
-   * for Yen's Algorithm
-   * @return the HashMap of Edge sets
+   * Map that contains all the Edges from the Node with the NodeID. The first String is the ID of
+   * the from Node. The second String is the ID of the to Node. The reason for the second hashmap is
+   * just for easy editing of the edge weights for Yen's Algorithm.
+   * @return the HashMap of Edges
    */
-  HashMap<String, HashMap<String, Edge>> getEdgeSet();
+  HashMap<String, HashMap<String, Edge>> getEdgeMap();
 
   /**
-   * Adds a Node to the Node set and Edges to the Edge Set
-   * @param node node to add to the Node set and add ID to Node Set
+   * Adds a Node to the Node map and Edges with the Node as their start to the Edge map.
+   * @param node Node to add to the map
+   * @param edges a Set of edges to check
    */
   void addNode(Node node, Set<Edge> edges);
 
   /**
-   * Ideally creates a deep copy of the current graph
+   * Ideally creates a deep copy of the current Graph.
    */
   Graph<Node, Edge> copy();
 }

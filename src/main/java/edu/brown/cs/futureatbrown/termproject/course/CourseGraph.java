@@ -28,7 +28,7 @@ public class CourseGraph implements Graph<GraphNode, GraphEdge> {
    * @return the HashMap
    */
   @Override
-  public HashMap<String, GraphNode> getNodeSet() {
+  public HashMap<String, GraphNode> getNodeMap() {
     return nodeMap;
   }
 
@@ -38,41 +38,53 @@ public class CourseGraph implements Graph<GraphNode, GraphEdge> {
    * @return the HashMap
    */
   @Override
-  public HashMap<String, HashMap<String, GraphEdge>> getEdgeSet() {
+  public HashMap<String, HashMap<String, GraphEdge>> getEdgeMap() {
     return edgeMap;
   }
 
+  /**
+   * Adds a CourseNode to the node map and edges with the node as their start to the edge map.
+   * @param node CourseNode to add to the map
+   * @param edges set of CourseEdges to check
+   */
   @Override
-  public void addNode(GraphNode node, Set<GraphEdge> graphEdges) {
-    // Implement this after full design
+  public void addNode(GraphNode node, Set<GraphEdge> edges) {
+    nodeMap.put(node.getID(), node);
+    for (GraphEdge edge : edges) {
+      if (edge.getStart().equals(node.getID())) {
+        edgeMap.put(edge.getID(), new HashMap<>() {{ put(edge.getID(), edge); }});
+      }
+    }
   }
 
   /**
-   * Creates and returns a copy of the current CourseGraph.
+   * Creates and returns a copy of the CourseGraph.
+   *
+   * @return a copy of the CourseGraph
    */
   @Override
   public Graph<GraphNode, GraphEdge> copy() {
     CourseGraph graphCopy = new CourseGraph();
-    graphCopy.setNodeMap(this.nodeMap);
-    graphCopy.setEdgeMap(this.edgeMap);
+    graphCopy.setNodeMap(nodeMap);
+    graphCopy.setEdgeMap(edgeMap);
     return graphCopy;
   }
 
   /**
    * Sets the NodeMap of this CourseGraph.
    *
-   * @param nm the NodeMap
+   * @param nodeMap the NodeMap
    */
-  public void setNodeMap(HashMap<String, GraphNode> nm) {
-    this.nodeMap = nm;
+  public void setNodeMap(HashMap<String, GraphNode> nodeMap) {
+    this.nodeMap = nodeMap;
   }
 
   /**
    * Sets the EdgeMap of this CourseGraph.
    *
-   * @param em the EdgeMap
+   * @param edgeMap the EdgeMap
    */
-  public void setEdgeMap(HashMap<String, HashMap<String, GraphEdge>> em) {
-    this.edgeMap = em;
+  public void setEdgeMap(HashMap<String, HashMap<String, GraphEdge>> edgeMap) {
+    this.edgeMap = edgeMap;
   }
 }

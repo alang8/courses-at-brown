@@ -1,5 +1,7 @@
 package edu.brown.cs.futureatbrown.termproject.course;
 
+import edu.brown.cs.futureatbrown.termproject.exception.SQLRuntimeException;
+
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -21,9 +23,9 @@ public final class Database {
   /**
    * Constructor that instantiates the database and creates tables.
    *
-   * @param filename File name of SQLite3 database to open.
-   * @throws ClassNotFoundException If the driver manager class is not found.
-   * @throws SQLException If an error occurs in any SQL query.
+   * @param filename file name of SQLite3 database to open
+   * @throws ClassNotFoundException if the driver manager class is not found
+   * @throws SQLException if an error occurs in any SQL query
    */
   public static void init(String filename) throws ClassNotFoundException, SQLException {
     Class.forName("org.sqlite.JDBC");
@@ -41,10 +43,10 @@ public final class Database {
   }
 
   /**
-   * Queries a CourseNode based on the user inputted id.
+   * Queries a CourseNode based on the user inputted id. Returns null if not found.
    *
-   * @param id The id of the CourseNode.
-   * @return The found CourseNode.
+   * @param id the id of the CourseNode
+   * @return the found CourseNode
    */
   public static CourseNode getCourseNode(String id) {
     try (PreparedStatement statement = conn
@@ -65,10 +67,10 @@ public final class Database {
   }
 
   /**
-   * Queries a CourseNode based on the user inputted id.
+   * Queries a CourseNode based on the user inputted id. Throws an error if not found.
    *
-   * @param id The id of the CourseNode.
-   * @return The found CourseNode.
+   * @param id the id of the CourseNode
+   * @return the found CourseNode
    */
   public static CourseNode getCourseNodeUnchecked(String id) {
     try (PreparedStatement statement = conn
@@ -91,7 +93,7 @@ public final class Database {
   /**
    * Queries all CourseNodes.
    *
-   * @return An iterator for all CourseNodes in the database.
+   * @return an iterator for all CourseNodes in the database
    */
   private static Iterator<CourseNode> iterateAllCourseNodes() throws SQLException {
     Statement query = conn.createStatement();
@@ -102,5 +104,5 @@ public final class Database {
     return CourseConversions.iterateResults(res, CourseConversions::resultToCourseNode);
   }
 
-  // Can't really query for CourseEdges because they aren't in the database
+  // Can't query or interact with CourseEdges in this class because they aren't in the database.
 }

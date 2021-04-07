@@ -7,7 +7,7 @@ import edu.brown.cs.futureatbrown.termproject.graph.GraphNode;
  * Specific edge implementation that links a start CourseNode to an end CourseNode.
  */
 public class CourseEdge implements GraphEdge<GraphNode, GraphEdge> {
-  private final String id;
+  private final String id; // Should the ID be unique even for edges with the same start and end?
   private GraphNode start;
   private GraphNode end;
   private double weight;
@@ -27,7 +27,6 @@ public class CourseEdge implements GraphEdge<GraphNode, GraphEdge> {
 
   /**
    * Returns the id of this CourseEdge.
-   * This value should be unique to this edge.
    *
    * @return the id
    */
@@ -88,6 +87,7 @@ public class CourseEdge implements GraphEdge<GraphNode, GraphEdge> {
 
   /**
    * Compares this CourseEdge to another object for equality.
+   * <p>
    * Another object is equal to this node if its start and end CourseNodes are the same.
    *
    * @param other another object
@@ -116,6 +116,6 @@ public class CourseEdge implements GraphEdge<GraphNode, GraphEdge> {
    */
   @Override
   public String toString() {
-    return id + ": " + start + "to " + end;
+    return id + ": " + start + "-> " + end;
   }
 }

@@ -36,7 +36,7 @@ public class CourseNode implements Locatable, GraphNode<GraphNode, GraphEdge> {
   /**
    * Constructs a new CourseNode with the given parameters.
    *
-   * @param id  the unique id
+   * @param id the unique id
    * @param name the name
    * @param instr the instructor name
    * @param sem the semester number
@@ -182,8 +182,7 @@ public class CourseNode implements Locatable, GraphNode<GraphNode, GraphEdge> {
   }
 
   /**
-   * Returns the ID of this CourseNode.
-   * This value should be unique to this node.
+   * Returns the ID of this CourseNode. This value should be unique.
    *
    * @return the ID
    */
@@ -195,7 +194,7 @@ public class CourseNode implements Locatable, GraphNode<GraphNode, GraphEdge> {
   /**
    * Returns the number of dimensions that the CourseNode is in.
    *
-   * @return Return an int representing the number of dimensions this CourseNode's coordinates have.
+   * @return an int representing the number of dimensions this CourseNode's coordinates have
    */
   @Override
   public int getNumOfDimensions() {
@@ -205,7 +204,7 @@ public class CourseNode implements Locatable, GraphNode<GraphNode, GraphEdge> {
   /**
    * Returns the position of the CourseNode.
    *
-   * @return An array of doubles representing this CourseNode's location.
+   * @return an array of doubles representing this CourseNode's location
    */
   @Override
   public double[] getCoordinates() {
@@ -215,8 +214,8 @@ public class CourseNode implements Locatable, GraphNode<GraphNode, GraphEdge> {
   /**
    * Returns the nth dimension of this CourseNode.
    *
-   * @param dim Which dimension to get from the locatable.
-   * @return The specified dimension from the locatable.
+   * @param dim which dimension to get from the locatable
+   * @return the specified dimension from the locatable
    */
   @Override
   public double getCoordinate(int dim) {
@@ -224,7 +223,68 @@ public class CourseNode implements Locatable, GraphNode<GraphNode, GraphEdge> {
   }
 
   /**
+   * Sets the weight of the CourseNode.
+   *
+   * @param weight the weight
+   */
+  @Override
+  public void setWeight(double weight) {
+    this.weight = weight;
+  }
+
+  /**
+   * Returns the weight of the CourseNode.
+   *
+   * @return the weight
+   */
+  @Override
+  public double getWeight() {
+    return weight;
+  }
+
+  /**
+   * Sets if the CourseNode has been visited or not.
+   *
+   * @param visited a boolean signifying if the CourseNode has been visited
+   */
+  @Override
+  public void setVisited(Boolean visited) {
+    this.visited = visited;
+  }
+
+  /**
+   * Checks if the CourseNode has been visited yet.
+   *
+   * @return a boolean signifying if the CourseNode has been visited
+   */
+  @Override
+  public Boolean visited() {
+    return visited;
+  }
+
+  /**
+   * Sets the previous path of the CourseNode.
+   *
+   * @param prevPath the path
+   */
+  @Override
+  public void setPreviousPath(List prevPath) {
+    this.prevPath = prevPath;
+  }
+
+  /**
+   * Returns the previous path of the CourseNode.
+   *
+   * @return the path
+   */
+  @Override
+  public List<GraphEdge> getPreviousPath() {
+    return prevPath;
+  }
+
+  /**
    * Compares this CourseNode to another object for equality.
+   * <p>
    * Another object is equal to this node if it is also a CourseNode and shares the same id.
    *
    * @param other another object
@@ -236,9 +296,9 @@ public class CourseNode implements Locatable, GraphNode<GraphNode, GraphEdge> {
   }
 
   /**
-   * Returns a unique hash for this Node.
+   * Returns a unique hash for this CourseNode.
    *
-   * @return a unique hash code
+   * @return the hash code
    */
   @Override
   public int hashCode() {
@@ -246,72 +306,12 @@ public class CourseNode implements Locatable, GraphNode<GraphNode, GraphEdge> {
   }
 
   /**
-   * Returns a string representing a node.
+   * Returns a string representing a CourseNode.
    *
-   * @return A string representing a node.
+   * @return the string
    */
   @Override
   public String toString() {
     return id + ": " + name;
-  }
-
-  /**
-   * Sets the weight of the node.
-   *
-   * @param weight The weight.
-   */
-  @Override
-  public void setWeight(double weight) {
-    this.weight = weight;
-  }
-
-  /**
-   * Returns the weight of the node.
-   *
-   * @return The weight.
-   */
-  @Override
-  public double getWeight() {
-    return weight;
-  }
-
-  /**
-   * Sets if the node has been visited or not.
-   *
-   * @param visited A boolean signifying if node has been visited.
-   */
-  @Override
-  public void setVisited(Boolean visited) {
-    this.visited = visited;
-  }
-
-  /**
-   * Checks if node has been visited yet.
-   *
-   * @return A boolean signifying if node has been visited.
-   */
-  @Override
-  public Boolean visited() {
-    return visited;
-  }
-
-  /**
-   * Sets the previous path of the node.
-   *
-   * @param prevPath The path.
-   */
-  @Override
-  public void setPreviousPath(List prevPath) {
-    this.prevPath = prevPath;
-  }
-
-  /**
-   * Returns the previous path of the node.
-   *
-   * @return The path.
-   */
-  @Override
-  public List<GraphEdge> getPreviousPath() {
-    return prevPath;
   }
 }

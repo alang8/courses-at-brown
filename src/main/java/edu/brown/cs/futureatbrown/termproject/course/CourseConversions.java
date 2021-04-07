@@ -9,8 +9,8 @@ import java.util.Iterator;
 import java.util.NoSuchElementException;
 import java.util.Set;
 
-import static edu.brown.cs.futureatbrown.termproject.course.SQLRuntimeException.unwrap;
-import static edu.brown.cs.futureatbrown.termproject.course.SQLRuntimeException.wrap;
+import static edu.brown.cs.futureatbrown.termproject.exception.SQLRuntimeException.unwrap;
+import static edu.brown.cs.futureatbrown.termproject.exception.SQLRuntimeException.wrap;
 
 /**
  * Converts CourseNode and CourseEdge data from results.
@@ -23,9 +23,9 @@ public final class CourseConversions {
   /**
    * Converts the first result to a CourseNode. Does not advance the ResultSet's row.
    *
-   * @param results A ResultSet with CourseNode data.
-   * @return The CourseNode represented at the result's current row, or null if there are none left.
-   * @throws SQLException If the ResultSet's data cannot be queried.
+   * @param results a ResultSet with CourseNode data.
+   * @return the CourseNode represented at the result's current row, or null if there are none left
+   * @throws SQLException if the ResultSet's data cannot be queried
    */
   public static CourseNode resultToCourseNode(ResultSet results) throws SQLException {
     if (results.isClosed()) {

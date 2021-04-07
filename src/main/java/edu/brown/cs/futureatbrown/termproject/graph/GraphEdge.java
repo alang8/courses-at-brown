@@ -1,47 +1,45 @@
 package edu.brown.cs.futureatbrown.termproject.graph;
 
 /**
- * The graph Edge interface represents a general Edge in a graph
+ * The graph Edge interface represents a general Edge in a graph.
  * @param <Edge> is an object that extends graph edge
- * @param <Node> is an objct that extends graph node
+ * @param <Node> is an object that extends graph node
  */
 public interface GraphEdge<Node extends GraphNode, Edge extends GraphEdge> {
+
   /**
-   * Gets the edge's ID.
+   * Gets the Edge's ID.
    * @return the id
    */
   String getID();
 
   /**
-   * Gets the weight of the edge.
-   * @return weight
+   * Gets the weight of the Edge.
+   * @return the weight
    */
   double getWeight();
 
   /**
-   * Sets the starting Node
-   * @param startingNode the start node
+   * Sets the start Node.
+   * @param startingNode the start Node
    */
   void setStart(Node startingNode);
 
   /**
-   * Retrieves the start node.
-   * @return the start node
+   * Gets the start Node.
+   * @return the start Node
    */
   Node getStart();
 
   /**
-   * Sets the end node.
-   * @param endingNode the end node
+   * Sets the End node.
+   * @param endingNode the End node
    */
   void setEnd(Node endingNode);
 
   /**
-   * Retrieves the end node.
-   * @return the end node
+   * Gets the End node.
+   * @return the End node
    */
   Node getEnd();
-
-  // REMEMBER TO OVERRIDE EQUALS AND HASH
-  // EQUALS Based on Start and End NODE IDs
 }
