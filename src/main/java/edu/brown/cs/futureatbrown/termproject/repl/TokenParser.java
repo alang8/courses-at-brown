@@ -1,7 +1,9 @@
 package edu.brown.cs.futureatbrown.termproject.repl;
 
-import edu.brown.cs.futureatbrown.termproject.util.FruitTree;
-import edu.brown.cs.futureatbrown.termproject.util.PathNotFoundException;
+import edu.brown.cs.futureatbrown.termproject.exception.CommandAlreadyExistsException;
+import edu.brown.cs.futureatbrown.termproject.exception.CommandParseException;
+import edu.brown.cs.futureatbrown.termproject.kdtree.FruitTree;
+import edu.brown.cs.futureatbrown.termproject.exception.PathNotFoundException;
 
 import java.io.PrintStream;
 import java.util.ArrayList;
@@ -17,6 +19,7 @@ import java.util.Set;
  * runArguments.
  */
 public class TokenParser {
+
   /**
    * Enumerates different types of tokens allowed.
    */
@@ -52,7 +55,7 @@ public class TokenParser {
   /**
    * Registers a command which runs using the given types.
    *
-   * @param types  an array of types which a user can input
+   * @param types an array of types which a user can input
    * @param action a function to run when the corresponding token types have been encountered
    */
   public void register(TokenType[] types, ArgsCommand action) {
@@ -68,19 +71,16 @@ public class TokenParser {
    * This method does not use a Scanner, so errors may be present.
    *
    * @param arguments a line of arguments to parse
-   * @param out       an output stream to print to
+   * @param out an output stream to print to
    */
   public void runArguments(String arguments, PrintStream out) {
     Scanner scanner = new Scanner(arguments);
     FruitTree<TokenType, ArgsCommand> currentNode = tokenPaths;
     List<String> tokens = new ArrayList<>();
-
     // Read all remaining tokens
     while (scanner.hasNext()) {
       Set<TokenType> possibleNextTypes = currentNode.getChildValues();
       String nextToken; // will be added to the token list
-      // TODO Generalize this
-      // TODO also make this more readable
       // Determine the type of the next token
       if (possibleNextTypes.contains(TokenType.NUMBER) && scanner.hasNextBigDecimal()) {
         // Read a BigDecimal, but as a String

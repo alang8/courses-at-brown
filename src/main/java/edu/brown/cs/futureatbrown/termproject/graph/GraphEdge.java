@@ -25,8 +25,8 @@ public interface GraphEdge<Node extends GraphNode, Edge extends GraphEdge> {
   void setStart(Node startingNode);
 
   /**
-   * returns the starting node.
-   * @return start
+   * Retrieves the start node.
+   * @return the start node
    */
   Node getStart();
 
@@ -37,7 +37,7 @@ public interface GraphEdge<Node extends GraphNode, Edge extends GraphEdge> {
   void setEnd(Node endingNode);
 
   /**
-   * retrieves the end node.
+   * Retrieves the end node.
    * @return the end node
    */
   Node getEnd();

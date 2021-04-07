@@ -6,7 +6,6 @@ import java.util.Comparator;
  * LocatableSort implements the Comparable interface and allows Locatable objects
  * to be sorted by one of their dimensions.
  *
- * @author theofernandez
  * @param <T> the type of Locatable to compare
  */
 public class LocatableSort<T extends Locatable> implements Comparator<T> {

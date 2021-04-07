@@ -7,6 +7,7 @@ import java.io.PrintStream;
  */
 @FunctionalInterface
 public interface ArgsCommand {
+
   /**
    * Executes this command with the given arguments.
    *

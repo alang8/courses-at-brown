@@ -1,5 +1,7 @@
 package edu.brown.cs.futureatbrown.termproject.repl;
 
+import edu.brown.cs.futureatbrown.termproject.exception.CommandParseException;
+
 import java.io.PrintStream;
 import java.util.HashMap;
 
@@ -13,7 +15,7 @@ public class CommandParser {
    * Registers a command under this parser.
    *
    * @param commandName the name of the command
-   * @param command     the command to run
+   * @param command the command to run
    */
   public void register(String commandName, Command command) {
     if (commandName.contains(" ")) {
@@ -27,20 +29,15 @@ public class CommandParser {
 
   /**
    * Recognizes the command used and passes the rest of the line to the registered command.
-   * <p>
-   * Thanks to the format of the "stars" command, I can unfortunately not be more specific about
-   * parsing commands here because some file systems allow names which are all spaces, and names
-   * which contain quotation marks.
    *
    * @param line a line containing a command to parse.
-   * @param out  an output stream to print to
+   * @param out an output stream to print to
    */
   public void parse(String line, PrintStream out) {
     line = line.stripLeading();
     if (line.equals("")) {
       return;
     }
-
     int firstSpace = line.indexOf(' ');
     String command;
     String rest;
@@ -51,7 +48,6 @@ public class CommandParser {
       command = line.substring(0, firstSpace);
       rest = line.substring(firstSpace + 1);
     }
-
     if (commands.containsKey(command)) {
       commands.get(command).execute(rest, out);
     } else {

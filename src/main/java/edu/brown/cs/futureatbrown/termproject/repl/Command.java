@@ -6,6 +6,7 @@ import java.io.PrintStream;
  * A command can be executed by a CommandParser.
  */
 public interface Command {
+
   /**
    * Executes this command.
    *

@@ -87,6 +87,19 @@ public class CourseEdge implements GraphEdge<GraphNode, GraphEdge> {
   }
 
   /**
+   * Compares this CourseEdge to another object for equality.
+   * Another object is equal to this node if its start and end CourseNodes are the same.
+   *
+   * @param other another object
+   * @return whether the other object is equal to this CourseEdge
+   */
+  @Override
+  public boolean equals(Object other) {
+    return other instanceof CourseEdge && start.equals(((CourseEdge) other).start) &&
+        end.equals(((CourseEdge) other).end);
+  }
+
+  /**
    * Returns a unique code denoting this CourseEdge.
    *
    * @return a hash code for this CourseEdge

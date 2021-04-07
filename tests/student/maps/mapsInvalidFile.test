@@ -1,5 +1,0 @@
-INPUT
-map data/bogusfile
-OUTPUT
-ERROR: map expects a valid SQL file.
-END

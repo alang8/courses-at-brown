@@ -6,7 +6,6 @@ import java.util.List;
 /**
  * Creates a KD Tree that can be used to search for data more efficiently than a normal list.
  *
- * @author theofernandez
  * @param <T> the type of item contained
  */
 
@@ -14,8 +13,8 @@ public class KDTree<T extends Locatable> {
   private KDNode<T> root;
 
   /**
-   * Takes in an ArrayList of Locatables called inputList, and creates a balanced KD tree
-   * using those Locatables as nodes.
+   * Takes in an ArrayList of Locatables called inputList, and creates a balanced KD tree using
+   * those Locatables as nodes.
    *
    * @param inputList A list of Locatables to be turned into a balanced KD Tree.
    */
@@ -29,9 +28,9 @@ public class KDTree<T extends Locatable> {
   /**
    * Creates a balanced KD Tree based on the input list.
    *
-   * @param inputList       The data to be input into the balanced KD Tree.
-   * @param layer           The depth of the current node in the KD Tree.
-   * @param numOfDimensions The number of dimensions K in the KD Tree.
+   * @param inputList the data to be input into the balanced KD Tree.
+   * @param layer the depth of the current node in the KD Tree.
+   * @param numOfDimensions the number of dimensions K in the KD Tree.
    * @return A balanced KD Tree using the data from the input list.
    */
   private KDNode<T> createKDTree(List<T> inputList, int layer, int numOfDimensions) {
@@ -69,9 +68,8 @@ public class KDTree<T extends Locatable> {
   /**
    * Returns the root of this KD tree.
    *
-   * @return The root of this KD tree. May be null.
+   * @return the root of this KD tree. May be null.
    */
-
   public KDNode<T> getRoot() {
     return root;
   }
@@ -79,7 +77,7 @@ public class KDTree<T extends Locatable> {
   /**
    * Converts a KD tree to a string. Overrides the toString() method.
    *
-   * @return The current KD tree as a String.
+   * @return the current KD tree as a String.
    */
   @Override
   public String toString() {

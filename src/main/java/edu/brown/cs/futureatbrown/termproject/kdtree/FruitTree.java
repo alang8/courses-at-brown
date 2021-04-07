@@ -1,4 +1,6 @@
-package edu.brown.cs.futureatbrown.termproject.util;
+package edu.brown.cs.futureatbrown.termproject.kdtree;
+
+import edu.brown.cs.futureatbrown.termproject.exception.PathNotFoundException;
 
 import java.util.ArrayDeque;
 import java.util.ArrayList;
@@ -46,7 +48,7 @@ public class FruitTree<N, F> {
    * Constructs a FruitTree node with a certain value and fruit.
    *
    * @param nodeValue the value of this node
-   * @param fruit     the fruit at this node
+   * @param fruit the fruit at this node
    */
   public FruitTree(N nodeValue, F fruit) {
     this.nodeValue = nodeValue;

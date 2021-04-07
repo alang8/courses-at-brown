@@ -1,5 +1,0 @@
-INPUT
-nearest 1 2 3
-OUTPUT
-ERROR: Nearest command expects 2 numerical arguments.
-END

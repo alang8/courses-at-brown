@@ -8,23 +8,29 @@ import edu.brown.cs.futureatbrown.termproject.repl.REPL;
  */
 public final class Main {
 
-  private static final int DEFAULT_PORT = 4567;
+  private String[] args;
 
   /**
    * The initial method called when execution begins.
    *
-   * @param args An array of command line arguments
+   * @param args an array of command line arguments
    */
   public static void main(String[] args) {
     new Main(args).run();
   }
 
-  private String[] args;
-
+  /**
+   * Constructs an Main object with a String array of arguments.
+   *
+   * @param args an array of command line arguments
+   */
   private Main(String[] args) {
     this.args = args;
   }
 
+  /**
+   * The method that runs the functions of the Main object.
+   */
   private void run() {
     // Parse command line arguments
     // Do not need any frontend components for this part

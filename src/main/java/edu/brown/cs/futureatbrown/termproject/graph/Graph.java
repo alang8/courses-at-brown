@@ -22,7 +22,7 @@ public interface Graph<Node extends GraphNode, Edge extends GraphEdge> {
    * The second String is the ID of the To Node
    * The reason for the second hashmap is just for easy editing of the edge weights
    * for Yen's Algorithm
-   * @return the HashMap of Egde sets
+   * @return the HashMap of Edge sets
    */
   HashMap<String, HashMap<String, Edge>> getEdgeSet();
 

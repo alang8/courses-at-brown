@@ -38,16 +38,12 @@ public class UserDataHandlers {
       Map<String, Object> variables;
       try {
         JSONObject data = new JSONObject(request.body());
-
         String inputtedUsername = data.getString("username");
         String inputtedPassword = data.getString("password");
-
-        String alphanumRegex = "^[a-zA-Z0-9_]+$";
-
+        String alphaNumRegex = "^[a-zA-Z0-9_]+$";
         Base64.Encoder coder = Base64.getEncoder();
         String hashedUsername = coder.encodeToString(inputtedUsername.getBytes());
         String hashedPassword = coder.encodeToString(inputtedPassword.getBytes());
-
         String query = "SELECT * FROM user_data WHERE username = ?;";
         PreparedStatement prep = conn.prepareStatement(query);
         prep.setString(1, hashedUsername);
@@ -64,7 +60,6 @@ public class UserDataHandlers {
         presets.put("maxHoursPref", maxHoursPref);
         presets.put("crsSizePref", crsSizePref);
         presets.put("profRatingPref", profRatingPref);
-
         if (rs.next()) {
           //found a match
           msg = "Username already taken!";
@@ -81,7 +76,6 @@ public class UserDataHandlers {
           prep.setDouble(7, profRatingPref);
           prep.executeQuery();
         }
-
         variables = ImmutableMap.of("message", msg, "presets", presets);
       } catch (JSONException | SQLException e) {
         variables = ImmutableMap.of("message", "ERROR: SignUpHandler", "presets", null);
@@ -95,7 +89,6 @@ public class UserDataHandlers {
     private static final Gson GSON = new Gson();
     private final String userDataPath;
     private Connection conn;
-
     public LoginHandler(String loginDBPath) {
       userDataPath = loginDBPath;
       try {
@@ -106,7 +99,6 @@ public class UserDataHandlers {
         e.printStackTrace();
       }
     }
-
     @Override
     public Object handle(Request request, Response response) throws Exception {
       JSONObject data = new JSONObject(request.body());
@@ -115,7 +107,6 @@ public class UserDataHandlers {
       Base64.Encoder coder = Base64.getEncoder();
       String hashedUsername = coder.encodeToString(inputtedUsername.getBytes());
       String hashedPassword = coder.encodeToString(inputtedPassword.getBytes());
-
       String query = "SELECT * FROM user_data WHERE username = ? AND password = ?;";
       PreparedStatement prep = conn.prepareStatement(query);
       prep.setString(1, hashedUsername);
@@ -128,7 +119,6 @@ public class UserDataHandlers {
       presets.put("maxHoursPref", 12.0);
       presets.put("crsSizePref", 20.0);
       presets.put("profRatingPref", 2.5);
-
       if (rs.next()) {
         //found a match
         msg = "Success!";
@@ -144,7 +134,6 @@ public class UserDataHandlers {
         presets.put("crsSizePref", sizePref);
         presets.put("profRatingPref", profRatPref);
       }
-
       Map<String, Object> variables = ImmutableMap.of("message", msg, "presets", presets);
       return GSON.toJson(variables);
     }

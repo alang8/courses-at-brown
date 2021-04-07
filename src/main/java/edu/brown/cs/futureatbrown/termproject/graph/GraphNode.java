@@ -41,7 +41,7 @@ public interface GraphNode<Node extends GraphNode, Edge extends GraphEdge> {
 
   /**
    * Sets the path used to reach this node for backtracking purposes
-   * @param prevPath previous Edge Path
+   * @param prevPath the previous Edge Path
    */
   void setPreviousPath(List<Edge> prevPath);
 
