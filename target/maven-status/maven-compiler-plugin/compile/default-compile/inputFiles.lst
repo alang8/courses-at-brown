@@ -1,3 +1,36 @@
+<<<<<<< Updated upstream
 /Users/johnwu/Documents/Brown CS/cs32_env/Projects/term-project-alang8-fkierzen-jwu175-rdai4/src/main/java/edu/brown/cs/termProject/repl/GeneralREPL.java
 /Users/johnwu/Documents/Brown CS/cs32_env/Projects/term-project-alang8-fkierzen-jwu175-rdai4/src/main/java/edu/brown/cs/termProject/main/Main.java
 /Users/johnwu/Documents/Brown CS/cs32_env/Projects/term-project-alang8-fkierzen-jwu175-rdai4/src/main/java/edu/brown/cs/termProject/repl/GeneralREPLCommand.java
+=======
+/Users/johnwu/Documents/Brown CS/cs32_env/Projects/term-project-alang8-fkierzen-jwu175-rdai4/src/main/java/edu/brown/cs/futureatbrown/termproject/UserDataHandlers.java
+/Users/johnwu/Documents/Brown CS/cs32_env/Projects/term-project-alang8-fkierzen-jwu175-rdai4/src/main/java/edu/brown/cs/futureatbrown/termproject/course/SQLRuntimeException.java
+/Users/johnwu/Documents/Brown CS/cs32_env/Projects/term-project-alang8-fkierzen-jwu175-rdai4/src/main/java/edu/brown/cs/futureatbrown/termproject/util/PathNotFoundException.java
+/Users/johnwu/Documents/Brown CS/cs32_env/Projects/term-project-alang8-fkierzen-jwu175-rdai4/src/main/java/edu/brown/cs/futureatbrown/termproject/course/CourseNode.java
+/Users/johnwu/Documents/Brown CS/cs32_env/Projects/term-project-alang8-fkierzen-jwu175-rdai4/src/main/java/edu/brown/cs/futureatbrown/termproject/util/FruitTree.java
+/Users/johnwu/Documents/Brown CS/cs32_env/Projects/term-project-alang8-fkierzen-jwu175-rdai4/src/main/java/edu/brown/cs/futureatbrown/termproject/graph/GraphEdge.java
+/Users/johnwu/Documents/Brown CS/cs32_env/Projects/term-project-alang8-fkierzen-jwu175-rdai4/src/main/java/edu/brown/cs/futureatbrown/termproject/repl/REPL.java
+/Users/johnwu/Documents/Brown CS/cs32_env/Projects/term-project-alang8-fkierzen-jwu175-rdai4/src/main/java/edu/brown/cs/futureatbrown/termproject/kdtree/Locatable.java
+/Users/johnwu/Documents/Brown CS/cs32_env/Projects/term-project-alang8-fkierzen-jwu175-rdai4/src/main/java/edu/brown/cs/futureatbrown/termproject/course/CourseGraph.java
+/Users/johnwu/Documents/Brown CS/cs32_env/Projects/term-project-alang8-fkierzen-jwu175-rdai4/src/main/java/edu/brown/cs/futureatbrown/termproject/course/RiskySupplier.java
+/Users/johnwu/Documents/Brown CS/cs32_env/Projects/term-project-alang8-fkierzen-jwu175-rdai4/src/main/java/edu/brown/cs/futureatbrown/termproject/course/GraphAlgorithms.java
+/Users/johnwu/Documents/Brown CS/cs32_env/Projects/term-project-alang8-fkierzen-jwu175-rdai4/src/main/java/edu/brown/cs/futureatbrown/termproject/kdtree/LocatableDistanceSort.java
+/Users/johnwu/Documents/Brown CS/cs32_env/Projects/term-project-alang8-fkierzen-jwu175-rdai4/src/main/java/edu/brown/cs/futureatbrown/termproject/repl/CommandAlreadyExistsException.java
+/Users/johnwu/Documents/Brown CS/cs32_env/Projects/term-project-alang8-fkierzen-jwu175-rdai4/src/main/java/edu/brown/cs/futureatbrown/termproject/kdtree/KDTree.java
+/Users/johnwu/Documents/Brown CS/cs32_env/Projects/term-project-alang8-fkierzen-jwu175-rdai4/src/main/java/edu/brown/cs/futureatbrown/termproject/repl/ArgsCommand.java
+/Users/johnwu/Documents/Brown CS/cs32_env/Projects/term-project-alang8-fkierzen-jwu175-rdai4/src/main/java/edu/brown/cs/futureatbrown/termproject/repl/TokenParser.java
+/Users/johnwu/Documents/Brown CS/cs32_env/Projects/term-project-alang8-fkierzen-jwu175-rdai4/src/main/java/edu/brown/cs/futureatbrown/termproject/repl/CommandParser.java
+/Users/johnwu/Documents/Brown CS/cs32_env/Projects/term-project-alang8-fkierzen-jwu175-rdai4/src/main/java/edu/brown/cs/futureatbrown/termproject/course/SQLFunction.java
+/Users/johnwu/Documents/Brown CS/cs32_env/Projects/term-project-alang8-fkierzen-jwu175-rdai4/src/main/java/edu/brown/cs/futureatbrown/termproject/repl/CommandException.java
+/Users/johnwu/Documents/Brown CS/cs32_env/Projects/term-project-alang8-fkierzen-jwu175-rdai4/src/main/java/edu/brown/cs/futureatbrown/termproject/kdtree/LocatableSort.java
+/Users/johnwu/Documents/Brown CS/cs32_env/Projects/term-project-alang8-fkierzen-jwu175-rdai4/src/main/java/edu/brown/cs/futureatbrown/termproject/repl/Command.java
+/Users/johnwu/Documents/Brown CS/cs32_env/Projects/term-project-alang8-fkierzen-jwu175-rdai4/src/main/java/edu/brown/cs/futureatbrown/termproject/kdtree/KDNode.java
+/Users/johnwu/Documents/Brown CS/cs32_env/Projects/term-project-alang8-fkierzen-jwu175-rdai4/src/main/java/edu/brown/cs/futureatbrown/termproject/course/RiskyFunction.java
+/Users/johnwu/Documents/Brown CS/cs32_env/Projects/term-project-alang8-fkierzen-jwu175-rdai4/src/main/java/edu/brown/cs/futureatbrown/termproject/course/Database.java
+/Users/johnwu/Documents/Brown CS/cs32_env/Projects/term-project-alang8-fkierzen-jwu175-rdai4/src/main/java/edu/brown/cs/futureatbrown/termproject/graph/GraphNode.java
+/Users/johnwu/Documents/Brown CS/cs32_env/Projects/term-project-alang8-fkierzen-jwu175-rdai4/src/main/java/edu/brown/cs/futureatbrown/termproject/repl/CommandParseException.java
+/Users/johnwu/Documents/Brown CS/cs32_env/Projects/term-project-alang8-fkierzen-jwu175-rdai4/src/main/java/edu/brown/cs/futureatbrown/termproject/Main.java
+/Users/johnwu/Documents/Brown CS/cs32_env/Projects/term-project-alang8-fkierzen-jwu175-rdai4/src/main/java/edu/brown/cs/futureatbrown/termproject/course/CourseEdge.java
+/Users/johnwu/Documents/Brown CS/cs32_env/Projects/term-project-alang8-fkierzen-jwu175-rdai4/src/main/java/edu/brown/cs/futureatbrown/termproject/course/CourseConversions.java
+/Users/johnwu/Documents/Brown CS/cs32_env/Projects/term-project-alang8-fkierzen-jwu175-rdai4/src/main/java/edu/brown/cs/futureatbrown/termproject/graph/Graph.java
+>>>>>>> Stashed changes
