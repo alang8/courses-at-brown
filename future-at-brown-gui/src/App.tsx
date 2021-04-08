@@ -17,6 +17,7 @@ import Search from './pages/Search';
 import Profile from './pages/Profile';
 import { getUser, User } from './modules/Data';
 import ExpandableCourses from './modules/ExpandableCourses';
+import GraphDisplay from "./pages/GraphDisplay";
 
 const TestComponent: React.FC<{}> = () => {
 
@@ -90,6 +91,7 @@ function App() {
         {InauthenticatedRoute("/", <Redirect to ="/splash" />)}
         {AuthenticatedRoute("/search", <Search user={user!} />)}
         {AuthenticatedRoute("/profile", <Profile user={user!} />)}
+        {InauthenticatedRoute("/graph", <GraphDisplay user={user!} />)}
         {InauthenticatedRoute("/splash", <SplashPage />)}
         {InauthenticatedRoute("/login", <Login setLogin={setUserByName} />)}
         {InauthenticatedRoute("/signup", <Signup setLogin={setUserByName} />)}
