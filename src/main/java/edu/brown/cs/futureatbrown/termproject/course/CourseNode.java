@@ -4,11 +4,19 @@ import edu.brown.cs.futureatbrown.termproject.graph.GraphEdge;
 import edu.brown.cs.futureatbrown.termproject.graph.GraphNode;
 
 import java.util.*;
+import edu.brown.cs.futureatbrown.termproject.kdtree.Locatable;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 /**
  * Specific node implementation that contains data about a course at Brown.
  */
-public class CourseNode extends GraphNode<GraphEdge> {
+public class CourseNode extends GraphNode<GraphEdge> implements Locatable {
   private final String id;
   private final String name;
   private final String instr;
@@ -64,6 +72,7 @@ public class CourseNode extends GraphNode<GraphEdge> {
 
     coordinates = new double[] {course_rating, prof_rating}; // Change this after creating scoring
   }
+
   /**
    * Returns the ID of this CourseNode.
    * This value should be unique to this node.
@@ -185,41 +194,42 @@ public class CourseNode extends GraphNode<GraphEdge> {
     return class_size;
   }
 
-//  /**
-//   * Returns the number of dimensions that the CourseNode is in.
-//   *
-//   * @return Return an int representing the number of dimensions this CourseNode's coordinates have.
-//   */
-//  @Override
-//  public int getNumOfDimensions() {
-//    return coordinates.length;
-//  }
-//
-//  /**
-//   * Returns the position of the CourseNode.
-//   *
-//   * @return An array of doubles representing this CourseNode's location.
-//   */
-//  @Override
-//  public double[] getCoordinates() {
-//    return Arrays.copyOf(coordinates, coordinates.length);
-//  }
-//
-//  /**
-//   * Returns the nth dimension of this CourseNode.
-//   *
-//   * @param dim Which dimension to get from the locatable.
-//   * @return The specified dimension from the locatable.
-//   */
-//  @Override
-//  public double getCoordinate(int dim) {
-//    return coordinates[dim];
-//  }
 
   /**
-   * Sets the weight of the node.
+   * Returns the number of dimensions that the CourseNode is in.
    *
-   * @param weight The weight.
+   * @return an int representing the number of dimensions this CourseNode's coordinates have
+   */
+  @Override
+  public int getNumOfDimensions() {
+    return coordinates.length;
+  }
+
+  /**
+   * Returns the position of the CourseNode.
+   *
+   * @return an array of doubles representing this CourseNode's location
+   */
+  @Override
+  public double[] getCoordinates() {
+    return Arrays.copyOf(coordinates, coordinates.length);
+  }
+
+  /**
+   * Returns the nth dimension of this CourseNode.
+   *
+   * @param dim which dimension to get from the locatable
+   * @return the specified dimension from the locatable
+   */
+  @Override
+  public double getCoordinate(int dim) {
+    return coordinates[dim];
+  }
+
+  /**
+   * Sets the weight of the CourseNode.
+   *
+   * @param weight the weight
    */
   @Override
   public void setWeight(double weight) {
@@ -237,9 +247,9 @@ public class CourseNode extends GraphNode<GraphEdge> {
   }
 
   /**
-   * Sets if the node has been visited or not.
+   * Sets if the CourseNode has been visited or not.
    *
-   * @param visited A boolean signifying if node has been visited.
+   * @param visited a boolean signifying if the CourseNode has been visited
    */
   @Override
   public void setVisited(Boolean visited) {
@@ -247,9 +257,9 @@ public class CourseNode extends GraphNode<GraphEdge> {
   }
 
   /**
-   * Checks if node has been visited yet.
+   * Checks if the CourseNode has been visited yet.
    *
-   * @return A boolean signifying if node has been visited.
+   * @return a boolean signifying if the CourseNode has been visited
    */
   @Override
   public Boolean visited() {
@@ -257,9 +267,9 @@ public class CourseNode extends GraphNode<GraphEdge> {
   }
 
   /**
-   * Sets the previous path of the node.
+   * Sets the previous path of the CourseNode.
    *
-   * @param prevPath The path.
+   * @param prevPath the path
    */
   @Override
   public void setPreviousPath(List prevPath) {
@@ -267,9 +277,9 @@ public class CourseNode extends GraphNode<GraphEdge> {
   }
 
   /**
-   * Returns the previous path of the node.
+   * Returns the previous path of the CourseNode.
    *
-   * @return The path.
+   * @return the path
    */
   @Override
   public List<GraphEdge> getPreviousPath() {

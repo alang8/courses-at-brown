@@ -10,7 +10,7 @@
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
-      <module name="term-project-alang8-fkierzen-jwu175-rdai4" target="9" />
+      <module name="term-project-alang8-fkierzen-jwu175-rdai4" target="11" />
     </bytecodeTargetLevel>
   </component>
   <component name="JavacSettings">

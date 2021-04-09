@@ -4,6 +4,10 @@ import edu.brown.cs.futureatbrown.termproject.graph.Graph;
 
 import java.util.HashMap;
 import java.util.Objects;
+import edu.brown.cs.futureatbrown.termproject.graph.GraphEdge;
+import edu.brown.cs.futureatbrown.termproject.graph.GraphNode;
+
+import java.util.HashMap;
 import java.util.Set;
 
 /**
@@ -41,12 +45,6 @@ public class CourseGraph implements Graph<CourseNode, CourseEdge> {
     return edgeMap;
   }
 
-  @Override
-  public void addNode(CourseNode node, Set<CourseEdge> graphEdges) {
-    // Implement this after full design
-  }
-
-
   /**
    * Helper function which returns a copy of a HashMap of Nodes
    */
@@ -79,20 +77,34 @@ public class CourseGraph implements Graph<CourseNode, CourseEdge> {
     HashMap<String, HashMap<String, CourseEdge>> newEdgeMap = new HashMap<>();
 
     for (String nodeID : this.edgeMap.keySet()) {
-       newEdgeMap.put(nodeID, edgeSetCopy(this.edgeMap.get(nodeID)));
+      newEdgeMap.put(nodeID, edgeSetCopy(this.edgeMap.get(nodeID)));
     }
     graphCopy.setNodeMap(newNodeMap);
     graphCopy.setEdgeMap(newEdgeMap);
     return graphCopy;
   }
+  /**
+   * Adds a CourseNode to the node map and edges with the node as their start to the edge map.
+   * @param node CourseNode to add to the map
+   * @param edges set of CourseEdges to check
+   */
+  @Override
+  public void addNode(CourseNode node, Set<CourseEdge> edges) {
+    nodeMap.put(node.getID(), node);
+    for (CourseEdge edge : edges) {
+      if (edge.getStart().equals(node.getID())) {
+        edgeMap.put(edge.getID(), new HashMap<>() {{ put(edge.getID(), edge); }});
+      }
+    }
+  }
 
   /**
    * Sets the NodeMap of this CourseGraph.
    *
-   * @param nm the NodeMap
+   * @param nodeMap the NodeMap
    */
-  public void setNodeMap(HashMap<String, CourseNode> nm) {
-    this.nodeMap = nm;
+  public void setNodeMap(HashMap<String, CourseNode> nodeMap) {
+    this.nodeMap = nodeMap;
   }
 
   /**

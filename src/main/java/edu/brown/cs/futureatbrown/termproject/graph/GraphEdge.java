@@ -25,7 +25,7 @@ public abstract class GraphEdge<Node extends GraphNode> {
 
   /**
    * Sets the starting Node
-   * @param start
+   * @param startingNode
    */
   public abstract void setStart(Node startingNode);
 
@@ -37,7 +37,7 @@ public abstract class GraphEdge<Node extends GraphNode> {
 
   /**
    * Sets the end node.
-   * @param the end node
+   * @param endingNode
    */
   public abstract void setEnd(Node endingNode);
 
