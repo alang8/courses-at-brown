@@ -61,7 +61,7 @@ const ClassGraph = (props) => {
             if (prereqIDs !== null) {
                 let z;
                 for (z = 0; z < prereqIDs.length; z++) {
-                    // linkArray.push({"source":prereqIDs[z], "target": curID});
+                    linkArray.push({"source":prereqIDs[z], "target": curID});
                 }
             }
             nodeArray.push({'id':curID, 'name':curID, 'val':8});
@@ -121,12 +121,13 @@ const ClassGraph = (props) => {
     //Here we can fiddle with the forces, if we uncomment this line, the connected part looks nice but
     //disconnected part goes crazy.
     useEffect(() => {
-        // forceRef.current.d3Force("charge").strength(-10000);
+        forceRef.current.d3Force("charge").strength(-20000);
+        forceRef.current.d3Force("link").strength(0);
     });
 
     return <div>
                 <div>
-                    <ForceGraph3D
+                    <ForceGraph2D
                         graphData={gData}
                         onNodeClick={(n, e) => {
                             displayedCourseInfo(n);
@@ -135,6 +136,7 @@ const ClassGraph = (props) => {
                         height={600}
                         width={1100}
                         showNavInfo = {true}
+                        dagMode={"radialin"}
                     />
                 </div>
                 <CourseInfo course={curCourse} setDisplay={closeModal} shouldDisplay={open}/>
