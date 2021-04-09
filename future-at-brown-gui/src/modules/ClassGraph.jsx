@@ -53,7 +53,7 @@ const ClassGraph = (props) => {
             let curID = theCourses[i]['id']
             let curName = theCourses[i]['name']
             let prereqInfo = theCourses[i]['prereqs']
-            const courseCodeReg = /[A-Z]{4}\s[0-9]{4}[A-Z]?/g;
+            const courseCodeReg = /CSCI\s[0-9]{4}[A-Z]?/g;
             const prereqIDs = prereqInfo.match(courseCodeReg)
             console.log("prereq info");
             console.log(prereqInfo)
@@ -67,6 +67,13 @@ const ClassGraph = (props) => {
             nodeArray.push({'id':curID, 'name':curID, 'val':8});
             tempCourseInfo[curID] = theCourses[i];
         }
+
+        // let pathInfo = props.path;
+        // let sem;
+        // for(sem = 0; sem < pathInfo.length; sem++) {
+        //
+        // }
+
         setAllCourseinfo(tempCourseInfo);
         setGData({"nodes": nodeArray, "links":linkArray});
     }
@@ -98,7 +105,7 @@ const ClassGraph = (props) => {
         let clickedCourse = {
             name:rawCourse['name'],
             dept:classID.substring(0,4),
-            code:classID,
+            code:classID.substring(4),
             description:rawCourse['desc'],
             rating: rawCourse['crsrat'],
             latestProf: rawCourse['instr'],
@@ -119,7 +126,7 @@ const ClassGraph = (props) => {
 
     return <div>
                 <div>
-                    <ForceGraph2D
+                    <ForceGraph3D
                         graphData={gData}
                         onNodeClick={(n, e) => {
                             displayedCourseInfo(n);

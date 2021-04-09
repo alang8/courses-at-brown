@@ -125,9 +125,10 @@ public final class Main {
       Map<String, Double> presets = new HashMap<>();
       Collection<Map<String, String>> courses = new ArrayList<>();
       try {
-        String query = "SELECT * FROM courseData INNER JOIN courseCR ON courseData.id=courseCR.id;";
+//        String query = "SELECT * FROM courseData INNER JOIN courseCR ON courseData.id=courseCR.id;";
+        String query = "SELECT * FROM courseData INNER JOIN courseCR ON courseData.id=courseCR.id WHERE courseData.id LIKE ?;";
         PreparedStatement prep = conn.prepareStatement(query);
-//        prep.setString(1, "CSCI%");
+        prep.setString(1, "CSCI%");
         ResultSet rs = prep.executeQuery();
         //cols are: id,name,instr,sem,rawprereq,prereq,desc,id,crsrat,profrat,avghr,maxhr,classsz
         while (rs.next()) {
