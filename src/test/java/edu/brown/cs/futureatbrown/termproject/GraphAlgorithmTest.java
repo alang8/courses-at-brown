@@ -1,12 +1,11 @@
 package edu.brown.cs.futureatbrown.termproject;
 
 import edu.brown.cs.futureatbrown.termproject.course.CourseNode;
-import edu.brown.cs.futureatbrown.termproject.course.GraphAlgorithms;
+import edu.brown.cs.futureatbrown.termproject.graph.GraphAlgorithms;
 import edu.brown.cs.futureatbrown.termproject.graph.GraphNode;
 import edu.brown.cs.futureatbrown.termproject.graph.GraphEdge;
 import edu.brown.cs.futureatbrown.termproject.graph.Graph;
 import edu.brown.cs.futureatbrown.termproject.course.CourseGraph;
-import org.checkerframework.checker.units.qual.C;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
@@ -476,6 +475,13 @@ public class GraphAlgorithmTest<Node extends GraphNode, Edge extends GraphEdge>{
   public void YensAlgorithmTest() throws InvalidAlgorithmParameterException {
     setup();
     Assert.assertEquals(
+      simpleAlgorithms.yenPaths("Node2", "Node5", simpleGraph, 1),
+      List.of(
+        new ArrayList<>(List.of(
+          new BasicEdge("Edge25", simpleNodes[2], simpleNodes[5])
+        ))
+    ));
+    Assert.assertEquals(
       simpleAlgorithms.yenPaths("Node0", "Node7", simpleGraph, 3),
       List.of(
         new ArrayList<>(List.of(
@@ -493,6 +499,39 @@ public class GraphAlgorithmTest<Node extends GraphNode, Edge extends GraphEdge>{
           new BasicEdge("Edge67", simpleNodes[6], simpleNodes[7])))
         )
     );
+    Assert.assertEquals(
+      simpleAlgorithms.yenPaths("Node4", "Node0", simpleGraph, 5),
+      List.of(
+        new ArrayList<>(List.of(
+          new BasicEdge("Edge45", simpleNodes[4], simpleNodes[5]),
+          new BasicEdge("Edge56", simpleNodes[5], simpleNodes[6]),
+          new BasicEdge("Edge67", simpleNodes[6], simpleNodes[7]),
+          new BasicEdge("Edge70", simpleNodes[7], simpleNodes[0]))),
+        new ArrayList<>(List.of(
+          new BasicEdge("Edge43", simpleNodes[4], simpleNodes[3]),
+          new BasicEdge("Edge32", simpleNodes[3], simpleNodes[2]),
+          new BasicEdge("Edge21", simpleNodes[2], simpleNodes[1]),
+          new BasicEdge("Edge10", simpleNodes[1], simpleNodes[0]))),
+        new ArrayList<>(List.of(
+          new BasicEdge("Edge45", simpleNodes[4], simpleNodes[5]),
+          new BasicEdge("Edge56", simpleNodes[5], simpleNodes[6]),
+          new BasicEdge("Edge67", simpleNodes[6], simpleNodes[7]),
+          new BasicEdge("Edge71", simpleNodes[7], simpleNodes[1]),
+          new BasicEdge("Edge10", simpleNodes[1], simpleNodes[0]))),
+        new ArrayList<>(List.of(
+          new BasicEdge("Edge43", simpleNodes[4], simpleNodes[3]),
+          new BasicEdge("Edge32", simpleNodes[3], simpleNodes[2]),
+          new BasicEdge("Edge28", simpleNodes[2], simpleNodes[8]),
+          new BasicEdge("Edge87", simpleNodes[8], simpleNodes[7]),
+          new BasicEdge("Edge71", simpleNodes[7], simpleNodes[1]),
+          new BasicEdge("Edge10", simpleNodes[1], simpleNodes[0]))),
+        new ArrayList<>(List.of(
+          new BasicEdge("Edge43", simpleNodes[4], simpleNodes[3]),
+          new BasicEdge("Edge35", simpleNodes[3], simpleNodes[5]),
+          new BasicEdge("Edge52", simpleNodes[5], simpleNodes[2]),
+          new BasicEdge("Edge21", simpleNodes[2], simpleNodes[1]),
+          new BasicEdge("Edge10", simpleNodes[1], simpleNodes[0])))
+    ));
     teardown();
   }
 }

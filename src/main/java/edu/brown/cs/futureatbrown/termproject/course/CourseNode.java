@@ -2,14 +2,13 @@ package edu.brown.cs.futureatbrown.termproject.course;
 
 import edu.brown.cs.futureatbrown.termproject.graph.GraphEdge;
 import edu.brown.cs.futureatbrown.termproject.graph.GraphNode;
-import edu.brown.cs.futureatbrown.termproject.kdtree.Locatable;
 
 import java.util.*;
 
 /**
  * Specific node implementation that contains data about a course at Brown.
  */
-public class CourseNode extends GraphNode<GraphEdge> implements Locatable {
+public class CourseNode extends GraphNode<GraphEdge> {
   private final String id;
   private final String name;
   private final String instr;
@@ -186,36 +185,36 @@ public class CourseNode extends GraphNode<GraphEdge> implements Locatable {
     return class_size;
   }
 
-  /**
-   * Returns the number of dimensions that the CourseNode is in.
-   *
-   * @return Return an int representing the number of dimensions this CourseNode's coordinates have.
-   */
-  @Override
-  public int getNumOfDimensions() {
-    return coordinates.length;
-  }
-
-  /**
-   * Returns the position of the CourseNode.
-   *
-   * @return An array of doubles representing this CourseNode's location.
-   */
-  @Override
-  public double[] getCoordinates() {
-    return Arrays.copyOf(coordinates, coordinates.length);
-  }
-
-  /**
-   * Returns the nth dimension of this CourseNode.
-   *
-   * @param dim Which dimension to get from the locatable.
-   * @return The specified dimension from the locatable.
-   */
-  @Override
-  public double getCoordinate(int dim) {
-    return coordinates[dim];
-  }
+//  /**
+//   * Returns the number of dimensions that the CourseNode is in.
+//   *
+//   * @return Return an int representing the number of dimensions this CourseNode's coordinates have.
+//   */
+//  @Override
+//  public int getNumOfDimensions() {
+//    return coordinates.length;
+//  }
+//
+//  /**
+//   * Returns the position of the CourseNode.
+//   *
+//   * @return An array of doubles representing this CourseNode's location.
+//   */
+//  @Override
+//  public double[] getCoordinates() {
+//    return Arrays.copyOf(coordinates, coordinates.length);
+//  }
+//
+//  /**
+//   * Returns the nth dimension of this CourseNode.
+//   *
+//   * @param dim Which dimension to get from the locatable.
+//   * @return The specified dimension from the locatable.
+//   */
+//  @Override
+//  public double getCoordinate(int dim) {
+//    return coordinates[dim];
+//  }
 
   /**
    * Sets the weight of the node.
