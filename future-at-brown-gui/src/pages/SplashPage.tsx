@@ -10,7 +10,7 @@ const SplashPage: React.FC<{}> = () => {
                     <div>
                         <Header as="h1" className="logo" content="Future @ Brown" />
                         <Header as="h2">
-                            Decide how <em>you</em> will take advantage of the open ciricculum
+                            Decide how <em>you</em> will take advantage of the open curriculum
                             </Header>
                     </div>
                     <Button.Group size="massive">

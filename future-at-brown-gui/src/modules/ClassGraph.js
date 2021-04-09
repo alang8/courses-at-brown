@@ -5,7 +5,7 @@ import { ForceGraph2D, ForceGraph3D, ForceGraphVR, ForceGraphAR } from 'react-fo
 import { User } from "../modules/Data"
 import axios from "axios";
 import 'reactjs-popup/dist/index.css';
-import '../css/PopUp.css'
+import "../css/Graph.css"
 
 
 const ClassGraph = (props) => {
@@ -53,7 +53,7 @@ const ClassGraph = (props) => {
             let curID = theCourses[i]['id']
             let curName = theCourses[i]['name']
             let prereqInfo = theCourses[i]['prereqs']
-            const courseCodeReg = /CSCI\s[0-9]{4}[A-Z]?/g;
+            const courseCodeReg = /[A-Z]{4}\s[0-9]{4}[A-Z]?/g;
             const prereqIDs = prereqInfo.match(courseCodeReg)
             console.log("prereq info");
             console.log(prereqInfo)
@@ -82,7 +82,7 @@ const ClassGraph = (props) => {
     }, [theCourses])
 
     const [open, setOpen] = useState(true);
-    const [curCourse, setCurCourse] = useState({name:"FILIP", dept:"CSCI", code:"CSCI0001"});
+    const [curCourse, setCurCourse] = useState({name:"DEFAULT", dept:"DEFAULT", code:"DEFAULT"});
     const closeModal = () => setOpen(false);
 
     useEffect(() => setOpen(!open), [curCourse])
@@ -109,7 +109,6 @@ const ClassGraph = (props) => {
 
     }
 
-    const contextRef = useRef();
     const forceRef = useRef(null);
 
     //Here we can fiddle with the forces, if we uncomment this line, the connected part looks nice but
@@ -119,11 +118,6 @@ const ClassGraph = (props) => {
     });
 
     return <div>
-        <Container ref={contextRef.current} textAlign={'center'} style={{height: '300vh'}}>
-            <Sticky context={contextRef.current}>
-                <Segment><Header as="h1" className="logo" content="Future @ Brown" /></Segment>
-            </Sticky>
-            <div>
                 <div>
                     <ForceGraph2D
                         graphData={gData}
@@ -131,12 +125,13 @@ const ClassGraph = (props) => {
                             displayedCourseInfo(n);
                         }}
                         ref={forceRef}
+                        height={600}
+                        width={1100}
+                        showNavInfo = {true}
                     />
                 </div>
                 <CourseInfo course={curCourse} setDisplay={closeModal} shouldDisplay={open}/>
             </div>
-        </Container>
-    </div>
 }
 
 export default ClassGraph;
