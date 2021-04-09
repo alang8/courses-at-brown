@@ -1,3 +1,5 @@
+import { stringify } from "node:querystring"
+
 export interface Course {
     name: string;
     dept: string;
@@ -14,6 +16,42 @@ export interface User {
     username: string;
     saved: Course[];
     taken: Course[];
+    preferences: SearchParams;
+    isGuest?: boolean;
+}
+
+export const newGuest = ():User => {
+    return {
+        username: "guest",
+        saved: [],
+        taken: [],
+        preferences: defaultParams,
+        isGuest: true
+    }
+}
+
+export const newUser = (name: string):User => {
+    return {
+        username: name,
+        saved: [],
+        taken: [],
+        preferences: defaultParams
+    }
+}
+export interface SearchParams {
+    crsRatingPref: number;
+    avgHoursPref: number;
+    maxHoursPref: number;
+    crsSizePref: number;
+    profRatingPref: number;
+}
+
+export const defaultParams: SearchParams = {
+    avgHoursPref: 5,
+    crsRatingPref: 5,
+    crsSizePref: 5,
+    maxHoursPref: 5,
+    profRatingPref: 5
 }
 
 export const getUser = async (username: string): Promise<User> => {
@@ -21,6 +59,7 @@ export const getUser = async (username: string): Promise<User> => {
     return {
         username: username,
         saved: [],
-        taken: []
+        taken: [],
+        preferences: defaultParams
     }
 }

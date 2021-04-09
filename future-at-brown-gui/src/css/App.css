@@ -27,12 +27,20 @@ div.total-image {
     justify-content: space-around;
     align-items: center;
     text-align: center;
+    color: white;
 }
 
-.total-image .container div .header {
+.total-image .container div h2.header {
     font-size: max(18px, 5vh);
     color: white;
     font-weight: lighter;
+}
+
+.total-image .container div h3.header {
+    font-size: max(12px, 2vh);
+    color: white;
+    font-weight: lighter;
+    font-style: italic;
 }
 
 .total-image .container div .header.logo {

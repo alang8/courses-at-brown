@@ -1,10 +1,11 @@
 import React, { useRef, useState } from "react";
 import { Container, Form, Header, Button, Segment } from "semantic-ui-react";
+import { newUser, User } from "../modules/Data";
 import FormattedInput from "../modules/FormattedInput";
 import { ValidNewUser, ValidPass } from "../modules/InputValidation";
 
 interface Props {
-    setLogin: (user: string) => Promise<any>;
+    setLogin: (User: User) => void;
 }
 
 const Signup: React.FC<Props> = (props) => {
@@ -32,7 +33,7 @@ const Signup: React.FC<Props> = (props) => {
             .then((userErr: string[]) => {
                 setUserError(userErr);
                 if (userErr.length === 0) {
-                    props.setLogin(username.current)
+                    props.setLogin(newUser(username.current));
                 } else {
                     setLoading(false);
                 }
