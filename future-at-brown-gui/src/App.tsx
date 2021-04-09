@@ -70,6 +70,10 @@ function App() {
   const [user, setUser] = useState<User | undefined>(undefined);
 
   const setUserByName = async (user: string) => setUser(await getUser(user));
+  const setNewUser = (user: User) => {
+    setUser(user);
+    // do something with the database
+  }
 
   // routes to be used if the user is not logged in (profile page otherwise)
   const InauthenticatedRoute = (route: string, loginProcess: JSX.Element): JSX.Element =>
@@ -91,10 +95,10 @@ function App() {
         {InauthenticatedRoute("/", <Redirect to ="/splash" />)}
         {AuthenticatedRoute("/search", <Search user={user!} />)}
         {AuthenticatedRoute("/profile", <Profile user={user!} />)}
+        {InauthenticatedRoute("/splash", <SplashPage setLogin={setUser}/>)}
         {InauthenticatedRoute("/graph", <GraphDisplay user={user!} />)}
-        {InauthenticatedRoute("/splash", <SplashPage />)}
         {InauthenticatedRoute("/login", <Login setLogin={setUserByName} />)}
-        {InauthenticatedRoute("/signup", <Signup setLogin={setUserByName} />)}
+        {InauthenticatedRoute("/signup", <Signup setLogin={setNewUser} />)}
         <Route path="*" component={NotFound} />
       </Switch>
     </Router>

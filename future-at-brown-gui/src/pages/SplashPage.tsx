@@ -1,8 +1,14 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import { Button, Container, Header } from 'semantic-ui-react';
+import { User, newGuest } from "../modules/Data";
 
-const SplashPage: React.FC<{}> = () => {
+interface Params {
+    setLogin: (user: User) => void;
+}
+
+
+const SplashPage: React.FC<Params> = (props) => {
     return (
         <div className="total-image">
             <Container className="total-page">
@@ -14,14 +20,23 @@ const SplashPage: React.FC<{}> = () => {
                             </Header>
                     </div>
                     <Button.Group size="massive">
-                        <Link to="/signup">
-                            <Button content="Sign Up" className="gradient"/>
+                        <Link to="/login">
+                            <Button
+                                content="Log in"
+                                className="gradient" />
                         </Link>
                         <Button.Or />
-                        <Link to="/login">
-                            <Button content="Log In" className="gradient"/>
-                        </Link>
+                        <Button
+                            content="Continue as Guest"
+                            className="gradient"
+                            onClick={() => props.setLogin(newGuest())} />
                     </Button.Group>
+                    <Header as="h3">
+                        {"Don't have an account? Sign up "}
+                        <Link to="/signup">
+                            {"Here"}
+                        </Link>
+                    </Header>
                 </div>
             </Container>
         </div>
