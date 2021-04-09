@@ -1,3 +1,11 @@
+import axios from "axios";
+
+let config = {
+    headers: {
+        "Content-Type": "application/json",
+        'Access-Control-Allow-Origin': '*',
+    }
+}
 
 const withoutChars = (chars: string): (inp: string) => string => {
     return (inp: string) => {
@@ -32,9 +40,27 @@ const notBlank = (inp: string): string => {
 const takenUsername = async (inp: string): Promise<string> => {
 
     const wait = async (input: string): Promise<boolean> => {
-        await new Promise(resolve => setTimeout(resolve, 2000));
-        return input.indexOf("take") !== -1
+        const toSend = {
+            username: input
+        };
+
+        let isTaken = true;
+
+        await axios.post(
+            'http://localhost:4567/checkname',
+            toSend,
+            config
+        ).then(response => {
+            isTaken = response.data["isTaken"];
+        }).catch(function (error) {
+            console.log(error);
+        });
+        console.log("in taken username 58")
+        console.log(isTaken)
+        return isTaken
     }
+
+
 
     return wait(inp)
         .then((isTaken: boolean): string =>
@@ -45,8 +71,25 @@ const takenUsername = async (inp: string): Promise<string> => {
 const matchingLogin = async (user: string, pass: string): Promise<string> => {
 
     const wait = async (u: string, p: string): Promise<boolean> => {
-        await new Promise(resolve => setTimeout(resolve, 2000));
-        return u === p;
+        const toSend = {
+            username: u,
+            password: p
+        };
+
+        let isValid = false;
+
+        await axios.post(
+            'http://localhost:4567/login',
+            toSend,
+            config
+        ).then(response => {
+            isValid = response.data["isValid"];
+            console.log("in then")
+            console.log(isValid)
+        }).catch(function (error) {
+            console.log(error);
+        });
+        return isValid
     }
 
     return wait(user, pass)
