@@ -1,39 +1,41 @@
 package edu.brown.cs.futureatbrown.termproject.graph;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Set;
 
 /**
- * The node based graph interface.
+ * The node based graph interface
  * @param <Edge> is an object that extends graph edge
- * @param <Node> is an object that extends graph node
+ * @param <Node> is an objct that extends graph node
  */
 public interface Graph<Node extends GraphNode, Edge extends GraphEdge> {
-
   /**
-   * Map that contains all the Nodes.
+   * Map that contains all the nodes
    *
-   * @return the HashMap of Nodes
+   * @return the HashMap of Node sets
    */
-  HashMap<String, Node> getNodeMap();
+  HashMap<String, Node> getNodeSet();
 
   /**
-   * Map that contains all the Edges from the Node with the NodeID. The first String is the ID of
-   * the from Node. The second String is the ID of the to Node. The reason for the second hashmap is
-   * just for easy editing of the edge weights for Yen's Algorithm.
-   * @return the HashMap of Edges
+   * Map that contains all the Edges from the Node with the NodeID
+   * The first String is the ID of the From Node
+   * The second String is the ID of the To Node
+   * The reason for the second hashmap is just for easy editing of the edge weights
+   * for Yen's Algorithm
+   * @return the HashMap of Egde sets
    */
-  HashMap<String, HashMap<String, Edge>> getEdgeMap();
+  HashMap<String, HashMap<String, Edge>> getEdgeSet();
 
   /**
-   * Adds a Node to the Node map and Edges with the Node as their start to the Edge map.
-   * @param node Node to add to the map
-   * @param edges a Set of edges to check
+   * Adds a Node to the Node set and Edges to the Edge Set
+   * @param node node to add to the Node set and add ID to Node Set
+   * @param edges edges from the node to add to the Edge Set
    */
   void addNode(Node node, Set<Edge> edges);
 
   /**
-   * Ideally creates a deep copy of the current Graph.
+   * Ideally creates a deep copy of the current graph
    */
   Graph<Node, Edge> copy();
 }

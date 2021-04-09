@@ -2,6 +2,8 @@ package edu.brown.cs.futureatbrown.termproject.course;
 
 import edu.brown.cs.futureatbrown.termproject.graph.GraphEdge;
 import edu.brown.cs.futureatbrown.termproject.graph.GraphNode;
+
+import java.util.*;
 import edu.brown.cs.futureatbrown.termproject.kdtree.Locatable;
 
 import java.util.ArrayList;
@@ -14,7 +16,7 @@ import java.util.Set;
 /**
  * Specific node implementation that contains data about a course at Brown.
  */
-public class CourseNode implements Locatable, GraphNode<GraphNode, GraphEdge> {
+public class CourseNode extends GraphNode<GraphEdge> implements Locatable {
   private final String id;
   private final String name;
   private final String instr;
@@ -36,7 +38,7 @@ public class CourseNode implements Locatable, GraphNode<GraphNode, GraphEdge> {
   /**
    * Constructs a new CourseNode with the given parameters.
    *
-   * @param id the unique id
+   * @param id  the unique id
    * @param name the name
    * @param instr the instructor name
    * @param sem the semester number
@@ -72,12 +74,23 @@ public class CourseNode implements Locatable, GraphNode<GraphNode, GraphEdge> {
   }
 
   /**
+   * Returns the ID of this CourseNode.
+   * This value should be unique to this node.
+   *
+   * @return the ID
+   */
+  @Override
+  public String getID() {
+    return this.id;
+  }
+
+  /**
    * Returns the name of this CourseNode.
    *
    * @return the name
    */
   public String getName() {
-    return name;
+    return this.name;
   }
 
   /**
@@ -86,7 +99,7 @@ public class CourseNode implements Locatable, GraphNode<GraphNode, GraphEdge> {
    * @return the instructor name
    */
   public String getInstr() {
-    return instr;
+    return this.instr;
   }
 
   /**
@@ -95,7 +108,7 @@ public class CourseNode implements Locatable, GraphNode<GraphNode, GraphEdge> {
    * @return the semester number
    */
   public int getSem() {
-    return sem;
+    return this.sem;
   }
 
   /**
@@ -104,7 +117,7 @@ public class CourseNode implements Locatable, GraphNode<GraphNode, GraphEdge> {
    * @return the raw prerequisite name
    */
   public String getRawprereq() {
-    return rawprereq;
+    return this.rawprereq;
   }
 
   /**
@@ -113,7 +126,7 @@ public class CourseNode implements Locatable, GraphNode<GraphNode, GraphEdge> {
    * @return the prerequisite name
    */
   public String getPrereq() {
-    return prereq;
+    return this.prereq;
   }
 
   /**
@@ -181,15 +194,6 @@ public class CourseNode implements Locatable, GraphNode<GraphNode, GraphEdge> {
     return class_size;
   }
 
-  /**
-   * Returns the ID of this CourseNode. This value should be unique.
-   *
-   * @return the ID
-   */
-  @Override
-  public String getID() {
-    return null;
-  }
 
   /**
    * Returns the number of dimensions that the CourseNode is in.
@@ -233,9 +237,9 @@ public class CourseNode implements Locatable, GraphNode<GraphNode, GraphEdge> {
   }
 
   /**
-   * Returns the weight of the CourseNode.
+   * Returns the weight of the node.
    *
-   * @return the weight
+   * @return The weight.
    */
   @Override
   public double getWeight() {
@@ -282,36 +286,37 @@ public class CourseNode implements Locatable, GraphNode<GraphNode, GraphEdge> {
     return prevPath;
   }
 
-  /**
-   * Compares this CourseNode to another object for equality.
-   * <p>
-   * Another object is equal to this node if it is also a CourseNode and shares the same id.
-   *
-   * @param other another object
-   * @return whether the other object is equal to this CourseNode
-   */
   @Override
-  public boolean equals(Object other) {
-    return other instanceof CourseNode && id.equals(((CourseNode) other).id);
+  public boolean equals(Object o) {
+    if (this == o) return true;
+    if (o == null || getClass() != o.getClass()) return false;
+    CourseNode that = (CourseNode) o;
+    return id.equals(that.id);
   }
 
-  /**
-   * Returns a unique hash for this CourseNode.
-   *
-   * @return the hash code
-   */
   @Override
   public int hashCode() {
-    return id.hashCode();
+    return Objects.hash(id);
   }
 
   /**
-   * Returns a string representing a CourseNode.
+   * Returns a string representing a node.
    *
-   * @return the string
+   * @return A string representing a node.
    */
   @Override
   public String toString() {
-    return id + ": " + name;
+    return "NODE (" + id + ": " + name + ")";
+  }
+
+  /**
+   * Returns a copy of the node
+   * @return A copy of the node
+   */
+  @Override
+  public GraphNode copy() {
+    return new CourseNode(this.id, this.name, this.instr, this.sem, this.rawprereq, this.prereq,
+                          this.description, this.course_rating, this.prof_rating, this.avg_hours,
+                          this.max_hours, this.class_size);
   }
 }

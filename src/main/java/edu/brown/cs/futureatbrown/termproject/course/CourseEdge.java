@@ -3,13 +3,15 @@ package edu.brown.cs.futureatbrown.termproject.course;
 import edu.brown.cs.futureatbrown.termproject.graph.GraphEdge;
 import edu.brown.cs.futureatbrown.termproject.graph.GraphNode;
 
+import java.util.Objects;
+
 /**
  * Specific edge implementation that links a start CourseNode to an end CourseNode.
  */
-public class CourseEdge implements GraphEdge<GraphNode, GraphEdge> {
-  private final String id; // Should the ID be unique even for edges with the same start and end?
-  private GraphNode start;
-  private GraphNode end;
+public class CourseEdge extends GraphEdge<GraphNode<?>> {
+  private final String id;
+  private GraphNode<?> start;
+  private GraphNode<?> end;
   private double weight;
 
   /**
@@ -18,7 +20,7 @@ public class CourseEdge implements GraphEdge<GraphNode, GraphEdge> {
    * @param start the id of this CourseEdge's start node
    * @param end the id of this CourseEdge's end node
    */
-  public CourseEdge(String id, GraphNode start, GraphNode end) {
+  public CourseEdge(String id, CourseNode start, CourseNode end) {
     this.id = id;
     this.start = start;
     this.end = end;
@@ -27,6 +29,7 @@ public class CourseEdge implements GraphEdge<GraphNode, GraphEdge> {
 
   /**
    * Returns the id of this CourseEdge.
+   * This value should be unique to this edge.
    *
    * @return the id
    */
@@ -46,12 +49,21 @@ public class CourseEdge implements GraphEdge<GraphNode, GraphEdge> {
   }
 
   /**
+   * Sets the weight of this CourseEdge.
+   */
+  @Override
+  public void setWeight(double weight) {
+    // REPLACE THIS WITH CALCULATION LATER WITH PENALTIES AND SLIDERS
+    this.weight = weight;
+  }
+
+  /**
    * Sets the start node of this CourseEdge.
    *
    * @param startingNode the start node
    */
   @Override
-  public void setStart(GraphNode startingNode) {
+  public void setStart(GraphNode<?> startingNode) {
     start = startingNode;
   }
 
@@ -61,7 +73,7 @@ public class CourseEdge implements GraphEdge<GraphNode, GraphEdge> {
    * @return the start node
    */
   @Override
-  public GraphNode getStart() {
+  public GraphNode<?> getStart() {
     return start;
   }
 
@@ -71,7 +83,7 @@ public class CourseEdge implements GraphEdge<GraphNode, GraphEdge> {
    * @param endingNode the end node
    */
   @Override
-  public void setEnd(GraphNode endingNode) {
+  public void setEnd(GraphNode<?> endingNode) {
     end = endingNode;
   }
 
@@ -81,32 +93,30 @@ public class CourseEdge implements GraphEdge<GraphNode, GraphEdge> {
    * @return the end node
    */
   @Override
-  public GraphNode getEnd() {
+  public GraphNode<?> getEnd() {
     return end;
   }
 
   /**
-   * Compares this CourseEdge to another object for equality.
-   * <p>
-   * Another object is equal to this node if its start and end CourseNodes are the same.
-   *
-   * @param other another object
-   * @return whether the other object is equal to this CourseEdge
+   * Returns a copy of the edge
+   * @return a copy of the edge
    */
   @Override
-  public boolean equals(Object other) {
-    return other instanceof CourseEdge && start.equals(((CourseEdge) other).start) &&
-        end.equals(((CourseEdge) other).end);
+  public GraphEdge<?> copy() {
+    return new CourseEdge(this.id, (CourseNode) this.start.copy(), (CourseNode) this.end.copy());
   }
 
-  /**
-   * Returns a unique code denoting this CourseEdge.
-   *
-   * @return a hash code for this CourseEdge
-   */
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) return true;
+    if (o == null || getClass() != o.getClass()) return false;
+    CourseEdge that = (CourseEdge) o;
+    return Objects.equals(id, that.id);
+  }
+
   @Override
   public int hashCode() {
-    return id.hashCode();
+    return Objects.hash(id);
   }
 
   /**
@@ -116,6 +126,6 @@ public class CourseEdge implements GraphEdge<GraphNode, GraphEdge> {
    */
   @Override
   public String toString() {
-    return id + ": " + start + "-> " + end;
+    return "EDGE: (" + id + ": " + start + "to " + end + ")";
   }
 }
