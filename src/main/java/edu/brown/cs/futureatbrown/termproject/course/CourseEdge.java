@@ -4,15 +4,17 @@ import edu.brown.cs.futureatbrown.termproject.graph.GraphEdge;
 import edu.brown.cs.futureatbrown.termproject.graph.GraphNode;
 
 import java.util.Objects;
+import java.util.Set;
 
 /**
  * Specific edge implementation that links a start CourseNode to an end CourseNode.
  */
-public class CourseEdge extends GraphEdge<GraphNode<?>> {
+public class CourseEdge extends GraphEdge<CourseNode> {
   private final String id;
-  private GraphNode<?> start;
-  private GraphNode<?> end;
+  private CourseNode start;
+  private CourseNode end;
   private double weight;
+  private boolean overrideWeightCalc;
 
   /**
    * Constructs a CourseEdge with the given id, start id, and end id.
@@ -25,6 +27,7 @@ public class CourseEdge extends GraphEdge<GraphNode<?>> {
     this.start = start;
     this.end = end;
     this.weight = 0; // Change this after creating weight formula
+    this.overrideWeightCalc = false;
   }
 
   /**
@@ -45,15 +48,31 @@ public class CourseEdge extends GraphEdge<GraphNode<?>> {
    */
   @Override
   public double getWeight() {
-    return weight;
+    // REPLACE THIS WITH CALCULATION LATER WITH PENALTIES AND SLIDERS
+    if (this.overrideWeightCalc) {
+      return weight;
+    } else {
+      return calculateWeight();
+    }
   }
+
+  /**
+   * Calculates the weight of the edge based on Penalties and Sliders
+   *
+   * @return weight - Calculated weight
+   */
+   private double calculateWeight() {
+    // HAS TO SATISFY PREREQS
+    Set<String[]> preReqs = this.end.getPrereqSet();
+    return 0; // TODO: REPLACE THIS VALUE
+   }
 
   /**
    * Sets the weight of this CourseEdge.
    */
   @Override
   public void setWeight(double weight) {
-    // REPLACE THIS WITH CALCULATION LATER WITH PENALTIES AND SLIDERS
+    this.overrideWeightCalc = true;
     this.weight = weight;
   }
 
@@ -63,7 +82,7 @@ public class CourseEdge extends GraphEdge<GraphNode<?>> {
    * @param startingNode the start node
    */
   @Override
-  public void setStart(GraphNode<?> startingNode) {
+  public void setStart(CourseNode startingNode) {
     start = startingNode;
   }
 
@@ -73,7 +92,7 @@ public class CourseEdge extends GraphEdge<GraphNode<?>> {
    * @return the start node
    */
   @Override
-  public GraphNode<?> getStart() {
+  public CourseNode getStart() {
     return start;
   }
 
@@ -83,7 +102,7 @@ public class CourseEdge extends GraphEdge<GraphNode<?>> {
    * @param endingNode the end node
    */
   @Override
-  public void setEnd(GraphNode<?> endingNode) {
+  public void setEnd(CourseNode endingNode) {
     end = endingNode;
   }
 
@@ -93,7 +112,7 @@ public class CourseEdge extends GraphEdge<GraphNode<?>> {
    * @return the end node
    */
   @Override
-  public GraphNode<?> getEnd() {
+  public CourseNode getEnd() {
     return end;
   }
 

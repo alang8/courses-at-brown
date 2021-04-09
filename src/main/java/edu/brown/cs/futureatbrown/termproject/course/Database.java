@@ -17,20 +17,30 @@ import java.util.NoSuchElementException;
 public final class Database {
   private static Connection conn = null;
 
-  private Database() {
-  }
+  private Database() {}
 
   /**
    * Constructor that instantiates the database and creates tables.
    *
-   * @param filename file name of SQLite3 database to open
+   * @param filepath file name of SQLite3 database to open
    * @throws ClassNotFoundException if the driver manager class is not found
    * @throws SQLException if an error occurs in any SQL query
    */
-  public static void init(String filename) throws ClassNotFoundException, SQLException {
+  public static void init(String filepath) throws ClassNotFoundException, SQLException {
     Class.forName("org.sqlite.JDBC");
-    String urlToDB = "jdbc:sqlite:" + filename;
+    String urlToDB = "jdbc:sqlite:" + filepath;
     conn = DriverManager.getConnection(urlToDB);
+  }
+
+  /**
+   * Closes the connection to the database.
+   */
+  public static void closeDB() {
+    try {
+      conn.close();
+    } catch (SQLException e) {
+      throw new SQLRuntimeException(e);
+    }
   }
 
   /**
@@ -50,38 +60,11 @@ public final class Database {
    */
   public static CourseNode getCourseNode(String id) {
     try (PreparedStatement statement = conn
-        .prepareStatement("SELECT courseCR.course_rating, courseCR.prof_rating, " +
-            "courseCR.avg_hours, courseCR.max_hours, courseCR.class_size, courseData.name, " +
-            "courseData.instr, courseData.sem, courseData.rawprereq, courseData.prereq," +
-            "courseData.description FROM courseCR JOIN courseData WHERE id = ?")) {
+        .prepareStatement("SELECT * FROM courseCR JOIN courseData ON courseCR.id = ? AND courseCR.id = courseData.id")) {
       statement.setString(1, id);
       try (ResultSet results = statement.executeQuery()) {
-        if (results.isClosed()) {
+        if (results.isClosed() || null == results) {
           return null;
-        }
-        return CourseConversions.resultToCourseNode(results);
-      }
-    } catch (SQLException e) {
-      throw new SQLRuntimeException(e);
-    }
-  }
-
-  /**
-   * Queries a CourseNode based on the user inputted id. Throws an error if not found.
-   *
-   * @param id the id of the CourseNode
-   * @return the found CourseNode
-   */
-  public static CourseNode getCourseNodeUnchecked(String id) {
-    try (PreparedStatement statement = conn
-        .prepareStatement("SELECT courseCR.course_rating, courseCR.prof_rating, " +
-            "courseCR.avg_hours, courseCR.max_hours, courseCR.class_size, courseData.name, " +
-            "courseData.instr, courseData.sem, courseData.rawprereq, courseData.prereq," +
-            "courseData.description FROM courseCR JOIN courseData WHERE id = ?")) {
-      statement.setString(1, id);
-      try (ResultSet results = statement.executeQuery()) {
-        if (results.isClosed()) {
-          throw new NoSuchElementException();
         }
         return CourseConversions.resultToCourseNode(results);
       }
@@ -97,10 +80,7 @@ public final class Database {
    */
   private static Iterator<CourseNode> iterateAllCourseNodes() throws SQLException {
     Statement query = conn.createStatement();
-    ResultSet res = query.executeQuery("SELECT courseCR.id, courseCR.course_rating, " +
-        "courseCR.prof_rating, courseCR.avg_hours, courseCR.max_hours, courseCR.class_size, " +
-        "courseData.name, courseData.instr, courseData.sem, courseData.rawprereq, " +
-        "courseData.prereq, courseData.description FROM courseCR JOIN courseData");
+    ResultSet res = query.executeQuery("SELECT * FROM courseCR JOIN courseData ON courseCR.id = courseData.id");
     return CourseConversions.iterateResults(res, CourseConversions::resultToCourseNode);
   }
 

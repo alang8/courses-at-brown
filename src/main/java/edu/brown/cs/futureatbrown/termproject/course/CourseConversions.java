@@ -34,15 +34,15 @@ public final class CourseConversions {
     String id = results.getString("id");
     String name = results.getString("name");
     String instr = results.getString("instr");
-    int sem;
+    Integer sem;
     String rawprereq = results.getString("rawprereq");
     String prereq = results.getString("prereq");
     String description = results.getString("description");
-    double course_rating;
-    double prof_rating;
-    double avg_hours;
-    double max_hours;
-    int class_size;
+    Double course_rating;
+    Double prof_rating;
+    Double avg_hours;
+    Double max_hours;
+    Integer class_size;
     try {
       sem = Integer.parseInt(results.getString("sem"));
       course_rating = Double.parseDouble(results.getString("course_rating"));
