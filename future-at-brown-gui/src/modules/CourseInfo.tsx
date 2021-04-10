@@ -7,6 +7,9 @@ interface Params {
     course: Course;
     shouldDisplay: boolean;
     setDisplay: (set: boolean) => void;
+    add?: (addCourse: Course) => void;
+    remove?: (removeCourse: Course) => void;
+    membership?: (testCourse: Course) => boolean;
 }
 
 const CourseInfo: React.FC<Params> = (props) => {
