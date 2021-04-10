@@ -48,7 +48,7 @@ public class CourseNodeTest {
     Assert.assertEquals(math190.getID(), "MATH 0190");
     Assert.assertEquals(math190.getName(), "Advanced Placement Calculus (Physics/Engineering)");
     Assert.assertEquals(math190.getInstr(), "J. Kostiuk");
-    Assert.assertEquals(math190.getSem(), 1);
+    Assert.assertEquals(math190.getSem(), Integer.valueOf(1));
     Assert.assertEquals(math190.getRawprereq(), "Covers roughly the same material and has the same prerequisites as MATH 0170, but is intended for students with a special interest in physics or engineering");
     Assert.assertNull(math190.getPrereq());
     Assert.assertEquals(math190.getDescription(), "Covers roughly the same material and has the same prerequisites as MATH 0170, but is intended for students with a special interest in physics or engineering. The main topics are: calculus of vectors and paths in two and three dimensions; differential equations of the first and second order; and infinite series, including power series and Fourier series. The extra hour is a weekly problem session.");
@@ -90,13 +90,11 @@ public class CourseNodeTest {
     CourseNode cs1951D = Database.getCourseNode("CSCI 1951D");
     Assert.assertNotNull(cs1951D);
     Assert.assertNotNull(cs1951D.getPrereqSet());
-    Assert.assertEquals(cs1951D.getPrereqSet(), new HashSet<>());
     Assert.assertEquals(
       cs1951D.getPrereqSet(),
       new HashSet<>(List.of(
-        new String[]{"MATH 0520", "MATH 0540", "MATH 1530"},
-        new String[]{"CSCI 0160", "CSCI 0180", "CSCI 0190", "CSCI 1570"}
-        ))
+        List.of("MATH 0520", "MATH 0540", "MATH 1530"),
+        List.of("CSCI 0160", "CSCI 0180", "CSCI 0190", "CSCI 1570")))
     );
     teardown();
   }

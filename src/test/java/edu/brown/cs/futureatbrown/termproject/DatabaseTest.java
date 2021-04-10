@@ -68,16 +68,15 @@ public class DatabaseTest {
       "Practical approaches to designing intelligent systems. Topics include search and optimization, uncertainty, learning, and decision making. Application areas include natural language processing, machine vision, machine learning, and robotics. Prerequisites: CSCI 0160, CSCI 0180 or CSCI 0190; and one of CSCI0220 or CSCI1450 or APMA1650 or APMA1655.",
         3.97, 4.47, 6.3, 12.3, 142)
     );
-    Assert.assertNull(Database.getCourseNode("CSCI 1951D"));
-//    Assert.assertEquals(
-//      Database.getCourseNode("CSCI 1951D"),
-//      new CourseNode("CSCI 1951D", "Projective Geometry via Interactive Proof Assistants", "J. Hughes", 2,
-//        null, "(MATH 0520|MATH 0540|MATH 1530)&(CSCI 0160|CSCI 0180|CSCI 0190|CSCI 1570)",
-//        "We will study both real and synthetic projective geometry, leading up to showing every Desarguian projective plane admits coordinates in some division ring. We'll do all of this using an automated proof assistant, Isabelle, and learn something about logic and automated theorem proving at the same time.\n" +
-//          "\n" +
-//          "Does not fit any pathways, but certainly fits the \"Math/CS three additional courses in Math, CS, or related areas\" item.",
-//        null, null, null, null, null)
-//    );
+    Assert.assertEquals(
+      Database.getCourseNode("CSCI 1951D"),
+      new CourseNode("CSCI 1951D", "Projective Geometry via Interactive Proof Assistants", "J. Hughes", 2,
+        null, "(MATH 0520|MATH 0540|MATH 1530)&(CSCI 0160|CSCI 0180|CSCI 0190|CSCI 1570)",
+        "We will study both real and synthetic projective geometry, leading up to showing every Desarguian projective plane admits coordinates in some division ring. We'll do all of this using an automated proof assistant, Isabelle, and learn something about logic and automated theorem proving at the same time.\n" +
+          "\n" +
+          "Does not fit any pathways, but certainly fits the \"Math/CS three additional courses in Math, CS, or related areas\" item.",
+        null, null, null, null, null)
+    );
     teardown();
   }
 

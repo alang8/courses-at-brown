@@ -32,24 +32,72 @@ public final class CourseConversions {
       throw new SQLException("Closed results");
     }
     String id = results.getString("id");
+    if (results.wasNull()) {
+      id = null;
+    }
+
     String name = results.getString("name");
+    if (results.wasNull()) {
+      name = null;
+    }
+
     String instr = results.getString("instr");
+    if (results.wasNull()) {
+      instr = null;
+    }
+
     Integer sem;
     String rawprereq = results.getString("rawprereq");
+    if (results.wasNull()) {
+      rawprereq = null;
+    }
+
     String prereq = results.getString("prereq");
+    if (results.wasNull()) {
+      prereq = null;
+    }
+
     String description = results.getString("description");
+    if (results.wasNull()) {
+      description = null;
+    }
+
     Double course_rating;
     Double prof_rating;
     Double avg_hours;
     Double max_hours;
     Integer class_size;
     try {
-      sem = Integer.parseInt(results.getString("sem"));
-      course_rating = Double.parseDouble(results.getString("course_rating"));
-      prof_rating = Double.parseDouble(results.getString("prof_rating"));
-      avg_hours = Double.parseDouble(results.getString("avg_hours"));
-      max_hours = Double.parseDouble(results.getString("max_hours"));
-      class_size = Integer.parseInt(results.getString("class_size"));
+      sem = results.getInt("sem");
+      if (results.wasNull()) {
+        sem = null;
+      }
+
+      course_rating = results.getDouble("course_rating");
+      if (results.wasNull()) {
+        course_rating = null;
+      }
+
+      prof_rating = results.getDouble("prof_rating");
+      if (results.wasNull()) {
+        prof_rating = null;
+      }
+
+      avg_hours = results.getDouble("avg_hours");
+      if (results.wasNull()) {
+        avg_hours = null;
+      }
+
+      max_hours = results.getDouble("max_hours");
+      if (results.wasNull()) {
+        max_hours = null;
+      }
+
+      class_size = results.getInt("class_size");
+      if (results.wasNull()) {
+        class_size = null;
+      }
+
     } catch (NumberFormatException e) {
       throw new SQLException("Invalid number format");
     }

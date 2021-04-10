@@ -3,6 +3,7 @@ package edu.brown.cs.futureatbrown.termproject.course;
 import edu.brown.cs.futureatbrown.termproject.graph.GraphEdge;
 import edu.brown.cs.futureatbrown.termproject.graph.GraphNode;
 
+import java.util.List;
 import java.util.Objects;
 import java.util.Set;
 
@@ -63,7 +64,7 @@ public class CourseEdge extends GraphEdge<CourseNode> {
    */
    private double calculateWeight() {
     // HAS TO SATISFY PREREQS
-    Set<String[]> preReqs = this.end.getPrereqSet();
+    Set<List<String>> preReqs = this.end.getPrereqSet();
     return 0; // TODO: REPLACE THIS VALUE
    }
 
