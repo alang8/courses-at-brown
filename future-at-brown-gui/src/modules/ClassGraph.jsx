@@ -53,7 +53,7 @@ const ClassGraph = (props) => {
             let curID = theCourses[i]['id']
             let curName = theCourses[i]['name']
             let prereqInfo = theCourses[i]['prereqs']
-            const courseCodeReg = /CSCI\s[0-9]{4}[A-Z]?/g;
+            const courseCodeReg = /[A-Z]{4}\s[0-9]{4}[A-Z]?/g;
             const prereqIDs = prereqInfo.match(courseCodeReg)
             console.log("prereq info");
             console.log(prereqInfo)
