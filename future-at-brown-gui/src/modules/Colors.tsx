@@ -1,4 +1,5 @@
 import { SemanticCOLORS } from "semantic-ui-react/dist/commonjs/generic";
+import User from "./User"
 
 const colorCycle: SemanticCOLORS[] =
     ['red', 'orange', 'yellow', 'olive', 'green', 'teal', 

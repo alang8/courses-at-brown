@@ -1,19 +1,19 @@
 import React from "react";
-import { Button, Dimmer, Header, Loader, Segment } from "semantic-ui-react";
+import { Header} from "semantic-ui-react";
 import { defaultParams, SearchParams, User } from "./Data";
 import { useState } from "react";
-import Slider, { Range } from 'rc-slider';
+import Slider from 'rc-slider';
 import 'rc-slider/assets/index.css';
 
 interface Params {
     curUser?: User;
     prefChange?: (newPref: SearchParams) => Promise<void>;
+    setLoading?: (set: boolean) => void;
 }
 
 const ParamSlider: React.FC<Params> = (props) => {
 
     const [pref, setPrefs] = useState<SearchParams>(props.curUser?.preferences ?? defaultParams);
-    const [isLoading, setLoading] = useState<boolean>(true);
 
     const makeSlider = (
         color: string,
@@ -45,10 +45,10 @@ const ParamSlider: React.FC<Params> = (props) => {
                         }}
                         onAfterChange={(newVal: number) => {
                             if (props.prefChange) {
-                                setLoading(true)
+                                props.setLoading?.(true)
                                 pref[id] = newVal;
                                 props.prefChange!({...pref})
-                                    .then(() => setLoading(false));
+                                    .then(() => props.setLoading?.(false));
                             }
                             
                         }}
@@ -71,10 +71,5 @@ const ParamSlider: React.FC<Params> = (props) => {
         </div>
     );
 }
-
-// const setParams = async (newParams: SearchParams) => {
-//     // TODO: add something that will set the search paramaeters
-//     await new Promise(resolve => setTimeout(resolve, 2000));
-// }
 
 export default ParamSlider
