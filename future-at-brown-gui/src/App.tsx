@@ -15,9 +15,10 @@ import Login from './pages/Login';
 import Signup from './pages/Signup';
 import Search from './pages/Search';
 import Profile from './pages/Profile';
-import { getUser, User } from './modules/Data';
+import { defaultParams, getUser, User } from './modules/Data';
 import ExpandableCourses from './modules/ExpandableCourses';
 import GraphDisplay from "./pages/GraphDisplay";
+import ParamSlider from './modules/ParamSliders';
 
 const TestComponent: React.FC<{}> = () => {
 
@@ -50,6 +51,7 @@ const TestComponent: React.FC<{}> = () => {
       <CourseTile course={{code: "0320", dept: "EChON", name: "Introduction to Software Engineering"}} />
       <CourseTile course={{code: "0320", dept: "EChON", name: "g"}} />
     </Card.Group>
+    <ParamSlider curUser={{preferences: defaultParams, saved: [], taken: [], username: "foo"}}/>
   </div>
 }
 

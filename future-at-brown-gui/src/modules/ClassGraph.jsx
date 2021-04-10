@@ -4,7 +4,6 @@ import CourseInfo from "../modules/CourseInfo";
 import { ForceGraph2D, ForceGraph3D, ForceGraphVR, ForceGraphAR } from 'react-force-graph';
 import { User } from "../modules/Data"
 import axios from "axios";
-import 'reactjs-popup/dist/index.css';
 import "../css/Graph.css"
 import { GetColor } from './Colors'
 

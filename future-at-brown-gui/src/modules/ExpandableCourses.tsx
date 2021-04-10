@@ -3,7 +3,7 @@ import { Accordion, Button, Card, Header, Icon, Segment } from "semantic-ui-reac
 import CourseTile from "./CourseTile";
 import { Course } from "./Data";
 interface Params {
-    title?: string;
+    title: string;
     modifiable?: boolean;
     courses: Course[];
 }
@@ -43,14 +43,11 @@ const ExpandableCourses: React.FC<Params> = (props) => {
     const overflowCards: JSX.Element[] = allCourses.map(
         (elt, index) => <CourseTile course={elt} key={String(index + initDisplay.length)} />);
 
-
-    console.log("display", initDisplay, initDisplay.length <= 1);
-
     return (
         <Segment>
-            {(props.title) ? <Header as="h1" content={props.title!} /> : undefined}
+            {(props.title) ? <Header as="h1" content={props.title} /> : undefined}
 
-            {(initDisplay.length <= (props.modifiable? 1 : 0)) ? <Header as="h3" content={"This selection is empty"} />
+            {(initDisplay.length <= 0) ? <Header as="h3" content={"This selection is empty"} />
                 : <Card.Group content={initDisplay} centered />}
             {(overflowCards.length > 0) ?
                 <Accordion>
