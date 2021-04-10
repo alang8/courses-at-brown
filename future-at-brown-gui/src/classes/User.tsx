@@ -88,7 +88,7 @@ class User {
         return { ...this.preferences }
     }
 
-    async setPreferences(prefName: SearchParamNames, newVal: number): SearchParams {
+    async setPreferences(prefName: SearchParamNames, newVal: number): Promise<SearchParams> {
         this.preferences[prefName] = newVal;
         // TODO:  replace with actuall adding course to dataabase
         await new Promise(resolve => setTimeout(resolve, 2000));
@@ -104,7 +104,7 @@ export default User;
  * @param username the username of the returned user
  * @returns the user with the given username
  */
-export const getUser = async (username: string): Promise<User> {
+export const getUser = async (username: string): Promise<User> => {
     // TODO: actually get the user from the database
     return new User(
         username,
@@ -120,7 +120,7 @@ export const getUser = async (username: string): Promise<User> {
  * @param password the password of the new user
  * @returns the new user with the given username
  */
-export const newUser = async (username: string, password: string): Promise<User> {
+export const newUser = async (username: string, password: string): Promise<User> => {
     const toSend = {
         username: username,
         password: password
