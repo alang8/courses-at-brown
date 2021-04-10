@@ -1,3 +1,7 @@
+# Remove package lock
+future-at-brown-gui/package-lock.json
 
-future-at-brown-gui/package-lock.json
-future-at-brown-gui/package-lock.json
+# packages that change depending on the computer
+target
+.idea
+.mvn-classpath

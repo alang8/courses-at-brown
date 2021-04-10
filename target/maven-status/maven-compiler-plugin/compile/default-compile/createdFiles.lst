@@ -1,6 +1,6 @@
-edu/brown/cs/futureatbrown/termproject/UserDataHandlers$LoginHandler.class
-edu/brown/cs/futureatbrown/termproject/UserDataHandlers$SignUpHandler.class
-edu/brown/cs/futureatbrown/termproject/Main.class
-edu/brown/cs/futureatbrown/termproject/Main$ClassDataHandler.class
-edu/brown/cs/futureatbrown/termproject/UserDataHandlers$CheckUsernameHandler.class
-edu/brown/cs/futureatbrown/termproject/UserDataHandlers.class
+edu\brown\cs\futureatbrown\termproject\UserDataHandlers$SignUpHandler.class
+edu\brown\cs\futureatbrown\termproject\UserDataHandlers$CheckUsernameHandler.class
+edu\brown\cs\futureatbrown\termproject\UserDataHandlers.class
+edu\brown\cs\futureatbrown\termproject\Main.class
+edu\brown\cs\futureatbrown\termproject\UserDataHandlers$LoginHandler.class
+edu\brown\cs\futureatbrown\termproject\Main$ClassDataHandler.class

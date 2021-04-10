@@ -4,6 +4,7 @@ export interface Course {
     name: string;
     dept: string;
     code: string;
+    prereqs?: string[];
     description?: string;
     rating?: number;
     latestProf?: string;
