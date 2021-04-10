@@ -1,6 +1,6 @@
 import React from "react";
 import { Header} from "semantic-ui-react";
-import { defaultParams, SearchParams, User } from "./Data";
+import { defaultParams, SearchParamNames, SearchParams, User } from "./Data";
 import { useState } from "react";
 import Slider from 'rc-slider';
 import 'rc-slider/assets/index.css';
@@ -18,7 +18,7 @@ const ParamSlider: React.FC<Params> = (props) => {
     const makeSlider = (
         color: string,
         name: string,
-        id: "avgHoursPref" | "crsRatingPref" | "maxHoursPref" | "crsSizePref" | "profRatingPref"
+        id: SearchParamNames
     ): JSX.Element => {
         return (
             <div style={{ padding: '1rem', display: "flex", flexDirection: "column", justifyContent: "space-between" }}>

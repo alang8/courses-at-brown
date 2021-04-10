@@ -1,5 +1,3 @@
-import { stringify } from "node:querystring"
-
 export interface Course {
     name: string;
     dept: string;
@@ -11,6 +9,10 @@ export interface Course {
     latestProfRating?: number;
     maxHours?: number;
     avgHours?: number;
+}
+
+export type CourseInventory = {
+    [course: string]: Course;
 }
 
 export interface User {
@@ -39,6 +41,7 @@ export const newUser = (name: string):User => {
         preferences: defaultParams
     }
 }
+
 export interface SearchParams {
     crsRatingPref: number;
     avgHoursPref: number;
@@ -46,6 +49,9 @@ export interface SearchParams {
     crsSizePref: number;
     profRatingPref: number;
 }
+
+export type SearchParamNames = 
+"avgHoursPref" | "crsRatingPref" | "maxHoursPref" | "crsSizePref" | "profRatingPref";
 
 export const defaultParams: SearchParams = {
     avgHoursPref: 5,

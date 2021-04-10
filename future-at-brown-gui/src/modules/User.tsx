@@ -1,12 +1,13 @@
-import { Course, defaultParams, SearchParams } from "./Data";
+import { Course, defaultParams, SearchParamNames, SearchParams } from "./Data";
 
 class User {
 
     readonly username: string;
-    readonly saved: Course[];
-    readonly taken: Course[];
-    readonly preferences: SearchParams;
     readonly isGuest: boolean;
+
+    private saved: Course[];
+    private taken: Course[];
+    private preferences: SearchParams;
 
     constructor();
     constructor(user: string);
@@ -23,24 +24,67 @@ class User {
         }
     }
 
+    // saved courses
+
     getSaved(): Course[] {
         return [...this.saved];
+    }
+
+    async saveCourse(toSave: Course): Promise<Course[]> {
+        this.saved.push(toSave);
+        // TODO:  replace with actuall adding course to dataabase
+        await new Promise(resolve => setTimeout(resolve, 2000));
+        return this.getSaved();
     }
 
     getTaken(): Course[] {
         return [...this.taken];
     }
 
-    async takeCourse(toAdd: Course): Promise<void> {
-        this.taken.push(toAdd);
+    async removeSaved(toRemove: Course): Promise<Course[]> {
+        this.saved.filter((c) => c !== toRemove);
         // TODO:  replace with actuall adding course to dataabase
-        return new Promise(resolve => setTimeout(resolve, 2000));
+        await new Promise(resolve => setTimeout(resolve, 2000));
+        return this.getSaved();
     }
 
-    async saveCourse(toSave: Course): Promise<void> {
-        this.saved.push(toSave);
+    // taken courses
+
+    async takeCourse(toAdd: Course): Promise<Course[]> {
+        this.taken.push(toAdd);
         // TODO:  replace with actuall adding course to dataabase
-        return new Promise(resolve => setTimeout(resolve, 2000));
+        await new Promise(resolve => setTimeout(resolve, 2000));
+        return this.getTaken()
+    }
+
+    async removeTaken(toRemove: Course): Promise<Course[]> {
+        this.taken.filter((c) => c !== toRemove);
+        // TODO:  replace with actuall adding course to dataabase
+        await new Promise(resolve => setTimeout(resolve, 2000));
+        return this.getTaken()
+    }
+
+    // preferences
+
+    getPreferences(): SearchParams {
+        return {...this.preferences}
+    }
+
+    async setPreferences(prefName: SearchParamNames, newVal: number): SearchParams {
+        this.preferences[prefName] = newVal;
+        // TODO:  replace with actuall adding course to dataabase
+        await new Promise(resolve => setTimeout(resolve, 2000));
+        return this.getPreferences();
+    }
+
+    // getting user from database
+    static async getUser(username: string): Promise<User> {
+        // TODO: actually get the user from the database
+        return new User(
+            username,
+            [],
+            []
+        )
     }
 
 }
