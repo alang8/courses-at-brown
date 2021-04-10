@@ -1,6 +1,8 @@
 import React, { createRef, useState } from "react"
 import { Button, Container, Grid, GridColumn, Header, Segment, Sticky } from "semantic-ui-react"
-import { Course, SearchParams, User } from "../modules/Data"
+import { Course } from "../classes/Course";
+import { SearchParams } from "../classes/SearchParams";
+import User from "../classes/User";
 import ExpandableCourses from "../modules/ExpandableCourses";
 import ParamSlider from "../modules/ParamSliders";
 
@@ -11,8 +13,8 @@ interface Params {
 const Search: React.FC<Params> = (props) => {
 
     const contextRef = createRef<HTMLElement>();
-    const [prefs, setPrefs] = useState<SearchParams>(props.user.preferences);
-    const [takenCourses, setTakenCourses] = useState<Course[]>(props.user.taken);
+    const [prefs, setPrefs] = useState<SearchParams>(props.user.getPreferences());
+    const [takenCourses, setTakenCourses] = useState<Course[]>(props.user.getTaken());
 
     const setPrefsAsync = async (pref: SearchParams) => setPrefs(pref)
 

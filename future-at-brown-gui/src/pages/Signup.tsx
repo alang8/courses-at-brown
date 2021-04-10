@@ -1,19 +1,11 @@
 import React, { useRef, useState } from "react";
 import { Container, Form, Header, Button, Segment } from "semantic-ui-react";
-import { newUser, User } from "../modules/Data";
 import FormattedInput from "../modules/FormattedInput";
-import { ValidNewUser, ValidPass } from "../modules/InputValidation";
-import axios from "axios";
+import { ValidNewUser, ValidPass } from "../classes/InputValidation";
+import User, { newUser } from "../classes/User";
 
 interface Props {
     setLogin: (User: User) => void;
-}
-
-let config = {
-    headers: {
-        "Content-Type": "application/json",
-        'Access-Control-Allow-Origin': '*',
-    }
 }
 
 const Signup: React.FC<Props> = (props) => {
@@ -42,25 +34,9 @@ const Signup: React.FC<Props> = (props) => {
                     setUserError(userErr);
                     if (userErr.length === 0) {
                         //want to axios write username data in here
-                        const toSend = {
-                            username: username.current,
-                            password: password.current
-                        };
-
-                        axios.post(
-                            'http://localhost:4567/signup',
-                            toSend,
-                            config
-                        )
-                            .then(response => {
-                                console.log("resp :")
-                                console.log(response)
-                            })
-                            .catch(function (error) {
-                                console.log(error);
-                            });
-
-                        props.setLogin(newUser(username.current));
+                        newUser(username.current, password.current)
+                            .then(props.setLogin)
+                            .catch(console.log);
                     } else {
                         setLoading(false);
                     }

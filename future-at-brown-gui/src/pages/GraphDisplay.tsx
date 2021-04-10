@@ -1,10 +1,10 @@
 import React, {createRef, useEffect, useRef, useState} from "react"
 import { Button, Container, Grid, GridRow, Header, Segment, Sticky } from "semantic-ui-react"
-import { User } from "../modules/Data"
 import axios from "axios";
 import ClassGraph from "../modules/ClassGraph.jsx";
 import {Link} from "react-router-dom";
 import "../css/Graph.css"
+import User from "../classes/User.js";
 
 interface Params {
     user: User;

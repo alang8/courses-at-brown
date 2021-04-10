@@ -1,6 +1,6 @@
 import React, { createRef } from "react"
 import { Button, Card, Container, Grid, GridColumn, GridRow, Header, Segment, Sticky } from "semantic-ui-react"
-import { User } from "../modules/Data"
+import User from "../classes/User";
 import ExpandableCourses from "../modules/ExpandableCourses";
 import ParamSlider from "../modules/ParamSliders";
 
@@ -32,12 +32,12 @@ const Profile: React.FC<Params> = (props) => {
                 </Grid.Row>
                 <Grid.Row stretched>
                     <Grid.Column>
-                        <ExpandableCourses courses={props.user.taken} title={"Taken coures"} modifiable />
+                        <ExpandableCourses courses={props.user.getTaken()} title={"Taken coures"} modifiable />
                     </Grid.Column>
                 </Grid.Row>
                 <Grid.Row stretched>
                     <Grid.Column>
-                        <ExpandableCourses courses={props.user.saved} title={"Saved coures"} />
+                        <ExpandableCourses courses={props.user.getSaved()} title={"Saved coures"} />
                     </Grid.Column>
                 </Grid.Row>
             </Grid>

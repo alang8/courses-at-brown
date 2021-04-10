@@ -1,7 +1,17 @@
-import { Course, defaultParams, SearchParamNames, SearchParams } from "./Data";
+import axios from "axios";
+import { Course } from "./Course";
+import { defaultParams, SearchParamNames, SearchParams } from "./SearchParams";
+
+const config = {
+    headers: {
+        "Content-Type": "application/json",
+        'Access-Control-Allow-Origin': '*',
+    }
+}
 
 class User {
 
+    // accesible variables
     readonly username: string;
     readonly isGuest: boolean;
 
@@ -33,7 +43,9 @@ class User {
     async saveCourse(toSave: Course): Promise<Course[]> {
         this.saved.push(toSave);
         // TODO:  replace with actuall adding course to dataabase
-        await new Promise(resolve => setTimeout(resolve, 2000));
+        if (!this.isGuest) {
+            await new Promise(resolve => setTimeout(resolve, 2000));
+        }
         return this.getSaved();
     }
 
@@ -44,7 +56,9 @@ class User {
     async removeSaved(toRemove: Course): Promise<Course[]> {
         this.saved.filter((c) => c !== toRemove);
         // TODO:  replace with actuall adding course to dataabase
-        await new Promise(resolve => setTimeout(resolve, 2000));
+        if (!this.isGuest) {
+            await new Promise(resolve => setTimeout(resolve, 2000));
+        }
         return this.getSaved();
     }
 
@@ -53,21 +67,25 @@ class User {
     async takeCourse(toAdd: Course): Promise<Course[]> {
         this.taken.push(toAdd);
         // TODO:  replace with actuall adding course to dataabase
-        await new Promise(resolve => setTimeout(resolve, 2000));
+        if (!this.isGuest) {
+            await new Promise(resolve => setTimeout(resolve, 2000));
+        }
         return this.getTaken()
     }
 
     async removeTaken(toRemove: Course): Promise<Course[]> {
         this.taken.filter((c) => c !== toRemove);
         // TODO:  replace with actuall adding course to dataabase
-        await new Promise(resolve => setTimeout(resolve, 2000));
+        if (!this.isGuest) {
+            await new Promise(resolve => setTimeout(resolve, 2000));
+        };
         return this.getTaken()
     }
 
     // preferences
 
     getPreferences(): SearchParams {
-        return {...this.preferences}
+        return { ...this.preferences }
     }
 
     async setPreferences(prefName: SearchParamNames, newVal: number): SearchParams {
@@ -76,17 +94,48 @@ class User {
         await new Promise(resolve => setTimeout(resolve, 2000));
         return this.getPreferences();
     }
-
-    // getting user from database
-    static async getUser(username: string): Promise<User> {
-        // TODO: actually get the user from the database
-        return new User(
-            username,
-            [],
-            []
-        )
-    }
-
 }
 
 export default User;
+
+/**
+ * Returns the user stored with the given username. Assumes the username is in
+ * the database
+ * @param username the username of the returned user
+ * @returns the user with the given username
+ */
+export const getUser = async (username: string): Promise<User> {
+    // TODO: actually get the user from the database
+    return new User(
+        username,
+        [],
+        []
+    )
+}
+
+/**
+ * Creates a new user with the given username and password. Assumes
+ * the username given is unique
+ * @param username the username of the new user
+ * @param password the password of the new user
+ * @returns the new user with the given username
+ */
+export const newUser = async (username: string, password: string): Promise<User> {
+    const toSend = {
+        username: username,
+        password: password
+    };
+
+    return axios.post(
+        'http://localhost:4567/signup',
+        toSend,
+        config
+    )
+        .then(() => {
+            return new User(username);
+        })
+        .catch((error) => {
+            return Promise.reject(error);
+        });
+
+}

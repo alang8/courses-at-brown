@@ -1,8 +1,8 @@
 import React, { useState } from "react";
 import { Card, Grid, Header, Icon } from 'semantic-ui-react';
-import { GetColor } from './Colors'
+import { GetColor } from '../classes/Colors'
 import CourseInfo from "./CourseInfo";
-import { Course } from "./Data";
+import { Course } from "../classes/Course";
 
 interface Params {
     course: Course;

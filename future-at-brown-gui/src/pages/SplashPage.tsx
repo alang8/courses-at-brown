@@ -1,7 +1,7 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import { Button, Container, Header } from 'semantic-ui-react';
-import { User, newGuest } from "../modules/Data";
+import User from "../classes/User";
 
 interface Params {
     setLogin: (user: User) => void;
@@ -29,7 +29,7 @@ const SplashPage: React.FC<Params> = (props) => {
                         <Button
                             content="Continue as Guest"
                             className="gradient"
-                            onClick={() => props.setLogin(newGuest())} />
+                            onClick={() => props.setLogin(new User())} />
                     </Button.Group>
                     <Header as="h3">
                         {"Don't have an account? Sign up "}

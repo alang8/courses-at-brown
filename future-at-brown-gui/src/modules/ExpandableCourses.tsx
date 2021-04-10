@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { Accordion, Button, Card, Header, Icon, Segment } from "semantic-ui-react";
 import CourseTile from "./CourseTile";
-import { Course } from "./Data";
+import { Course } from "../classes/Course";
 interface Params {
     title: string;
     modifiable?: boolean;

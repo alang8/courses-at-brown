@@ -1,9 +1,10 @@
 import React from "react";
 import { Header} from "semantic-ui-react";
-import { defaultParams, SearchParamNames, SearchParams, User } from "./Data";
+import { defaultParams, SearchParamNames, SearchParams } from "../classes/SearchParams";
 import { useState } from "react";
 import Slider from 'rc-slider';
 import 'rc-slider/assets/index.css';
+import User from "../classes/User";
 
 interface Params {
     curUser?: User;
@@ -13,7 +14,7 @@ interface Params {
 
 const ParamSlider: React.FC<Params> = (props) => {
 
-    const [pref, setPrefs] = useState<SearchParams>(props.curUser?.preferences ?? defaultParams);
+    const [pref, setPrefs] = useState<SearchParams>(props.curUser?.getPreferences() ?? defaultParams);
 
     const makeSlider = (
         color: string,
