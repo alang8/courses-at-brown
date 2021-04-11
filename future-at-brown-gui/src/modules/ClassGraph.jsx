@@ -5,6 +5,7 @@ import { ForceGraph2D, ForceGraph3D, ForceGraphVR, ForceGraphAR } from 'react-fo
 import { User } from "../modules/Data"
 import axios from "axios";
 import "../css/Graph.css"
+import { GetColor } from './Colors'
 
 
 const ClassGraph = (props) => {
@@ -13,6 +14,11 @@ const ClassGraph = (props) => {
     const [theCourses, setCourses] = useState([]);
     const [allCourseInfo, setAllCourseinfo] = useState({});
     const [gData, setGData] = useState({"nodes":[{}], "links":[{}]});
+
+    //TEST PATH
+    // let thePath = {"CSCI 0170":0, "CSCI 0220":1, "CSCI 0180":1, "CSCI 0330":2, "CSCI 1470":2, "CSCI 0320":3, "APMA 0360":5}
+    let theSemester = {0:"Fall 2021", 1:"Spring 2022", 2:"Fall 2022", 3:"Spring 2023", 4:"Fall 2023", 5:"Spring 2024", 6:"Fall 2024", 7:"Spring 2025", 8:"Fall 2025", 9:"Spring 2026"}
+
 
     let config = {
         headers: {
@@ -46,6 +52,7 @@ const ClassGraph = (props) => {
         let i;
         let tempCourseInfo = {};
 
+
         console.log("course ln 47)")
         console.log(theCourses);
         for(i = 0; i < theCourses.length; i++) {
@@ -63,7 +70,11 @@ const ClassGraph = (props) => {
                     linkArray.push({"source":prereqIDs[z], "target": curID});
                 }
             }
-            nodeArray.push({'id':curID, 'name':curID, 'val':8});
+            let val = 8;
+            if (curID in props.path) {
+                val = 100;
+            }
+            nodeArray.push({'id':curID, 'name':curID, 'val':val});
             tempCourseInfo[curID] = theCourses[i];
         }
 
@@ -115,13 +126,32 @@ const ClassGraph = (props) => {
 
     }
 
-    const forceRef = useRef(null);
+    function nodePaint({ id, x, y }, color, ctx) {
+        if(id in props.path) {
+            ctx.fillStyle = GetColor(id.substring(0,4));
+            ctx.beginPath();
+            ctx.arc(x, y, 100, 0, 2 * Math.PI, false);
+            ctx.fill();
+            ctx.fillStyle = "black"
+            ctx.font = '24px Sans-Serif';
+            ctx.textAlign = 'center';
+            ctx.textBaseline = 'middle';
+            ctx.fillText(id, x, y-15);
+            ctx.fillText(theSemester[props.path[id]], x, y + 9);
+            ctx.stroke();
+        } else {
+            ctx.fillStyle = "#b1c2de";
+            ctx.beginPath();
+            ctx.arc(x, y, 15, 0, 2 * Math.PI, false);
+            ctx.fill();
+        }
+    }
 
     //Here we can fiddle with the forces, if we uncomment this line, the connected part looks nice but
     //disconnected part goes crazy.
     useEffect(() => {
-        forceRef.current.d3Force("charge").strength(-20000);
-        forceRef.current.d3Force("link").strength(0);
+        fgRef.current.d3Force("charge").strength(-15000);
+        fgRef.current.d3Force("link").strength(0);
     });
 
     return <div>
@@ -131,11 +161,13 @@ const ClassGraph = (props) => {
                         onNodeClick={(n, e) => {
                             displayedCourseInfo(n);
                         }}
-                        ref={forceRef}
-                        height={600}
-                        width={1100}
+                        ref={fgRef}
                         showNavInfo = {true}
                         dagMode={"radialin"}
+                        dagLevelDistance={100}
+                        height={600}
+                        width={1100}
+                        nodeCanvasObject={(node, ctx) => nodePaint(node, "black", ctx)}
                     />
                 </div>
                 <CourseInfo course={curCourse} setDisplay={closeModal} shouldDisplay={open}/>
