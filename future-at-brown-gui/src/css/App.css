@@ -11,13 +11,37 @@ ul {
 
 /* Splash page */
 
-.rail {
-    height: 10vh;
-    margin-top: 90vh;
-}
-
 .fill {
     height: 100%;
+}
+
+.bottom-float {
+    margin-top: 85vh;
+    height: 10vh;
+    position: fixed;
+    z-index: 1;
+    margin-bottom: 2vh;
+    display: flex;
+    flex-direction: row;
+}
+
+.bottom-float.left {
+    margin-left: 2vw;
+    margin-right: calc(98vw - 10vh);
+}
+
+.bottom-float.right {
+    margin-right: 2vw;
+    margin-left: calc(98vw - 10vh);
+}
+
+.bottom-float .ui.button {
+    height: 10vh;
+    width: 10vh;
+}
+
+.bottom-float .ui.button:hover {
+    filter: hue-rotate(40deg);
 }
 
 div.total-image {
@@ -88,8 +112,23 @@ div.total-grad .header.logo {
     }
 }
 
+.card.class-card {
+    min-width: 8em;
+}
+
+.left-align {
+    width: 100%;
+    display: flex;
+    justify-content: flex-end;
+}
+
+.card.class-card .meta {
+    width: 50%;
+    min-width: 6em;
+}
+
 .card.class-card:hover {
-    transform: scale(1.05);
+    transform: scale(1.03);
     cursor: pointer;
 }
 

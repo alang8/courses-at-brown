@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import { Button, Card, Header } from "semantic-ui-react";
 import User from "../classes/User";
+import { ButtonFooter, ProfileButton, SearchButton } from "../modules/BottomButton";
 import CourseTile from "../modules/CourseTile";
 import ExpandableCourses from "../modules/ExpandableCourses";
 import FormattedInput from "../modules/FormattedInput";
@@ -12,13 +13,15 @@ const TestComponent: React.FC<{}> = () => {
     const [error, setError] = useState<Array<String>>(["Uhoh", "more meesages"]);
   
     return <div className="App">
+      <SearchButton />
+      <ProfileButton />
       <Header as="h1" className="logo">Future @ Brown</Header>
       <Link to="/test-route"><Button content="test" className="gradient"/></Link>
       <FormattedInput label="Texte" />
       <FormattedInput label="Username" type="username" />
       <FormattedInput label="Password" type="password" error={{ messages: error, resolve: () => setError([]) }} />
   
-      <ExpandableCourses courses={[{code: "0320", dept: "CSCI", name: "Introduction to Software Engineering"}]} title="Test" />
+      <ExpandableCourses modifiable courses={[{code: "0320", dept: "CSCI", name: "Introduction to Software Engineering"}]} title="Test" />
       <ExpandableCourses courses={[{code: "0320", dept: "CSCI", name: "Introduction to Software Engineering"}, {code: "0320", dept: "CSCI", name: "Introduction to Software Engineering"}, {code: "0320", dept: "CSCI", name: "Introduction to Software Engineering"}, {code: "0320", dept: "CSCI", name: "Introduction to Software Engineering"}]} title="Test" />
       <ExpandableCourses courses={[{code: "0320", dept: "CSCI", name: "Introduction to Software Engineering"}, {code: "0320", dept: "CSCI", name: "Introduction to Software Engineering"}, {code: "0320", dept: "CSCI", name: "Introduction to Software Engineering"}, {code: "0320", dept: "CSCI", name: "Introduction to Software Engineering"}, {code: "0320", dept: "CSCI", name: "Introduction to Software Engineering"}, {code: "0320", dept: "CSCI", name: "Introduction to Software Engineering"}, {code: "0320", dept: "CSCI", name: "Introduction to Software Engineering"}, {code: "0320", dept: "CSCI", name: "Introduction to Software Engineering"}]} title="Test" />
       <Card.Group>
@@ -39,6 +42,7 @@ const TestComponent: React.FC<{}> = () => {
         <CourseTile course={{code: "0320", dept: "EChON", name: "g"}} />
       </Card.Group>
       <ParamSlider curUser={new User()}/>
+      <ButtonFooter />
     </div>
   }
   

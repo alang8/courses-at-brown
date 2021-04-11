@@ -4,6 +4,7 @@ import { AuthenticatedPageProps } from "../classes/Authentication";
 import { Course } from "../classes/Course";
 import { SearchParams } from "../classes/SearchParams";
 import User from "../classes/User";
+import { ButtonFooter, ProfileButton } from "../modules/BottomButton";
 import ExpandableCourses from "../modules/ExpandableCourses";
 import ParamSlider from "../modules/ParamSliders";
 
@@ -26,7 +27,7 @@ const Search: React.FC<AuthenticatedPageProps> = (props) => {
                     <GridColumn>
                         <Segment>
                             <Header as="h2" content={"Preferences"} />
-                            <ParamSlider curUser={props.user} prefChange={setPrefsAsync}/>
+                            <ParamSlider curUser={props.user} prefChange={setPrefsAsync} />
                         </Segment>
                     </GridColumn>
                 </Grid.Row>
@@ -41,6 +42,8 @@ const Search: React.FC<AuthenticatedPageProps> = (props) => {
                     </Grid.Column>
                 </Grid.Row>
             </Grid>
+            <ProfileButton />
+            <ButtonFooter />
         </Container>
     </div>
 }

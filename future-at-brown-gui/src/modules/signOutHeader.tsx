@@ -12,7 +12,7 @@ const SignOutHeader: React.FC<AuthenticatedPageProps> = (props) => {
             <Grid columns='equal'>
                 <Grid.Row>
                     <Grid.Column>
-                        <Header as="h2" content={props.user.username} />
+                        <Header as="h2" content={props.user.isGuest ? "" : props.user.username} />
                     </Grid.Column>
                     <Grid.Column>
                         <Header as="h1" className="logo" content="Future @ Brown" />

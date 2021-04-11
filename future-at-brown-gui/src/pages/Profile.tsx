@@ -1,13 +1,12 @@
 import React from "react"
 import { Button, Container, Grid, GridColumn, Header, Icon, Rail, Segment, Sticky } from "semantic-ui-react"
 import { AuthenticatedPageProps } from "../classes/Authentication";
+import { ButtonFooter, SearchButton } from "../modules/BottomButton";
 import ExpandableCourses from "../modules/ExpandableCourses";
 import ParamSlider from "../modules/ParamSliders";
-import SignOutHeader from "../modules/signOutHeader";
-
+import SignOutHeader from "../modules/SignOutHeader";
 
 const Profile: React.FC<AuthenticatedPageProps> = (props) => {
-
 
     return <Container textAlign={'center'}>
         <SignOutHeader setUser={props.setUser} user={props.user} />
@@ -35,7 +34,8 @@ const Profile: React.FC<AuthenticatedPageProps> = (props) => {
                 </Grid.Column>
             </Grid.Row>
         </Grid>
-        
+        <SearchButton />
+        <ButtonFooter />
     </Container>
 }
 

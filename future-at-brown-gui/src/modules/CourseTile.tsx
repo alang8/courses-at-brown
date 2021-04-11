@@ -3,6 +3,7 @@ import { Card, Grid, Header, Icon } from 'semantic-ui-react';
 import { GetColor } from '../classes/Colors'
 import CourseInfo from "./CourseInfo";
 import { Course } from "../classes/Course";
+import { findByLabelText } from "@testing-library/dom";
 
 interface Params {
     course: Course;
@@ -20,9 +21,9 @@ const CourseTile: React.FC<Params> = (props) => {
 
             <Card.Content>
                 <div onClick={() => setDisplay(true)}>
-                    <Grid columns={2}>
+                    <Grid>
                         <Grid.Row >
-                            <Grid.Column textAlign='left' width={12}>
+                            <Grid.Column textAlign='left' width={12} columns={2}>
                                 <Card.Header>
                                     <Header as="h3" color={GetColor(course.dept)}>
                                         {course.dept + course.code}
@@ -34,9 +35,10 @@ const CourseTile: React.FC<Params> = (props) => {
                             </Grid.Column>
                         </Grid.Row>
                         <Grid.Row textAlign='right'>
-                            <Grid.Column />
                             <Grid.Column verticalAlign='bottom'>
-                                <Card.Meta>{course.name}</Card.Meta>
+                                <div className="left-align">
+                                    <Card.Meta>{course.name}</Card.Meta>
+                                </div>
                             </Grid.Column>
                         </Grid.Row>
                     </Grid>
