@@ -1,7 +1,7 @@
 import React from "react";
 import { Button, Grid, Header, Icon, Modal } from 'semantic-ui-react';
-import { GetColor } from './Colors'
-import { Course } from "./Data";
+import { GetColor } from '../classes/Colors'
+import { Course } from '../classes/Course'
 
 interface Params {
     course: Course;

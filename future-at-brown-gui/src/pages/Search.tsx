@@ -1,18 +1,18 @@
 import React, { createRef, useState } from "react"
 import { Button, Container, Grid, GridColumn, Header, Segment, Sticky } from "semantic-ui-react"
-import { Course, SearchParams, User } from "../modules/Data"
+import { AuthenticatedPageProps } from "../classes/Authentication";
+import { Course } from "../classes/Course";
+import { SearchParams } from "../classes/SearchParams";
+import User from "../classes/User";
+import { ButtonFooter, ProfileButton } from "../modules/BottomButton";
 import ExpandableCourses from "../modules/ExpandableCourses";
 import ParamSlider from "../modules/ParamSliders";
 
-interface Params {
-    user: User;
-}
-
-const Search: React.FC<Params> = (props) => {
+const Search: React.FC<AuthenticatedPageProps> = (props) => {
 
     const contextRef = createRef<HTMLElement>();
-    const [prefs, setPrefs] = useState<SearchParams>(props.user.preferences);
-    const [takenCourses, setTakenCourses] = useState<Course[]>(props.user.taken);
+    const [prefs, setPrefs] = useState<SearchParams>(props.user.getPreferences());
+    const [takenCourses, setTakenCourses] = useState<Course[]>(props.user.getTaken());
 
     const setPrefsAsync = async (pref: SearchParams) => setPrefs(pref)
 
@@ -27,7 +27,7 @@ const Search: React.FC<Params> = (props) => {
                     <GridColumn>
                         <Segment>
                             <Header as="h2" content={"Preferences"} />
-                            <ParamSlider curUser={props.user} prefChange={setPrefsAsync}/>
+                            <ParamSlider curUser={props.user} prefChange={setPrefsAsync} />
                         </Segment>
                     </GridColumn>
                 </Grid.Row>
@@ -42,6 +42,8 @@ const Search: React.FC<Params> = (props) => {
                     </Grid.Column>
                 </Grid.Row>
             </Grid>
+            <ProfileButton />
+            <ButtonFooter />
         </Container>
     </div>
 }

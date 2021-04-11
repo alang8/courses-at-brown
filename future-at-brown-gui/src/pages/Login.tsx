@@ -1,13 +1,10 @@
 import React, { useRef, useState } from "react";
 import { Button, Container, Form, Header, Segment } from "semantic-ui-react";
 import FormattedInput from "../modules/FormattedInput";
-import { ValidPass, ValidUser, ValidLogin } from "../modules/InputValidation";
+import { ValidPass, ValidUser, ValidLogin, InAuthenticaedPageProps } from "../classes/Authentication";
+import { getUser } from "../classes/User";
 
-interface Params{
-    setLogin: (user: string) => Promise<any>;
-}
-
-const Login: React.FC<Params> = (props) => {
+const Login: React.FC<InAuthenticaedPageProps> = (props) => {
     const username = useRef<string>("");
     const password = useRef<string>("");
 
@@ -29,9 +26,10 @@ const Login: React.FC<Params> = (props) => {
             .then((loginErr: string[]) => {
                 setUserError(loginErr);
                 setPassError(loginErr);
-                console.log(loginErr);
                 if (loginErr.length === 0) {
-                    props.setLogin(username.current)
+                    getUser(username.current)
+                        .then(props.setLogin)
+                        .catch(console.log)
                 } else {
                     setLoading(false);
                 }
@@ -58,7 +56,7 @@ const Login: React.FC<Params> = (props) => {
                         type="password"
                         textChange={(pass: string) => password.current = pass}
                         error={{ messages: passError, resolve: () => setPassError([]) }} />
-                    <Button type="submit" content="Submit" />
+                    <Button type="submit" content="Submit" className="gradient"/>
                 </Form>
             </Segment>
         </Container>

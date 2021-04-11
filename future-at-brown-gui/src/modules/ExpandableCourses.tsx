@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { Accordion, Button, Card, Header, Icon, Segment } from "semantic-ui-react";
 import CourseTile from "./CourseTile";
-import { Course } from "./Data";
+import { Course } from "../classes/Course";
 interface Params {
     title: string;
     modifiable?: boolean;
@@ -48,7 +48,7 @@ const ExpandableCourses: React.FC<Params> = (props) => {
             {(props.title) ? <Header as="h1" content={props.title} /> : undefined}
 
             {(initDisplay.length <= 0) ? <Header as="h3" content={"This selection is empty"} />
-                : <Card.Group content={initDisplay} centered />}
+                : <Card.Group content={initDisplay} centered itemsPerRow={5} />}
             {(overflowCards.length > 0) ?
                 <Accordion>
                     <Accordion.Title

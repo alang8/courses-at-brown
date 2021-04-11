@@ -1,4 +1,5 @@
 import axios from "axios";
+import User from "./User";
 
 const config = {
     headers: {
@@ -125,10 +126,20 @@ export const ValidLogin = async (user: string, pass: string): Promise<string[]> 
 }
 
 export const ValidNewUser = async (user: string): Promise<string[]> => {
+    return Promise.resolve([]);
     const syncTests = ValidUser(user);
     if (syncTests.length === 0) {
         const valid = await takenUsername(user);
         if (valid.length > 0) syncTests.push(valid);
     }
     return syncTests;
+}
+
+export interface AuthenticatedPageProps {
+    user: User;
+    setUser: (user: User | undefined) => void;
+}
+
+export interface InAuthenticaedPageProps {
+    setLogin: (user: User) => void;
 }
