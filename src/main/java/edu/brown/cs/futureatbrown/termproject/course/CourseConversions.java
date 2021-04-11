@@ -11,7 +11,6 @@ import java.util.Set;
 
 import static edu.brown.cs.futureatbrown.termproject.exception.SQLRuntimeException.unwrap;
 import static edu.brown.cs.futureatbrown.termproject.exception.SQLRuntimeException.wrap;
-
 /**
  * Converts CourseNode and CourseEdge data from results.
  */

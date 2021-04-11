@@ -4,18 +4,35 @@ import edu.brown.cs.futureatbrown.termproject.graph.Graph;
 
 import java.util.HashMap;
 import java.util.Objects;
-import edu.brown.cs.futureatbrown.termproject.graph.GraphEdge;
-import edu.brown.cs.futureatbrown.termproject.graph.GraphNode;
 
-import java.util.HashMap;
 import java.util.Set;
 
 /**
  * Specific graph implementation containing CourseNodes and CourseEdges.
  */
 public class CourseGraph implements Graph<CourseNode, CourseEdge> {
+  // Graph Specific Variables
   private HashMap<String, CourseNode> nodeMap;
   private HashMap<String, HashMap<String, CourseEdge>> edgeMap;
+
+  // Global Variables
+
+  // SLIDER PREFERENCES
+  private Double crsRatingPref; // Number from 1 - 10 [Inclusive]
+  private Double profRatingPref; // Number from 1 - 10 [Inclusive]
+  private Double avgHoursPref; // Number from 1 - 10 [Inclusive]
+  private Double balanceFactorPref; // Number from 1 - 10 [Inclusive]
+  private Double maxHoursPref; // Number from 1 - 10 [Inclusive]
+  private Double classSizePref; // Number from 1 - 10 [Inclusive]
+
+  // HARD INPUTS
+  private Integer globalSem;
+  private Double avgHoursInput; // Desired Avg Hour Workload PER CLASS
+  private Double totalMaxHoursInput; // TOTAL HOURS OVERALL [ENTIRE PATHWAY]
+  private Integer classSizeInput; // Desired Class Size Per Class
+  private Integer classSizeMax; // Max Class Size
+  private Integer minNumClasses; // Minimum Number of Classes
+  private Integer maxNumClasses; // Maximum Number of Classes
 
   /**
    * Constructs a new CourseGraph with the given parameters.
@@ -46,12 +63,50 @@ public class CourseGraph implements Graph<CourseNode, CourseEdge> {
   }
 
   /**
+   * Sets up all the global parameters of the graph in this edge
+   * @param globalSem - The semester the user has picked
+   */
+  public void setGlobalParams(int globalSem, double crsRatingPref, double profRatingPref,
+                              double avgHoursPref, double avgHoursInput, int minNumClasses,
+                              int maxNumClasses, double balanceFactorPref, double maxHoursPref,
+                              double totalMaxHoursInput, double classSizePref, int classSizeInput,
+                              int classSizeMax) {
+    // SLIDER PREFERENCES
+    this.globalSem = globalSem;
+    this.crsRatingPref = crsRatingPref;
+    this.profRatingPref = profRatingPref;
+    this.avgHoursPref = avgHoursPref;
+    this.maxHoursPref = maxHoursPref;
+    this.balanceFactorPref = balanceFactorPref;
+    this.classSizePref = classSizePref;
+
+    // HARD INPUTS
+    this.avgHoursInput = avgHoursInput; // AVG HOURS PER CLASS
+    this.totalMaxHoursInput = totalMaxHoursInput; // TOTAL HOURS OVERALL
+    this.minNumClasses = minNumClasses;
+    this.maxNumClasses = maxNumClasses;
+    this.classSizeInput = classSizeInput;
+    this.classSizeMax = classSizeMax;
+
+    // SET ALL THE EDGES TO THE SAME PARAMETER
+    for (HashMap<String, CourseEdge> edgesFrom: this.edgeMap.values()) {
+      for (CourseEdge edge : edgesFrom.values()) {
+        edge.setGlobalParams(this.globalSem, this.crsRatingPref, this.profRatingPref,
+          this.avgHoursPref, this.avgHoursInput, this.minNumClasses,
+          this.maxNumClasses, this.balanceFactorPref, this.maxHoursPref,
+          this.totalMaxHoursInput, this.classSizePref, this.classSizeInput,
+          this.classSizeMax);
+      }
+    }
+  }
+
+  /**
    * Helper function which returns a copy of a HashMap of Nodes
    */
   private HashMap<String, CourseNode> nodeSetCopy(HashMap<String, CourseNode> nodeMap) {
     HashMap<String, CourseNode> newNodeMap = new HashMap<>();
     for (String nodeID : nodeMap.keySet()) {
-      newNodeMap.put(nodeID, (CourseNode) nodeMap.get(nodeID).copy());
+      newNodeMap.put(nodeID, nodeMap.get(nodeID).copy());
     }
     return newNodeMap;
   }
@@ -92,8 +147,21 @@ public class CourseGraph implements Graph<CourseNode, CourseEdge> {
   public void addNode(CourseNode node, Set<CourseEdge> edges) {
     nodeMap.put(node.getID(), node);
     for (CourseEdge edge : edges) {
-      if (edge.getStart().equals(node.getID())) {
-        edgeMap.put(edge.getID(), new HashMap<>() {{ put(edge.getID(), edge); }});
+      try {
+        edge.setGlobalParams(this.globalSem, this.crsRatingPref, this.profRatingPref,
+          this.avgHoursPref, this.avgHoursInput, this.minNumClasses,
+          this.maxNumClasses, this.balanceFactorPref, this.maxHoursPref,
+          this.totalMaxHoursInput, this.classSizePref, this.classSizeInput,
+          this.classSizeMax);
+      } catch (NullPointerException e) {
+        System.out.println("WARNING: Remember to Initialize the Global Parameters");
+      }
+      if (edge.getStart().getID().equals(node.getID())) {
+        if (edgeMap.containsKey(edge.getStart().getID())) {
+          edgeMap.get(edge.getStart().getID()).put(edge.getEnd().getID(), edge);
+        } else {
+          edgeMap.put(edge.getStart().getID(), new HashMap<>() {{ put(edge.getEnd().getID(), edge); }});
+        }
       }
     }
   }

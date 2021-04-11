@@ -30,6 +30,8 @@ public class CourseNode extends GraphNode<CourseEdge> implements Locatable {
   private double weight;
   private boolean visited;
   private List<CourseEdge> prevPath;
+  private Double prevTotalAvgHours;
+  private Double prevTotalMaxHours;
 
   private final double[] coordinates;
 
@@ -71,6 +73,8 @@ public class CourseNode extends GraphNode<CourseEdge> implements Locatable {
     } else {
       this.coordinates = new double[0];
     }
+    this.prevTotalAvgHours = 0.0;
+    this.prevTotalMaxHours = 0.0;
   }
 
   /**
@@ -136,11 +140,12 @@ public class CourseNode extends GraphNode<CourseEdge> implements Locatable {
    * @return the set of prerequisites of groups
    */
   public Set<List<String>> getPrereqSet() {
-    Set<List<String>> answer =
-      Arrays.stream(prereq.split("&"))
-            .map(group -> List.of(group.replaceAll("[()]", "").split("[|]")))
-            .collect(Collectors.toSet());
-    return answer;
+    if (null == prereq) {
+      return new HashSet<>();
+    }
+    return Arrays.stream(prereq.split("&"))
+      .map(group -> List.of(group.replaceAll("[()]", "").split("[|]")))
+      .collect(Collectors.toSet());
   }
 
   /**
@@ -275,7 +280,7 @@ public class CourseNode extends GraphNode<CourseEdge> implements Locatable {
    * @param prevPath the path
    */
   @Override
-  public void setPreviousPath(List prevPath) {
+  public void setPreviousPath(List<CourseEdge> prevPath) {
     this.prevPath = prevPath;
   }
 
@@ -289,36 +294,21 @@ public class CourseNode extends GraphNode<CourseEdge> implements Locatable {
     return prevPath;
   }
 
-  /**
-   * Checks if 2 doubles are equal including if they are both null
-   * @param double1
-   * @param double2
-   * @return a boolean that tells if the doubles are equal
-   */
-   private boolean doubleEquals(Double double1, Double double2) {
-    if (double1 == double2) {
-      return true;
-    } else if (double1 == null || double2 == null) {
-      return false;
-    }
-    return Double.compare(double1, double2) == 0;
-   }
-
-  /**
-   * Checks if 2 integers are equal including if they are both null
-   * @param int1
-   * @param int2
-   * @return a boolean that tells if the intgers are equal
-   */
-  private boolean intEquals(Integer int1, Integer int2) {
-    if (int1 == int2) {
-      return true;
-    } else if (int1 == null || int2 == null) {
-      return false;
-    }
-    return int1.equals(int2);
+  public Double getPrevTotalAvgHours() {
+    return prevTotalAvgHours;
   }
 
+  public void setPrevTotalAvgHours(Double prevTotalAvgHours) {
+    this.prevTotalAvgHours = prevTotalAvgHours;
+  }
+
+  public Double getPrevTotalMaxHours() {
+    return prevTotalMaxHours;
+  }
+
+  public void setPrevTotalMaxHours(Double prevTotalMaxHours) {
+    this.prevTotalMaxHours = prevTotalMaxHours;
+  }
 
   @Override
   public boolean equals(Object o) {
@@ -327,45 +317,45 @@ public class CourseNode extends GraphNode<CourseEdge> implements Locatable {
     CourseNode that = (CourseNode) o;
 
     // WHEN NODES ARE NOT EQUAL IDENTIFY THE OFFENDING COMPONENT
-    if (!Objects.equals(id, that.id)) {
-      System.out.println("ID: Expected " + id + ", GOT " + that.id);
-    }
-    if (!Objects.equals(name, that.name)) {
-      System.out.println("NAME: Expected " + name + ", GOT " + that.name);
-    }
-    if (!Objects.equals(instr, that.instr)) {
-      System.out.println("INSTRUCTOR: Expected " + instr + ", GOT " + that.instr);
-    }
-    if (!Objects.equals(sem, that.sem)) {
-      System.out.println("SEMESTER: Expected " + sem + ", GOT " + that.sem);
-    }
-    if (!Objects.equals(course_rating, that.course_rating)) {
-      System.out.println("COURSE RATING: Expected " + course_rating + ", GOT " + that.course_rating);
-    }
-    if (!Objects.equals(prof_rating, that.prof_rating)) {
-      System.out.println("PROF RATING: Expected " + prof_rating + ", GOT " + that.prof_rating);
-    }
-    if (!Objects.equals(avg_hours, that.avg_hours)) {
-      System.out.println("AVG HOURS: Expected " + avg_hours + ", GOT " + that.avg_hours);
-    }
-    if (!Objects.equals(max_hours, that.max_hours)) {
-      System.out.println("MAX HOURS: Expected " + max_hours + ", GOT " + that.max_hours);
-    }
-    if (!Objects.equals(class_size, that.class_size)) {
-      System.out.println("CLASS SIZE: Expected " + class_size + ", GOT " + that.class_size);
-    }
-    if (!(Double.compare(that.weight, weight) == 0)){
-      System.out.println("WEIGHT: EXPECTED " + weight + ", GOT " + that.weight);
-    }
-    if (visited != that.visited) {
-      System.out.println("VISITED: Expected " + visited + ", GOT " + that.visited);
-    }
-    if (!Objects.equals(prevPath, that.prevPath)) {
-      System.out.println("PREVIOUS PATH: Expected " + prevPath + ", GOT " + that.prevPath);
-    }
-    if (!Arrays.equals(coordinates, that.coordinates)) {
-      System.out.println("COORDINATES: Expected " + coordinates + ", GOT " + that.coordinates);
-    }
+//    if (!Objects.equals(id, that.id)) {
+//      System.out.println("ID: Expected " + id + ", GOT " + that.id);
+//    }
+//    if (!Objects.equals(name, that.name)) {
+//      System.out.println("NAME: Expected " + name + ", GOT " + that.name);
+//    }
+//    if (!Objects.equals(instr, that.instr)) {
+//      System.out.println("INSTRUCTOR: Expected " + instr + ", GOT " + that.instr);
+//    }
+//    if (!Objects.equals(sem, that.sem)) {
+//      System.out.println("SEMESTER: Expected " + sem + ", GOT " + that.sem);
+//    }
+//    if (!Objects.equals(course_rating, that.course_rating)) {
+//      System.out.println("COURSE RATING: Expected " + course_rating + ", GOT " + that.course_rating);
+//    }
+//    if (!Objects.equals(prof_rating, that.prof_rating)) {
+//      System.out.println("PROF RATING: Expected " + prof_rating + ", GOT " + that.prof_rating);
+//    }
+//    if (!Objects.equals(avg_hours, that.avg_hours)) {
+//      System.out.println("AVG HOURS: Expected " + avg_hours + ", GOT " + that.avg_hours);
+//    }
+//    if (!Objects.equals(max_hours, that.max_hours)) {
+//      System.out.println("MAX HOURS: Expected " + max_hours + ", GOT " + that.max_hours);
+//    }
+//    if (!Objects.equals(class_size, that.class_size)) {
+//      System.out.println("CLASS SIZE: Expected " + class_size + ", GOT " + that.class_size);
+//    }
+//    if (!(Double.compare(that.weight, weight) == 0)){
+//      System.out.println("WEIGHT: EXPECTED " + weight + ", GOT " + that.weight);
+//    }
+//    if (visited != that.visited) {
+//      System.out.println("VISITED: Expected " + visited + ", GOT " + that.visited);
+//    }
+//    if (!Objects.equals(prevPath, that.prevPath)) {
+//      System.out.println("PREVIOUS PATH: Expected " + prevPath + ", GOT " + that.prevPath);
+//    }
+//    if (!Arrays.equals(coordinates, that.coordinates)) {
+//      System.out.println("COORDINATES: Expected " + Arrays.toString(coordinates) + ", GOT " + Arrays.toString(that.coordinates));
+//    }
     return Objects.equals(sem, that.sem) &&
            Objects.equals(course_rating, that.course_rating) &&
            Objects.equals(prof_rating, that.prof_rating) &&

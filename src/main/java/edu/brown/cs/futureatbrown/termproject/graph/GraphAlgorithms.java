@@ -117,10 +117,8 @@ public class GraphAlgorithms<Node extends GraphNode, Edge extends GraphEdge, G e
     Set<List<Edge>> potentialPathsSet = new HashSet<>();
 
     for (int kidx = 1; kidx < k; kidx++) {
-//      System.out.println("FINDING PATH " + (kidx + 1));
       // Spur Node selection follows the last shortest path
       for (int i = 0; i < results.get(kidx - 1).size(); i++) {
-//        System.out.println("LATEST PATH: " + results.get(kidx - 1));
         // Grab the current spur node from the last shortest path
         Node spurNode;
         if (i == 0) {
@@ -128,9 +126,6 @@ public class GraphAlgorithms<Node extends GraphNode, Edge extends GraphEdge, G e
         } else {
           spurNode = (Node) results.get(kidx - 1).get(i - 1).getEnd();
         }
-
-//        System.out.println("INDEX: " + i);
-//        System.out.println("SPUR NODE: " + spurNode);
 
         // Create a temporary copy of the graph to modify and traverse through
         G currGraph = (G) graph.copy();
@@ -193,6 +188,12 @@ public class GraphAlgorithms<Node extends GraphNode, Edge extends GraphEdge, G e
     return results;
   }
 
+
+  /**
+   *
+   */
+
+
   /**
    * A Function that creates a Short Path Tree from a starting Node and returns a ordered list
    *  containing all of the Short Paths to every other node in the same concentration (Graph)
@@ -208,7 +209,7 @@ public class GraphAlgorithms<Node extends GraphNode, Edge extends GraphEdge, G e
    */
   public final List<List<Edge>> dijkstraPathTree(String startID, G graph)
     throws InvalidAlgorithmParameterException {
-
+    System.out.println("---------------------------------------------");
     HashMap<String, Node> nodeSet = graph.getNodeSet();
     HashMap<String, HashMap<String, Edge>> edgeSet = graph.getEdgeSet();
 
@@ -229,18 +230,23 @@ public class GraphAlgorithms<Node extends GraphNode, Edge extends GraphEdge, G e
       // Pop off the minHeap
       Node currNode = minHeap.remove();
       String currID = currNode.getID();
+      System.out.println("--------------------------------------------");
+      System.out.println("CURRENT NODE: " + currNode);
 
       // Process Node only if it hasn't been visited yet
       if (!currNode.visited()) {
         // Iterate through all of the neighbors of the current node
         for (Edge E : edgeSet.get(currID).values()) {
-
           // Get Neighbor and calculate score to neighbor from currrent node
           Node neighbor = (Node) E.getEnd();
+          System.out.println("CURRENT EDGE: " + E);
 
           List<Edge> prevPath = new ArrayList<>(nodeSet.get(currID).getPreviousPath());
+          System.out.println("PREVIOUS PATH: " + prevPath);
+          System.out.println("OLD WEIGHT: " + currNode.getWeight());
           double newWeight = currNode.getWeight() + E.getWeight();
-
+          System.out.println("NEW WEIGHT: " + newWeight);
+          System.out.println("--------------------------------------------");
           // Update hashMap and add to minHeap if neighbor can be reached betterly
           if (nodeSet.get(neighbor.getID()).getWeight() > newWeight) {
             nodeSet.get(neighbor.getID()).setWeight(newWeight);
@@ -264,6 +270,8 @@ public class GraphAlgorithms<Node extends GraphNode, Edge extends GraphEdge, G e
         if (startingEdge.getStart().getID().equals(startID)) {
           results.add(nodeSet.get(nodeID).getPreviousPath());
         }
+      } else {
+        System.out.println("NO PATH FOR " + nodeID);
       }
     }
 
