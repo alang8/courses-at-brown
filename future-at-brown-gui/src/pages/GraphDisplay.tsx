@@ -12,7 +12,9 @@ interface Params {
 
 const GraphDisplay: React.FC<Params> = (props) => {
     const contextRef = useRef();
+
     let samplePath = {"CSCI 0170":0, "CSCI 0220":1, "CSCI 0180":1, "CSCI 0330":2, "CSCI 1470":2, "CSCI 0320":3, "APMA 0360":5};
+
     return <div id="container">
         <Button.Group floated="right" size="massive" id="profilebutton">
             <Link to="/profile">
@@ -30,7 +32,7 @@ const GraphDisplay: React.FC<Params> = (props) => {
             </Segment>
             <div id="newSearchButton">
                 <Button.Group attached="bottom" size="massive">
-                    <Link to="/search">
+                    <Link to="/login">
                         <Button content="New Search" className="basic"/>
                     </Link>
                 </Button.Group>

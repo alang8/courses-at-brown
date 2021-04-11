@@ -70,10 +70,10 @@ class User {
         return {...this.preferences}
     }
 
-    async setPreferences(prefName: SearchParamNames, newVal: number): SearchParams {
+    setPreferences(prefName: SearchParamNames, newVal: number): SearchParams {
         this.preferences[prefName] = newVal;
         // TODO:  replace with actuall adding course to dataabase
-        await new Promise(resolve => setTimeout(resolve, 2000));
+        new Promise(resolve => setTimeout(resolve, 2000));
         return this.getPreferences();
     }
 

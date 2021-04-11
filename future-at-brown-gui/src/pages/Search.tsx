@@ -33,7 +33,7 @@ const Search: React.FC<Params> = (props) => {
                 </Grid.Row>
                 <Grid.Row stretched>
                     <Grid.Column>
-                        <ExpandableCourses courses={takenCourses} title={"Taken coures"} modifiable />
+                        <ExpandableCourses courses={takenCourses} title={"Taken courses"} modifiable />
                     </Grid.Column>
                 </Grid.Row>
                 <Grid.Row stretched>
