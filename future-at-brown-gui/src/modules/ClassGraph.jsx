@@ -1,11 +1,9 @@
-import React, {createRef, useEffect, useRef, useState} from "react"
-import { Card, Container, Grid, GridRow, Header, Segment, Sticky } from "semantic-ui-react"
+import {useEffect, useRef, useState} from "react"
 import CourseInfo from "../modules/CourseInfo";
-import { ForceGraph2D, ForceGraph3D, ForceGraphVR, ForceGraphAR } from 'react-force-graph';
-import { User } from "../modules/Data"
+import { ForceGraph2D } from 'react-force-graph';
 import axios from "axios";
 import "../css/Graph.css"
-import { GetColor } from './Colors'
+import { GetColor } from '../classes/Colors'
 
 
 const ClassGraph = (props) => {

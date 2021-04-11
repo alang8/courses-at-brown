@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   BrowserRouter as Router,
   Route,
@@ -14,32 +14,44 @@ import Profile from './pages/Profile';
 import GraphDisplay from "./pages/GraphDisplay";
 import TestComponent, { TestComponent2 } from './pages/TestComponents';
 import NotFound from './pages/NotFound';
-import User from './classes/User';
+import User, { destringify } from './classes/User';
 
-const App:React.FC<{}> = () => {
-  const [user, setUser] = useState<User | undefined>(undefined);
+const App: React.FC<{}> = () => {
+  const [user, setUser] = useState<User | undefined>(destringify(localStorage.getItem("user")));
+  console.log(user);
+
   // routes to be used if the user is not logged in (profile page otherwise)
-  const InauthenticatedRoute = (route: string, loginProcess: JSX.Element): JSX.Element =>
-    <Route exact path={route}>
+  const InauthenticatedRoute = (route: string, loginProcess: JSX.Element): JSX.Element => {
+    console.log("inauth check", user);
+    return <Route exact path={route}>
       {(user) ? <Redirect to="/profile" /> : loginProcess}
     </Route>
+  }
 
   // routes to be used if the user is logged in (splash page otherwise)
-  const AuthenticatedRoute = (route: string, protectedContent: JSX.Element): JSX.Element =>
-    <Route exact path={route}>
+  const AuthenticatedRoute = (route: string, protectedContent: JSX.Element): JSX.Element => {
+    console.log("auth check", user);
+    return <Route exact path={route}>
       {(user) ? protectedContent : <Redirect to="/splash" />}
-    </Route>
+    </Route>;
+  }
+
+  useEffect(() => {
+    if (user) {
+      localStorage.setItem("user", user.stringify());
+    }
+  }, [user]);
 
   return (
     <Router>
       <Switch>
         <Route path="/test-components" component={TestComponent} />
         <Route path="/test-route" component={TestComponent2} />
-        {InauthenticatedRoute("/", <Redirect to ="/splash" />)}
-        {AuthenticatedRoute("/search", <Search user={user!} />)}
-        {AuthenticatedRoute("/profile", <Profile user={user!} />)}
-        {InauthenticatedRoute("/splash", <SplashPage setLogin={setUser}/>)}
-        {InauthenticatedRoute("/graph", <GraphDisplay user={user!} />)}
+        {InauthenticatedRoute("/", <Redirect to="/splash" />)}
+        {AuthenticatedRoute("/search", <Search user={user!} setUser={setUser}/>)}
+        {AuthenticatedRoute("/profile", <Profile user={user!} setUser={setUser}/>)}
+        {InauthenticatedRoute("/splash", <SplashPage setLogin={setUser} />)}
+        {AuthenticatedRoute("/graph", <GraphDisplay user={user!} setUser={setUser}/>)}
         {InauthenticatedRoute("/login", <Login setLogin={setUser} />)}
         {InauthenticatedRoute("/signup", <Signup setLogin={setUser} />)}
         <Route path="*" component={NotFound} />

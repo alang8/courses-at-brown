@@ -1,16 +1,13 @@
 import React, { createRef, useState } from "react"
 import { Button, Container, Grid, GridColumn, Header, Segment, Sticky } from "semantic-ui-react"
+import { AuthenticatedPageProps } from "../classes/Authentication";
 import { Course } from "../classes/Course";
 import { SearchParams } from "../classes/SearchParams";
 import User from "../classes/User";
 import ExpandableCourses from "../modules/ExpandableCourses";
 import ParamSlider from "../modules/ParamSliders";
 
-interface Params {
-    user: User;
-}
-
-const Search: React.FC<Params> = (props) => {
+const Search: React.FC<AuthenticatedPageProps> = (props) => {
 
     const contextRef = createRef<HTMLElement>();
     const [prefs, setPrefs] = useState<SearchParams>(props.user.getPreferences());

@@ -1,16 +1,11 @@
-import React, {createRef, useEffect, useRef, useState} from "react"
-import { Button, Container, Grid, GridRow, Header, Segment, Sticky } from "semantic-ui-react"
-import axios from "axios";
+import React, {useRef} from "react"
+import { Button, Container, Header, Segment, Sticky } from "semantic-ui-react"
 import ClassGraph from "../modules/ClassGraph.jsx";
 import {Link} from "react-router-dom";
 import "../css/Graph.css"
-import User from "../classes/User.js";
+import { AuthenticatedPageProps } from "../classes/Authentication.js";
 
-interface Params {
-    user: User;
-}
-
-const GraphDisplay: React.FC<Params> = (props) => {
+const GraphDisplay: React.FC<AuthenticatedPageProps> = (props) => {
     const contextRef = useRef();
     let samplePath = {"CSCI 0170":0, "CSCI 0220":1, "CSCI 0180":1, "CSCI 0330":2, "CSCI 1470":2, "CSCI 0320":3, "APMA 0360":5};
     return <div id="container">

@@ -11,6 +11,11 @@ ul {
 
 /* Splash page */
 
+.rail {
+    height: 10vh;
+    margin-top: 90vh;
+}
+
 .fill {
     height: 100%;
 }
@@ -37,7 +42,7 @@ div.total-image {
 }
 
 .total-image .container div h3.header {
-    font-size: max(12px, 2vh);
+    font-size: max(12px, 3vh);
     color: white;
     font-weight: lighter;
     font-style: italic;

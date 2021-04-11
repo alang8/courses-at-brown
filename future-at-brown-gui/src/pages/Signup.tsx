@@ -1,14 +1,10 @@
 import React, { useRef, useState } from "react";
 import { Container, Form, Header, Button, Segment } from "semantic-ui-react";
 import FormattedInput from "../modules/FormattedInput";
-import { ValidNewUser, ValidPass } from "../classes/InputValidation";
-import User, { newUser } from "../classes/User";
+import { InAuthenticaedPageProps, ValidNewUser, ValidPass } from "../classes/Authentication";
+import { newUser } from "../classes/User";
 
-interface Props {
-    setLogin: (User: User) => void;
-}
-
-const Signup: React.FC<Props> = (props) => {
+const Signup: React.FC<InAuthenticaedPageProps> = (props) => {
 
     const username = useRef<string>("");
     const password = useRef<string>("");

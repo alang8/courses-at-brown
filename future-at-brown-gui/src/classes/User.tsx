@@ -22,11 +22,12 @@ class User {
     constructor();
     constructor(user: string);
     constructor(user: string, saved: Course[], taken: Course[]);
-    constructor(user?: string, saved?: Course[], taken?: Course[]) {
+    constructor(user: string, saved: Course[], taken: Course[], prefs: SearchParams)
+    constructor(user?: string, saved?: Course[], taken?: Course[], prefs?: SearchParams) {
         this.username = user || "guest";
         this.saved = [...(saved ?? [])];
         this.taken = [...(taken ?? [])];
-        this.preferences = defaultParams;
+        this.preferences = prefs ?? defaultParams;
         if (user) {
             this.isGuest = false;
         } else {
@@ -94,6 +95,16 @@ class User {
         await new Promise(resolve => setTimeout(resolve, 2000));
         return this.getPreferences();
     }
+
+    stringify(): string {
+        const jsonVersion = {
+            username: this.username,
+            taken: this.taken,
+            saved: this.saved,
+            prefs: this.preferences
+        }
+        return JSON.stringify(jsonVersion);
+    }
 }
 
 export default User;
@@ -138,4 +149,18 @@ export const newUser = async (username: string, password: string): Promise<User>
             return Promise.reject(error);
         });
 
+}
+
+export const destringify = (json: string | null): User | undefined => {
+    const value = JSON.parse(json ?? "{}");
+    if (value["username"] && value["taken"] && value["saved"] && value["prefs"]) {
+        return new User(
+            value["username"],
+            value["saved"],
+            value["taken"],
+            value["prefs"]
+        )
+    } else {
+        return undefined;
+    }
 }
