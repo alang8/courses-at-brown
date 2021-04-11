@@ -3,6 +3,7 @@ import { Container, Form, Header, Button, Segment } from "semantic-ui-react";
 import FormattedInput from "../modules/FormattedInput";
 import { InAuthenticaedPageProps, ValidNewUser, ValidPass } from "../classes/Authentication";
 import { newUser } from "../classes/User";
+import { HomeButton } from "../modules/BottomButton";
 
 const Signup: React.FC<InAuthenticaedPageProps> = (props) => {
 
@@ -43,7 +44,8 @@ const Signup: React.FC<InAuthenticaedPageProps> = (props) => {
     }
 
     return (
-        <div className="total-grad">
+        <div className="total grad">
+            <HomeButton />
             <Container className="total-page">
                 <Header as="h1" className="logo" content="Future @ Brown" />
                 <Segment style={{ width: '50%' }}>

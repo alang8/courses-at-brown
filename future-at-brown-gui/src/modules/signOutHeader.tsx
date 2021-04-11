@@ -8,8 +8,8 @@ const SignOutHeader: React.FC<AuthenticatedPageProps> = (props) => {
         props.setUser(undefined);
     }
     return <Sticky>
-        <Segment>
-            <Grid columns='equal'>
+        <Segment clasName="signheader">
+            <Grid columns='equal' textAlign="center">
                 <Grid.Row>
                     <Grid.Column>
                         <Header as="h2" content={props.user.isGuest ? "" : props.user.username} />

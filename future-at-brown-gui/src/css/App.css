@@ -44,12 +44,12 @@ ul {
     filter: hue-rotate(40deg);
 }
 
-div.total-image {
+.total.image {
     background-image: url('/src/images/background.jpg');
     background-size: cover;
 }
 
-.total-image .container .content {
+.total.image .container .content {
     min-height: 50vh;
     display: flex;
     flex-direction: column;
@@ -59,37 +59,40 @@ div.total-image {
     color: white;
 }
 
-.total-image .container div h2.header {
+.total.image .container div h2.header {
     font-size: max(18px, 5vh);
     color: white;
     font-weight: lighter;
 }
 
-.total-image .container div h3.header {
+.total.image .container div h3.header {
     font-size: max(12px, 3vh);
     color: white;
     font-weight: lighter;
     font-style: italic;
 }
 
-.total-image .container div .header.logo {
+.total.image .container div .header.logo {
     font-size: max(36px, 10vh);
     color: rgba(0, 212, 255, 1);
     font-weight: bolder;
 }
 
-div.total-grad {
+div.total.grad {
     background: hsla(187, 60%, 92%, 1);
     background: radial-gradient(circle, hsla(187, 60%, 92%, 1) 0%, hsla(216, 41%, 75%, 1) 100%);
     background: -moz-radial-gradient(circle, hsla(187, 60%, 92%, 1) 0%, hsla(216, 41%, 75%, 1) 100%);
     background: -webkit-radial-gradient(circle, hsla(187, 60%, 92%, 1) 0%, hsla(216, 41%, 75%, 1) 100%);
     filter: progid: DXImageTransform.Microsoft.gradient( startColorstr="#DFF4F7", endColorstr="#A7BBDA", GradientType=1);
-    height: 100vh;
-    width: 100vw;
 }
 
-div.total-grad .header.logo {
+div.total.grad .header.logo {
     font-size: max(24px, 7vh);
+}
+
+div.total {
+    height: 100vh;
+    width: 100vw;
 }
 
 .form {

@@ -16,7 +16,8 @@ const Search: React.FC<AuthenticatedPageProps> = (props) => {
 
     const setPrefsAsync = async (pref: SearchParams) => setPrefs(pref)
 
-    return <div>
+    return <div className="total">
+                    <ProfileButton />
         <Container ref={contextRef.current} textAlign={'center'}>
             <Sticky context={contextRef.current}>
                 <Segment><Header as="h1" className="logo" content="Future @ Brown" /></Segment>
@@ -42,7 +43,7 @@ const Search: React.FC<AuthenticatedPageProps> = (props) => {
                     </Grid.Column>
                 </Grid.Row>
             </Grid>
-            <ProfileButton />
+
             <ButtonFooter />
         </Container>
     </div>
