@@ -9,7 +9,6 @@ import spark.Response;
 import spark.Route;
 
 import java.sql.Connection;
-import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -19,6 +18,9 @@ import java.util.Map;
 
 public class UserDataHandlers {
 
+  /**
+   * Class which ensures that a username isnt yet taken for our site.
+   */
   public static class CheckUsernameHandler implements Route {
     private static final Gson GSON = new Gson();
     private Connection conn;
@@ -55,6 +57,9 @@ public class UserDataHandlers {
     }
   }
 
+  /**
+   * Class which handles signing up for our site.
+   */
   public static class SignUpHandler implements Route {
     private static final Gson GSON = new Gson();
     private Connection conn;
@@ -110,6 +115,9 @@ public class UserDataHandlers {
     }
   }
 
+  /**
+   * Class which handles logging into our site.
+   */
   public static class LoginHandler implements Route {
     private static final Gson GSON = new Gson();
     private Connection conn;
@@ -164,6 +172,114 @@ public class UserDataHandlers {
         e.printStackTrace();
       }
       Map<String, Object> variables = ImmutableMap.of("isValid", isValid, "message", msg, "presets", presets);
+      return GSON.toJson(variables);
+    }
+  }
+
+  /**
+   * Class which handles writing course codes to our database for a given user.
+   */
+  public static class WriteCourseHandler implements Route {
+    private static final Gson GSON = new Gson();
+    private Connection conn;
+
+    public WriteCourseHandler(Connection c) {
+      this.conn = c;
+    }
+
+    @Override
+    public Object handle(Request request, Response response) {
+      String msg = "";
+      JSONObject data = null;
+      try {
+        data = new JSONObject(request.body());
+        String curUser = data.getString("username");
+        String colToAppend = data.getString("column");
+        String codeToAdd = data.getString("course");
+        Base64.Encoder coder = Base64.getEncoder();
+        String hashedUsername = coder.encodeToString(curUser.getBytes());
+
+        String query = "SELECT ? FROM user_data WHERE username = ?;";
+        PreparedStatement prep = conn.prepareStatement(query);
+        prep.setString(1, colToAppend);
+        prep.setString(2, hashedUsername);
+        ResultSet rs = prep.executeQuery();
+
+        if (rs.next()) {
+          String curCourses = rs.getString(1);
+          if (curCourses == null) {
+            curCourses = "";
+          }
+          curCourses = curCourses + codeToAdd + ",";
+          query = "UPDATE user_data SET ? = ? WHERE username = ?;";
+          prep = conn.prepareStatement(query);
+          prep.setString(1, colToAppend);
+          prep.setString(2, curCourses);
+          prep.setString(3, hashedUsername);
+          prep.executeUpdate();
+          msg = "updated";
+        } else {
+          System.out.println("couldnt find user!!");
+          msg = "failed";
+        }
+      } catch (JSONException | SQLException e) {
+        e.printStackTrace();
+      }
+      Map<String, Object> variables = ImmutableMap.of("msg", msg);
+      return GSON.toJson(variables);
+    }
+  }
+
+  /**
+   * Class which handles writing course codes to our database for a given user.
+   */
+  public static class RemoveCourseHandler implements Route {
+    private static final Gson GSON = new Gson();
+    private Connection conn;
+
+    public RemoveCourseHandler(Connection c) {
+      this.conn = c;
+    }
+
+    @Override
+    public Object handle(Request request, Response response) {
+      String msg = "";
+      JSONObject data = null;
+      try {
+        data = new JSONObject(request.body());
+        String curUser = data.getString("username");
+        String colToEdit = data.getString("column");
+        String codeToRemove = data.getString("course");
+        Base64.Encoder coder = Base64.getEncoder();
+        String hashedUsername = coder.encodeToString(curUser.getBytes());
+
+        String query = "SELECT ? FROM user_data WHERE username = ?;";
+        PreparedStatement prep = conn.prepareStatement(query);
+        prep.setString(1, colToEdit);
+        prep.setString(2, hashedUsername);
+        ResultSet rs = prep.executeQuery();
+
+        if (rs.next()) {
+          String curCourses = rs.getString(1);
+          if (curCourses == null) {
+            curCourses = "";
+          }
+          curCourses = curCourses.replace(codeToRemove + ",", "");
+          query = "UPDATE user_data SET ? = ? WHERE username = ?;";
+          prep = conn.prepareStatement(query);
+          prep.setString(1, colToEdit);
+          prep.setString(2, curCourses);
+          prep.setString(3, hashedUsername);
+          prep.executeUpdate();
+          msg = "updated";
+        } else {
+          System.out.println("couldnt find user!!");
+          msg = "failed";
+        }
+      } catch (JSONException | SQLException e) {
+        e.printStackTrace();
+      }
+      Map<String, Object> variables = ImmutableMap.of("msg", msg);
       return GSON.toJson(variables);
     }
   }

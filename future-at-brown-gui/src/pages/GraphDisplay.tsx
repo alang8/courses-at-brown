@@ -3,9 +3,9 @@ import { Button, Container, Header, Segment, Sticky } from "semantic-ui-react"
 import ClassGraph from "../modules/ClassGraph.jsx";
 import { Link } from "react-router-dom";
 import "../css/Graph.css"
-import { AuthenticatedPageProps } from "../classes/Authentication.js";
-import SignOutHeader from "../modules/SignOutHeader.js";
-import { ProfileButton, SearchButton } from "../modules/BottomButton.js";
+import { AuthenticatedPageProps } from "../classes/Authentication";
+import SignOutHeader from "../modules/SignOutHeader";
+import { ProfileButton, SearchButton } from "../modules/BottomButton";
 
 const GraphDisplay: React.FC<AuthenticatedPageProps> = (props) => {
 

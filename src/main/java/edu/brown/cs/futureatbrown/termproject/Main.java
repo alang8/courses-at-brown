@@ -105,6 +105,7 @@ public final class Main {
       Spark.post("/signup", new UserDataHandlers.SignUpHandler(userDataConn));
       Spark.post("/checkname", new UserDataHandlers.CheckUsernameHandler(userDataConn));
       Spark.post("/getcourses", new ClassDataHandler(courseDataConn));
+      Spark.post("/writecourse", new UserDataHandlers.WriteCourseHandler(courseDataConn));
     } catch (ClassNotFoundException | SQLException e) {
       System.out.println("Couldnt connect to SQL user data!");
     }

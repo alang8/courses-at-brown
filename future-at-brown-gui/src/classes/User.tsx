@@ -43,9 +43,27 @@ class User {
 
     async saveCourse(toSave: Course): Promise<Course[]> {
         this.saved.push(toSave);
+        let courseCode = toSave.dept + " " + toSave.code;
+        const toSend = {
+            username: this.username,
+            column: "saved_courses",
+            course: courseCode
+        };
         // TODO:  replace with actuall adding course to dataabase
+        //
         if (!this.isGuest) {
-            await new Promise(resolve => setTimeout(resolve, 2000));
+            axios.post(
+                'http://localhost:4567/writecourse',
+                toSend,
+                config
+            )
+                .then((response) => {
+                    console.log("saveCourse")
+                    console.log(response.data['msg'])
+                })
+                .catch((error) => {
+                    return Promise.reject(error);
+                });
         }
         return this.getSaved();
     }
@@ -68,8 +86,27 @@ class User {
     async takeCourse(toAdd: Course): Promise<Course[]> {
         this.taken.push(toAdd);
         // TODO:  replace with actuall adding course to dataabase
+        let courseCode = toAdd.dept + " " + toAdd.code;
+        const toSend = {
+            username: this.username,
+            column: "taken_courses",
+            course: courseCode
+        };
+        // TODO:  replace with actuall adding course to dataabase
+        //
         if (!this.isGuest) {
-            await new Promise(resolve => setTimeout(resolve, 2000));
+            axios.post(
+                'http://localhost:4567/writecourse',
+                toSend,
+                config
+            )
+                .then((response) => {
+                    console.log("takeCourse")
+                    console.log(response.data['msg'])
+                })
+                .catch((error) => {
+                    return Promise.reject(error);
+                });
         }
         return this.getTaken()
     }

@@ -50,12 +50,9 @@ const ClassGraph = (props) => {
         let i;
         let tempCourseInfo = {};
 
-
-        console.log("course ln 47)")
         console.log(theCourses);
         for(i = 0; i < theCourses.length; i++) {
             let curID = theCourses[i]['id']
-            let curName = theCourses[i]['name']
             let prereqInfo = theCourses[i]['prereqs']
             const courseCodeReg = /[A-Z]{4}\s[0-9]{4}[A-Z]?/g;
             const prereqIDs = prereqInfo.match(courseCodeReg)
@@ -75,12 +72,6 @@ const ClassGraph = (props) => {
             nodeArray.push({'id':curID, 'name':curID, 'val':val});
             tempCourseInfo[curID] = theCourses[i];
         }
-
-        // let pathInfo = props.path;
-        // let sem;
-        // for(sem = 0; sem < pathInfo.length; sem++) {
-        //
-        // }
 
         setAllCourseinfo(tempCourseInfo);
         setGData({"nodes": nodeArray, "links":linkArray});
@@ -145,8 +136,6 @@ const ClassGraph = (props) => {
         }
     }
 
-    //Here we can fiddle with the forces, if we uncomment this line, the connected part looks nice but
-    //disconnected part goes crazy.
     useEffect(() => {
         fgRef.current.d3Force("charge").strength(-15000);
         fgRef.current.d3Force("link").strength(0);
@@ -164,7 +153,7 @@ const ClassGraph = (props) => {
                         dagMode={"radialin"}
                         dagLevelDistance={100}
                         height={600}
-                        width={1100}
+                        width={1125}
                         nodeCanvasObject={(node, ctx) => nodePaint(node, "black", ctx)}
                     />
                 </div>
