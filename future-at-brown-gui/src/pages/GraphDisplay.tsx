@@ -11,14 +11,16 @@ const GraphDisplay: React.FC<AuthenticatedPageProps> = (props) => {
 
     const samplePath = { "CSCI 0170": 0, "CSCI 0220": 1, "CSCI 0180": 1, "CSCI 0330": 2, "CSCI 1470": 2, "CSCI 0320": 3, "APMA 0360": 5 };
 
-    return <Container style={{ height: '100vh' }}>
-        <SignOutHeader setUser={props.setUser} user={props.user} />
-        <div style={{ height: '90vh' }}>
-            <ClassGraph path={samplePath} />
-        </div>
+    return <div className="total">
         <ProfileButton />
         <SearchButton />
-    </Container>
+        <SignOutHeader setUser={props.setUser} user={props.user} />
+
+        <div style={{ height: '100vh' }}>
+            <ClassGraph path={samplePath} />
+        </div>
+
+    </div>
 }
 
 export default GraphDisplay;

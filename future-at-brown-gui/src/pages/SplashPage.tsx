@@ -6,7 +6,7 @@ import User from "../classes/User";
 
 const SplashPage: React.FC<InAuthenticaedPageProps> = (props) => {
     return (
-        <div className="total-image">
+        <div className="total image">
             <Container className="total-page">
                 <div className="content">
                     <div>
