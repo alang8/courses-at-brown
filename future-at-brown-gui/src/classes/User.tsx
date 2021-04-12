@@ -22,7 +22,7 @@ class User {
     constructor();
     constructor(user: string);
     constructor(user: string, saved: Course[], taken: Course[]);
-    constructor(user: string, saved: Course[], taken: Course[], prefs: SearchParams)
+    constructor(user: string | undefined, saved: Course[], taken: Course[], prefs: SearchParams);
     constructor(user?: string, saved?: Course[], taken?: Course[], prefs?: SearchParams) {
         this.username = user || "guest";
         this.saved = [...(saved ?? [])];
@@ -98,7 +98,7 @@ class User {
 
     stringify(): string {
         const jsonVersion = {
-            username: this.username,
+            username: (this.isGuest) ? undefined : this.username,
             taken: this.taken,
             saved: this.saved,
             prefs: this.preferences
@@ -153,7 +153,7 @@ export const newUser = async (username: string, password: string): Promise<User>
 
 export const destringify = (json: string | null): User | undefined => {
     const value = JSON.parse(json ?? "{}");
-    if (value["username"] && value["taken"] && value["saved"] && value["prefs"]) {
+    if (value["taken"] && value["saved"] && value["prefs"]) {
         return new User(
             value["username"],
             value["saved"],

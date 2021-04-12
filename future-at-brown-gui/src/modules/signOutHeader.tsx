@@ -1,35 +1,45 @@
 import React from "react";
-import { Button, Grid, Header, Icon, Segment, Sticky } from "semantic-ui-react";
+import { Button, Container, Grid, GridColumn, Header, Icon, Segment, Sticky } from "semantic-ui-react";
 import { AuthenticatedPageProps } from "../classes/Authentication";
 
-const SignOutHeader: React.FC<AuthenticatedPageProps> = (props) => {
+interface Props extends AuthenticatedPageProps {
+    heading?: string
+}
+const SignOutHeader: React.FC<Props> = (props) => {
     const handleClick = () => {
         localStorage.removeItem("user");
         props.setUser(undefined);
     }
     return <Sticky>
-        <Segment clasName="signheader">
-            <Grid columns='equal' textAlign="center">
-                <Grid.Row>
-                    <Grid.Column>
-                        <Header as="h2" content={props.user.isGuest ? "" : props.user.username} />
-                    </Grid.Column>
-                    <Grid.Column>
-                        <Header as="h1" className="logo" content="Future @ Brown" />
-                    </Grid.Column>
-                    <Grid.Column>
-                        <Button icon labelPosition='left'
-                            compact
-                            inverted color="red"
-                            onClick={handleClick}>
-                            <Icon name="remove user" />
-                            {"Sign out"}
-                        </Button>
-                    </Grid.Column>
-                </Grid.Row>
-            </Grid>
-        </Segment>
-    </Sticky>
+        <Container>
+            <Segment clasName="signheader">
+                <Grid columns='equal' textAlign="center">
+                    <Grid.Row verticalAlign="middle">
+                        <Grid.Column textAlign="left" >
+                            <Header as="h1" className="logo" content="F@B" />
+                        </Grid.Column>
+                        <Grid.Column textAlign="center">
+                            <Header as="h1" content={props.heading} />
+                        </Grid.Column>
+                        <Grid.Column textAlign="right">
+                            <div className="signout-button">
+                                <div className="light-header">
+                                    {props.user.isGuest ? "" : props.user.username}
+                                </div>
+                                <Button icon labelPosition='left'
+                                    compact
+                                    inverted color="red"
+                                    onClick={handleClick}>
+                                    <Icon name="remove user" />
+                                    {"Sign out"}
+                                </Button>
+                            </div>
+                        </Grid.Column>
+                    </Grid.Row>
+                </Grid>
+            </Segment >
+        </Container>
+    </Sticky >
 }
 
 export default SignOutHeader;
