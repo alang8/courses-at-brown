@@ -96,7 +96,7 @@ class User {
                 .catch((error) => {
                     return Promise.reject(error);
                 });
-        };
+        }
         return this.getSaved();
     }
 
@@ -221,8 +221,8 @@ export const getUser = async (username: string): Promise<User> => {
         username: username
     };
 
-    let savedCourses = [];
-    let takenCourses = [];
+    let savedCourses: Course[] = [];
+    let takenCourses: Course[] = [];
     let preferences = defaultParams;
 
     //response has 'user', 'taken', 'saved'
@@ -246,10 +246,11 @@ export const getUser = async (username: string): Promise<User> => {
         .catch((error) => {
             return Promise.reject(error);
         });
+    //TODO: ensure that this is working correctly - that saved/taken courses are actually arrays of courses
     return new User(
         username,
-        [],
-        [],
+        savedCourses,
+        takenCourses,
         preferences
     )
 }

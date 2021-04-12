@@ -443,7 +443,7 @@ public class UserDataHandlers {
           curCourseInfo.put("dept", rs.getString(1).substring(0, 4));
           curCourseInfo.put("code", rs.getString(1).substring(5));
           String prereqString = rs.getString(6);
-          String[] prereqInfo = prereqString.replaceAll("[&|()]+]", ",").split(",");
+          String[] prereqInfo = prereqString.replaceAll("[&|()]+", ",").split(",");
           prereqInfo = Arrays.stream(prereqInfo).filter(s -> !s.isEmpty()).toArray(String[]::new);
           curCourseInfo.put("prereqs", prereqInfo);
           curCourseInfo.put("description", rs.getString(7));
