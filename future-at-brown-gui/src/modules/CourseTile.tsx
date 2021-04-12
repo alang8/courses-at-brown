@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { Card, Grid, Header, Icon, SemanticICONS } from 'semantic-ui-react';
 import { GetColor } from '../classes/Colors'
 import CourseInfo from "./CourseInfo";
-import { Course } from "../classes/Course";
+import { Course, GetCode } from "../classes/Course";
 
 interface Params {
     course: Course;
@@ -10,7 +10,7 @@ interface Params {
     isMember?: (testCourse: Course) => boolean;
     onClick?: () => void;
     infoButton?: {
-        func: (addCourse: Course) => Promise<void>;
+        func: (inp: Course) => Promise<any>;
         name?: string;
         icon?: SemanticICONS;
     }
@@ -32,7 +32,7 @@ const CourseTile: React.FC<Params> = (props) => {
                                 <Card.Header>
                                     <Header as="h3"
                                         color={GetColor(course.dept)}
-                                        content={course.dept + course.code} />
+                                        content={GetCode(course)} />
                                 </Card.Header>
                             </Grid.Column>
                             <Grid.Column textAlign='right' width={4}>

@@ -1,7 +1,7 @@
 import React, { createRef, useState } from "react"
 import { Button, Container, Grid, GridColumn, Header, Segment, Sticky } from "semantic-ui-react"
 import { AuthenticatedPageProps } from "../classes/Authentication";
-import { Course } from "../classes/Course";
+import { Course, FindCourse, GetCode } from "../classes/Course";
 import { SearchParams } from "../classes/SearchParams";
 import User from "../classes/User";
 import { ButtonFooter, ProfileButton } from "../modules/BottomButton";
@@ -18,7 +18,7 @@ const Search: React.FC<AuthenticatedPageProps> = (props) => {
     return <div className="total">
         <ProfileButton />
         <Container >
-            <SignOutHeader setUser={props.setUser} user={props.user}/>
+            <SignOutHeader setUser={props.setUser} user={props.user} />
             <Header as="h1" content={"New search"} />
             <Grid padded stretched centered>
                 <Grid.Row stretched>
@@ -31,7 +31,11 @@ const Search: React.FC<AuthenticatedPageProps> = (props) => {
                 </Grid.Row>
                 <Grid.Row stretched>
                     <Grid.Column>
-                        <ExpandableCourses courses={takenCourses} title={"Taken coures"} modifiable />
+                        <ExpandableCourses courses={takenCourses} title={"Taken coures"} modify={{
+                            searcher: FindCourse,
+                            addCourse: async (course: Course) => setTakenCourses(takenCourses.concat(course)),
+                            removeCourse: async (code: string) => setTakenCourses(takenCourses.filter(c => GetCode(c) !== code))
+                        }} />
                     </Grid.Column>
                 </Grid.Row>
                 <Grid.Row stretched>

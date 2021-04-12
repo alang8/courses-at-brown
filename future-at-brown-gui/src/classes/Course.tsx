@@ -24,15 +24,25 @@ const config = {
     }
 }
 
-export const FindCourse = async (dept: string, code: string): Promise<Course> => {
+export const FindCourse = async (inp: string): Promise<Course[]> => {
+    const sanatized: string = inp.replaceAll(/[^a-z0-9A-Z]+/gm, '');
     const toSend = {
-        dept: dept,
-        code: code
+        dept: sanatized.substring(0, 4).toUpperCase(),
+        code: sanatized.substring(4).toUpperCase()
     }
-    return axios.post(
+    console.log("sending", toSend);
+    return axios.post<Course>(
         'http://localhost:4567/courseinfo',
         toSend,
         config
     )
-        .then((course) => course as unknown as Course)
+        .then((course) => { 
+            if (course.data.dept === "" && course.data.code === "") {
+                return Promise.resolve([course.data]);
+            } else {
+                return Promise.reject();
+            }
+        })
 }   
+
+export const GetCode = (test: Course): string => test.dept + " " + test.code;
