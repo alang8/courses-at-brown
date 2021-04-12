@@ -401,10 +401,16 @@ public class UserDataHandlers {
           userData.put("profRatingPref", rs.getDouble(7));
           String svdCourses = rs.getString(8);
           String tknCourses = rs.getString(9);
-          String[] savedCourses = svdCourses.split(",");
-          String[] takenCourses = tknCourses.split(",");
-          Map[] savedCourseInfo = getCourseInfo(savedCourses);
-          Map[] takenCourseInfo = getCourseInfo(takenCourses);
+          Map<String, Object>[] savedCourseInfo = new Map[0];
+          Map<String, Object>[] takenCourseInfo = new Map[0];
+          if (svdCourses != null) {
+            String[] savedCourses = svdCourses.split(",");
+            savedCourseInfo = getCourseInfo(savedCourses);
+          }
+          if (tknCourses != null) {
+            String[] takenCourses = tknCourses.split(",");
+            takenCourseInfo = getCourseInfo(takenCourses);
+          }
           Map<String, Object> variables = ImmutableMap.of("user", userData, "taken", takenCourseInfo, "saved", savedCourseInfo);
           return GSON.toJson(variables);
         } else {
