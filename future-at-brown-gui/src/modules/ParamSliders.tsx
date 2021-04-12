@@ -21,6 +21,9 @@ const ParamSlider: React.FC<Params> = (props) => {
         name: string,
         id: SearchParamNames
     ): JSX.Element => {
+        console.log("making slider");
+        console.log(props.curUser?.getPreferences())
+        console.log(props.curUser?.getPreferences()[id])
         return (
             <div style={{ padding: '1rem', display: "flex", flexDirection: "column", justifyContent: "space-between" }}>
                 <div style={{ width: '100%' }}>
@@ -35,7 +38,7 @@ const ParamSlider: React.FC<Params> = (props) => {
                     <Slider
                         min={0}
                         max={10}
-                        defaultValue={5}
+                        defaultValue={props.curUser?.getPreferences()[id]}
                         step={0.1}
                         trackStyle={{ backgroundColor: color }}
                         handleStyle={{ borderColor: color }}

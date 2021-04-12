@@ -242,14 +242,12 @@ export const getUser = async (username: string): Promise<User> => {
     let preferences = defaultParams;
 
     //response has 'user', 'taken', 'saved'
-    axios.post(
+    await axios.post(
         'http://localhost:4567/loaduser',
         toSend,
         config
     )
         .then((response) => {
-            console.log("loaduser")
-            console.log(response.data)
             savedCourses = response.data['saved']
             takenCourses = response.data['taken']
             let u = response.data['user']
@@ -262,7 +260,7 @@ export const getUser = async (username: string): Promise<User> => {
         .catch((error) => {
             return Promise.reject(error);
         });
-    //TODO: ensure that this is working correctly - that saved/taken courses are actually arrays of courses
+
     return new User(
         username,
         savedCourses,
