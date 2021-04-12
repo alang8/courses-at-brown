@@ -68,8 +68,11 @@ class User {
         return this.getSaved();
     }
 
-    getTaken(): Course[] {
-        return [...this.taken];
+    async clearSaved(): Promise<void> {
+        this.saved = [];
+        if (!this.isGuest) {
+            await new Promise(resolve => setTimeout(resolve, 2000));
+        }
     }
 
     async removeSaved(toRemove: Course): Promise<Course[]> {
@@ -81,7 +84,6 @@ class User {
             column: "saved_courses",
             course: courseCode
         };
-
         if (!this.isGuest) {
             axios.post(
                 'http://localhost:4567/removecourse',
@@ -100,6 +102,10 @@ class User {
     }
 
     // taken courses
+
+    getTaken(): Course[] {
+        return [...this.taken];
+    }
 
     async takeCourse(toAdd: Course): Promise<Course[]> {
         this.taken.push(toAdd);
@@ -152,6 +158,13 @@ class User {
                 });
         }
         return this.getTaken()
+    }
+
+    async clearTaken(): Promise<void> {
+        this.taken = [];
+        if (!this.isGuest) {
+            await new Promise(resolve => setTimeout(resolve, 2000));
+        }
     }
 
     // preferences
