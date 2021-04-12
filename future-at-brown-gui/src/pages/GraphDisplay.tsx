@@ -18,7 +18,7 @@ interface Params {
 
 const GraphDisplay: React.FC<Params> = (props) => {
 
-    // const samplePath = { "CSCI 0170": 0, "CSCI 0220": 1, "CSCI 0180": 1, "CSCI 0330": 2, "CSCI 1470": 2, "CSCI 0320": 3, "APMA 0360": 5 };
+    const samplePath = { "CSCI 0170": 0, "CSCI 0220": 1, "CSCI 0180": 1, "CSCI 0330": 2, "CSCI 1470": 2, "CSCI 0320": 3, "APMA 0360": 5 };
 
     return <div className="total">
         <ProfileButton />
@@ -26,7 +26,7 @@ const GraphDisplay: React.FC<Params> = (props) => {
         <SignOutHeader setUser={props.setUser} user={props.user} heading={"Graph"}/>
 
         <div style={{ height: '100vh' }}>
-            <ClassGraph path={props.path} />
+            <ClassGraph path={samplePath} />
         </div>
 
     </div>
