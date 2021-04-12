@@ -14,3 +14,7 @@ html, body
 #profilebutton {
     z-index: 10;
 }
+
+canvas {
+    margin:auto;
+}

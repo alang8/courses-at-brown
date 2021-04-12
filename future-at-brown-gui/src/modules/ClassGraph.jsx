@@ -142,7 +142,7 @@ const ClassGraph = (props) => {
     });
 
     return <div>
-                <div>
+                <div id="around graph">
                     <ForceGraph2D
                         graphData={gData}
                         onNodeClick={(n, e) => {
