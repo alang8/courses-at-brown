@@ -11,6 +11,19 @@ ul {
 
 /* Splash page */
 
+.signout-button {
+    width: 100%;
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+}
+
+.signout-button .light-header {
+    font-style: italic;
+    padding-right: 1rem;
+    font-size: 2.5vh;
+}
+
 .fill {
     height: 100%;
 }
