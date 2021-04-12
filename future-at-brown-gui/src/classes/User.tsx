@@ -51,7 +51,7 @@ class User {
         };
 
         if (!this.isGuest) {
-            axios.post(
+            await axios.post(
                 'http://localhost:4567/writecourse',
                 toSend,
                 config
@@ -84,7 +84,7 @@ class User {
             course: courseCode
         };
         if (!this.isGuest) {
-            axios.post(
+            await axios.post(
                 'http://localhost:4567/removecourse',
                 toSend,
                 config
@@ -117,7 +117,7 @@ class User {
         };
 
         if (!this.isGuest) {
-            axios.post(
+            await axios.post(
                 'http://localhost:4567/writecourse',
                 toSend,
                 config
@@ -143,7 +143,7 @@ class User {
         };
 
         if (!this.isGuest) {
-            axios.post(
+            await axios.post(
                 'http://localhost:4567/removecourse',
                 toSend,
                 config
@@ -186,7 +186,7 @@ class User {
         };
 
         if (!this.isGuest) {
-            axios.post(
+            await axios.post(
                 'http://localhost:4567/setpreference',
                 toSend,
                 config
@@ -282,7 +282,7 @@ export const newUser = async (username: string, password: string): Promise<User>
         password: password
     };
 
-    return axios.post(
+    return await axios.post(
         'http://localhost:4567/signup',
         toSend,
         config
