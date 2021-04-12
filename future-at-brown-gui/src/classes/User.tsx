@@ -50,12 +50,15 @@ class User {
         return this.getSaved();
     }
 
-    getTaken(): Course[] {
-        return [...this.taken];
+    async clearSaved(): Promise<void> {
+        this.saved = [];
+        if (!this.isGuest) {
+            await new Promise(resolve => setTimeout(resolve, 2000));
+        }
     }
 
-    async removeSaved(toRemove: Course): Promise<Course[]> {
-        this.saved.filter((c) => c !== toRemove);
+    async removeSaved(toRemove: string): Promise<Course[]> {
+        this.saved.filter((c) => c.dept + c.code !== toRemove);
         // TODO:  replace with actuall adding course to dataabase
         if (!this.isGuest) {
             await new Promise(resolve => setTimeout(resolve, 2000));
@@ -64,6 +67,10 @@ class User {
     }
 
     // taken courses
+
+    getTaken(): Course[] {
+        return [...this.taken];
+    }
 
     async takeCourse(toAdd: Course): Promise<Course[]> {
         this.taken.push(toAdd);
@@ -74,8 +81,8 @@ class User {
         return this.getTaken()
     }
 
-    async removeTaken(toRemove: Course): Promise<Course[]> {
-        this.taken.filter((c) => c !== toRemove);
+    async removeTaken(toRemove: string): Promise<Course[]> {
+        this.saved.filter((c) => c.dept + c.code !== toRemove);
         // TODO:  replace with actuall adding course to dataabase
         if (!this.isGuest) {
             await new Promise(resolve => setTimeout(resolve, 2000));
