@@ -77,6 +77,15 @@ public class CourseNode extends GraphNode<CourseEdge> implements Locatable {
     this.prevTotalMaxHours = 0.0;
   }
 
+
+  /**
+   * Resets the Hours back to 0.0 at the beginning of every dijkstra call
+   */
+   public void resetHours() {
+    this.prevTotalAvgHours = 0.0;
+    this.prevTotalMaxHours = 0.0;
+   }
+
   /**
    * Returns the ID of this CourseNode.
    * This value should be unique to this node.

@@ -246,6 +246,15 @@ class BasicGraph implements Graph<BasicNode, BasicEdge> {
     graphCopy.setEdgeSet(this.edgeSet);
     return graphCopy;
   }
+
+  /**
+   * Sets up the global parameters of the graph if needed
+   *
+   * @param startID
+   * @param endID
+   */
+  @Override
+  public void setup(String startID, String endID) { }
 }
 
 /**

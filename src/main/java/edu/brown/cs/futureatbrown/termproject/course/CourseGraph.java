@@ -3,9 +3,11 @@ package edu.brown.cs.futureatbrown.termproject.course;
 import edu.brown.cs.futureatbrown.termproject.graph.Graph;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Objects;
 
 import java.util.Set;
+import java.util.stream.Collectors;
 
 /**
  * Specific graph implementation containing CourseNodes and CourseEdges.
@@ -26,7 +28,6 @@ public class CourseGraph implements Graph<CourseNode, CourseEdge> {
   private Double classSizePref; // Number from 1 - 10 [Inclusive]
 
   // HARD INPUTS
-  private Integer globalSem;
   private Double avgHoursInput; // Desired Avg Hour Workload PER CLASS
   private Double totalMaxHoursInput; // TOTAL HOURS OVERALL [ENTIRE PATHWAY]
   private Integer classSizeInput; // Desired Class Size Per Class
@@ -34,6 +35,7 @@ public class CourseGraph implements Graph<CourseNode, CourseEdge> {
   private Integer minNumClasses; // Minimum Number of Classes
   private Integer maxNumClasses; // Maximum Number of Classes
 
+  private Set<List<CourseNode>> prereqs; //Global Prerequisites of the target end node
   /**
    * Constructs a new CourseGraph with the given parameters.
    */
@@ -64,15 +66,13 @@ public class CourseGraph implements Graph<CourseNode, CourseEdge> {
 
   /**
    * Sets up all the global parameters of the graph in this edge
-   * @param globalSem - The semester the user has picked
    */
-  public void setGlobalParams(int globalSem, double crsRatingPref, double profRatingPref,
+  public void setGlobalParams(double crsRatingPref, double profRatingPref,
                               double avgHoursPref, double avgHoursInput, int minNumClasses,
                               int maxNumClasses, double balanceFactorPref, double maxHoursPref,
                               double totalMaxHoursInput, double classSizePref, int classSizeInput,
                               int classSizeMax) {
     // SLIDER PREFERENCES
-    this.globalSem = globalSem;
     this.crsRatingPref = crsRatingPref;
     this.profRatingPref = profRatingPref;
     this.avgHoursPref = avgHoursPref;
@@ -91,13 +91,21 @@ public class CourseGraph implements Graph<CourseNode, CourseEdge> {
     // SET ALL THE EDGES TO THE SAME PARAMETER
     for (HashMap<String, CourseEdge> edgesFrom: this.edgeMap.values()) {
       for (CourseEdge edge : edgesFrom.values()) {
-        edge.setGlobalParams(this.globalSem, this.crsRatingPref, this.profRatingPref,
+        edge.setGlobalParams(this.crsRatingPref, this.profRatingPref,
           this.avgHoursPref, this.avgHoursInput, this.minNumClasses,
           this.maxNumClasses, this.balanceFactorPref, this.maxHoursPref,
           this.totalMaxHoursInput, this.classSizePref, this.classSizeInput,
           this.classSizeMax);
       }
     }
+  }
+
+  /**
+   * Sets up the Global Prerequisites and overall requirements
+   *
+   */
+  public void setGlobalPrereqs(Set<List<CourseNode>> prereqs) {
+    this.prereqs = prereqs;
   }
 
   /**
@@ -138,6 +146,35 @@ public class CourseGraph implements Graph<CourseNode, CourseEdge> {
     graphCopy.setEdgeMap(newEdgeMap);
     return graphCopy;
   }
+
+  /**
+   * Sets up the global parameters of the graph if needed
+   *
+   * @param startID
+   * @param endID
+   */
+  @Override
+  public void setup(String startID, String endID) {
+    Set<List<String>> prereqSet = this.nodeMap.get(endID).getPrereqSet();
+    System.out.println("END NODE: " + endID);
+    System.out.println("PREREQ SET: " + prereqSet);
+    Set<List<CourseNode>> prereqs = prereqSet
+      .stream()
+      .map(group -> group.stream().map(id -> this.nodeMap.get(id)).collect(Collectors.toList()))
+      .collect(Collectors.toSet());
+    setGlobalPrereqs(prereqs);
+    for (HashMap<String, CourseEdge> edgesFrom: this.edgeMap.values()) {
+      for (CourseEdge edge : edgesFrom.values()) {
+        edge.setGlobalPrereqs(this.prereqs);
+      }
+    }
+    System.out.println("PREREQS: " + this.prereqs);
+    for (CourseNode node: this.nodeMap.values()) {
+      node.resetHours();
+    }
+  }
+
+
   /**
    * Adds a CourseNode to the node map and edges with the node as their start to the edge map.
    * @param node CourseNode to add to the map
@@ -148,7 +185,7 @@ public class CourseGraph implements Graph<CourseNode, CourseEdge> {
     nodeMap.put(node.getID(), node);
     for (CourseEdge edge : edges) {
       try {
-        edge.setGlobalParams(this.globalSem, this.crsRatingPref, this.profRatingPref,
+        edge.setGlobalParams(this.crsRatingPref, this.profRatingPref,
           this.avgHoursPref, this.avgHoursInput, this.minNumClasses,
           this.maxNumClasses, this.balanceFactorPref, this.maxHoursPref,
           this.totalMaxHoursInput, this.classSizePref, this.classSizeInput,

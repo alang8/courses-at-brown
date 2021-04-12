@@ -2,10 +2,8 @@ package edu.brown.cs.futureatbrown.termproject.course;
 
 import edu.brown.cs.futureatbrown.termproject.graph.GraphEdge;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
-import java.util.Set;
+import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * Specific edge implementation that links a start CourseNode to an end CourseNode.
@@ -29,7 +27,6 @@ public class CourseEdge extends GraphEdge<CourseNode> {
   private Double classSizePref; // Number from 1 - 10 [Inclusive]
 
   // HARD INPUTS
-  private Integer globalSem;
   private Double avgHoursInput; // Desired Avg Hour Workload PER CLASS
   private Double totalMaxHoursInput; // TOTAL HOURS OVERALL [ENTIRE PATHWAY]
   private Integer classSizeInput; // Desired Class Size Per Class
@@ -37,6 +34,7 @@ public class CourseEdge extends GraphEdge<CourseNode> {
   private Integer minNumClasses; // Minimum Number of Classes
   private Integer maxNumClasses; // Maximum Number of Classes
 
+  private Set<List<CourseNode>> prereqs; //Global Prerequisites of the target end node
 
   /**
    * Constructs a CourseEdge with the given id, start id, and end id.
@@ -80,15 +78,13 @@ public class CourseEdge extends GraphEdge<CourseNode> {
 
   /**
    * Sets up all the global parameters of the graph in this edge
-   * @param globalSem - The semester the user has picked
    */
-  public void setGlobalParams(int globalSem, double crsRatingPref, double profRatingPref,
+  public void setGlobalParams(double crsRatingPref, double profRatingPref,
                               double avgHoursPref, double avgHoursInput, int minNumClasses,
                               int maxNumClasses, double balanceFactorPref, double maxHoursPref,
                               double totalMaxHoursInput, double classSizePref, int classSizeInput,
                               int classSizeMax) {
     // SLIDER PREFERENCES
-    this.globalSem = globalSem;
     this.crsRatingPref = crsRatingPref;
     this.profRatingPref = profRatingPref;
     this.avgHoursPref = avgHoursPref;
@@ -104,6 +100,14 @@ public class CourseEdge extends GraphEdge<CourseNode> {
     this.classSizeInput = classSizeInput;
     this.classSizeMax = classSizeMax;
   }
+
+  /**
+   * Sets up the Global Prerequisites and overall requirements
+   *
+   */
+   public void setGlobalPrereqs(Set<List<CourseNode>> prereqs) {
+     this.prereqs = prereqs;
+   }
 
   /**
    * Converts a path of edges into a path of nodes
@@ -153,13 +157,7 @@ public class CourseEdge extends GraphEdge<CourseNode> {
      boolean satisfiedAllPrereqs = true;
 
      for (List<String> group : preReqs) {
-       boolean satisfiedPrereq = false;
-       for (String prereqId : group) {
-         if (previousPath.contains(prereqId)) {
-           satisfiedPrereq = true;
-           break;
-         }
-       }
+       boolean satisfiedPrereq = !Collections.disjoint(group, previousPath);
        if (!satisfiedPrereq) {
          satisfiedAllPrereqs = false;
          break;
@@ -168,28 +166,18 @@ public class CourseEdge extends GraphEdge<CourseNode> {
 
      // If they aren't satisfied then nullify the path
      if (!satisfiedAllPrereqs) {
+       System.out.println("FAILED PREREQS");
        return Double.POSITIVE_INFINITY;
      }
-     System.out.println("SATISFIED PREREQS");
-
-     //////////////////////////////////
-     // PENALTY: SEMESTER MUST MATCH //
-     //////////////////////////////////
-
-//     if (null != this.globalSem && null != this.end.getSem()) {
-//       if (!Objects.equals(this.globalSem, this.end.getSem())) {
-//         return Double.POSITIVE_INFINITY;
-//       }
-//     }
 
      ///////////////////////////////////////////////
      // PENALTY: MUST REACH MIN NUMBER OF CLASSES //
      ///////////////////////////////////////////////
      // TODO: AFTER REDOING CACHING
 
-     ///////////////////////////////////////
+     ////////////////////////////////////////
      // PENALTY: REQUIREMENTS FOR PATHWAYS //
-     ///////////////////////////////////////
+     ////////////////////////////////////////
      // TODO: AFTER REDOING CACHING
 
      //////////////////////////////////////////////////
@@ -197,6 +185,7 @@ public class CourseEdge extends GraphEdge<CourseNode> {
      //////////////////////////////////////////////////
      if (null != this.maxNumClasses) {
        if (previousPath.size() >= this.maxNumClasses) {
+         System.out.println("EXCEEDED MAX NUM CLASSES");
          return Double.POSITIVE_INFINITY;
        }
      }
@@ -206,7 +195,7 @@ public class CourseEdge extends GraphEdge<CourseNode> {
      /////////////////////////////////////
 
      if (null != this.crsRatingPref && null != this.end.getCourse_rating()) {
-       this.weight += this.end.getCourse_rating() * this.crsRatingPref;
+       this.weight +=  Math.pow(2, this.end.getCourse_rating()) / this.crsRatingPref;
      }
 
      ////////////////////////////////////////
@@ -214,7 +203,7 @@ public class CourseEdge extends GraphEdge<CourseNode> {
      ////////////////////////////////////////
 
      if (null != this.profRatingPref && null != this.end.getProf_rating()) {
-       this.weight += this.end.getProf_rating() * this.profRatingPref;
+       this.weight += Math.pow(2, this.end.getProf_rating()) / this.profRatingPref;
      }
 
      /////////////////////////////////
@@ -233,9 +222,9 @@ public class CourseEdge extends GraphEdge<CourseNode> {
 
        // Penalize by distance if it goes over, Penalize by balance if it is under
        if (totalAvgHours > desiredTotalAvgHours) {
-         this.weight += this.avgHoursPref * 5 * (totalAvgHours - desiredTotalAvgHours) / desiredTotalAvgHours;
+         this.weight += Math.pow(2, this.avgHoursPref) * 0.2 * (totalAvgHours - desiredTotalAvgHours) / desiredTotalAvgHours;
        } else {
-         this.weight += this.balanceFactorPref * 5 * Math.abs(this.end.getAvg_hours() - this.avgHoursInput) / this.avgHoursInput;
+         this.weight += Math.pow(2, this.balanceFactorPref) * 0.2 * Math.abs(this.end.getAvg_hours() - this.avgHoursInput) / this.avgHoursInput;
        }
      }
 
@@ -246,12 +235,16 @@ public class CourseEdge extends GraphEdge<CourseNode> {
 
        if (null != this.maxHoursPref && null != this.start.getPrevTotalMaxHours() && null != this.end.getMax_hours() &&
          null != this.totalMaxHoursInput) {
+
          // Get the Total Max Hours up to this point
          double totalMaxHours = this.start.getPrevTotalMaxHours();
+         System.out.println("PREVIOUS TOTAL MAX HOURS: " + totalMaxHours);
          totalMaxHours += this.end.getMax_hours();
+         System.out.println("NEW MAX HOURS: " + this.end.getMax_hours());
          this.end.setPrevTotalMaxHours(totalMaxHours);
 
          if (totalMaxHours > this.totalMaxHoursInput) {
+           System.out.println("EXCEEDED MAX HOURS: " + totalMaxHours + " > " + this.totalMaxHoursInput);
            return Double.POSITIVE_INFINITY;
          }
        }
@@ -260,8 +253,26 @@ public class CourseEdge extends GraphEdge<CourseNode> {
        // SLIDER COMPONENT: CLASS SIZE //
        //////////////////////////////////
        if (null != this.classSizePref && null != this.end.getClass_size() && null != this.classSizeInput && null != this.classSizeMax) {
-         this.weight += this.classSizePref * 5 * Math.abs(this.end.getClass_size() - this.classSizeInput) / this.classSizeMax;
+         this.weight += Math.pow(2, this.classSizePref) * 0.2 * Math.abs(this.end.getClass_size() - this.classSizeInput) / this.classSizeMax;
        }
+
+      ////////////////////////////////////////////////////////
+      //  PENALTY: +2000 PER PREREQUISITE GROUP UNSATISFIED //
+      ////////////////////////////////////////////////////////
+      if (null != this.prereqs) {
+        for (List<CourseNode> group : this.prereqs) {
+          List<String> groupIDs = group.stream()
+            .filter(elem -> elem != null)
+            .map(elem -> elem.getID())
+            .collect(Collectors.toList());
+          if (!Collections.disjoint(groupIDs, previousPath)) {
+            continue;
+          }
+          if (group.contains(this.end)) {
+            this.weight -= 2000;
+          }
+        }
+      }
 
        return this.weight;
    }

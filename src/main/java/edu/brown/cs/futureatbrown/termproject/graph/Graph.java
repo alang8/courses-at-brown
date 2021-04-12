@@ -38,4 +38,9 @@ public interface Graph<Node extends GraphNode, Edge extends GraphEdge> {
    * Ideally creates a deep copy of the current graph
    */
   Graph<Node, Edge> copy();
+
+  /**
+   * Sets up the global parameters of the graph if needed
+   */
+   void setup(String startID, String endID);
 }
