@@ -14,24 +14,31 @@ interface Params {
 
 const ExpandableCourses: React.FC<Params> = (props) => {
 
+    const [displayed, setDisplayed] = useState<Course[]>(props.courses);
     const [showMore, setShowMore] = useState<boolean>(false);
     const [isRemoving, setRemoving] = useState<boolean>(false);
     const [isAdding, setAdding] = useState<boolean>(false);
 
-    const allCourses = [...props.courses];
+    const allCourses = [...displayed];
     const initDisplay: JSX.Element[] = allCourses.splice(0, 4).map((elt, index) =>
         <CourseTile course={elt} key={String(index)} />
     );
 
-    // const remove= (rmv: Course): Promise<void> => {
-    //     if (props.removeCourse) {
-    //         return props.removeCourse(rmv.dept + rmv.code)
-    //     }
-    // }
+    useEffect(() => {
+        setRemoving(false);
+        setAdding(false);
+    }, [displayed]);
+
+    const remove = async (rmv: Course): Promise<void> => {
+        if (props.removeCourse) {
+            await props.removeCourse(rmv.dept + rmv.code);
+        }
+        setDisplayed(displayed.filter((c) => c.dept + c.code !== rmv.dept + rmv.code));
+    }
 
     const addMore: JSX.Element = (
         <Card key="5">
-            <Button.Group vertical className="fill">
+            <Button.Group vertical className="fill" compact>
                 <Button icon
                     labelPosition='left'
                     color={'green'}
@@ -61,8 +68,13 @@ const ExpandableCourses: React.FC<Params> = (props) => {
         (elt, index) => <CourseTile course={elt} key={String(index + initDisplay.length)} />);
     return (
         <Segment>
+            <CourseSearch
+                searcher={
+                    async (inp: string) =>
+                        displayed.filter((c) => (c.code + c.dept).toLowerCase().indexOf(inp.toLowerCase()) !== -1)}
+                resolveButton={{ func: remove, icon: 'x', name: 'Remove course' }} initialResults={displayed}
+                setDisplay={setRemoving} shouldDisplay={isRemoving} heading={"Find the course to remove"}/>
             {(props.title) ? <Header as="h1" content={props.title} /> : undefined}
-
             {(initDisplay.length <= 0) ? <Header as="h3" content={"This selection is empty"} />
                 : <Card.Group content={initDisplay} centered itemsPerRow={5} />}
             {(overflowCards.length > 0) ?
