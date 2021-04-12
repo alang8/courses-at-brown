@@ -74,10 +74,27 @@ class User {
 
     async removeSaved(toRemove: Course): Promise<Course[]> {
         this.saved.filter((c) => c !== toRemove);
-        // TODO:  replace with actuall adding course to dataabase
+
+        const toSend = {
+            username: this.username,
+            column: "saved_courses",
+            course: courseCode
+        };
+
         if (!this.isGuest) {
-            await new Promise(resolve => setTimeout(resolve, 2000));
-        }
+            axios.post(
+                'http://localhost:4567/removecourse',
+                toSend,
+                config
+            )
+                .then((response) => {
+                    console.log("removeSaved")
+                    console.log(response.data['msg'])
+                })
+                .catch((error) => {
+                    return Promise.reject(error);
+                });
+        };
         return this.getSaved();
     }
 
@@ -92,8 +109,7 @@ class User {
             column: "taken_courses",
             course: courseCode
         };
-        // TODO:  replace with actuall adding course to dataabase
-        //
+
         if (!this.isGuest) {
             axios.post(
                 'http://localhost:4567/writecourse',
@@ -113,10 +129,26 @@ class User {
 
     async removeTaken(toRemove: Course): Promise<Course[]> {
         this.taken.filter((c) => c !== toRemove);
-        // TODO:  replace with actuall adding course to dataabase
-        if (!this.isGuest) {
-            await new Promise(resolve => setTimeout(resolve, 2000));
+        const toSend = {
+            username: this.username,
+            column: "taken_courses",
+            course: courseCode
         };
+
+        if (!this.isGuest) {
+            axios.post(
+                'http://localhost:4567/removecourse',
+                toSend,
+                config
+            )
+                .then((response) => {
+                    console.log("removeTaken")
+                    console.log(response.data['msg'])
+                })
+                .catch((error) => {
+                    return Promise.reject(error);
+                });
+        }
         return this.getTaken()
     }
 
@@ -128,8 +160,26 @@ class User {
 
     async setPreferences(prefName: SearchParamNames, newVal: number): Promise<SearchParams> {
         this.preferences[prefName] = newVal;
-        // TODO:  replace with actuall adding course to dataabase
-        await new Promise(resolve => setTimeout(resolve, 2000));
+        const toSend = {
+            username: this.username,
+            pref: prefName,
+            value: newVal
+        };
+
+        if (!this.isGuest) {
+            axios.post(
+                'http://localhost:4567/setpreference',
+                toSend,
+                config
+            )
+                .then((response) => {
+                    console.log("setPreference")
+                    console.log(response.data['msg'])
+                })
+                .catch((error) => {
+                    return Promise.reject(error);
+                });
+        }
         return this.getPreferences();
     }
 

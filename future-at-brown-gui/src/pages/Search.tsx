@@ -43,7 +43,6 @@ const Search: React.FC<AuthenticatedPageProps> = (props) => {
                     </Grid.Column>
                 </Grid.Row>
             </Grid>
-
             <ButtonFooter />
         </Container>
     </div>

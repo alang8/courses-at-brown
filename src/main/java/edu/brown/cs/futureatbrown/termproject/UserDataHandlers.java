@@ -217,7 +217,7 @@ public class UserDataHandlers {
           prep.setString(2, curCourses);
           prep.setString(3, hashedUsername);
           prep.executeUpdate();
-          msg = "updated";
+          msg = "updated added course";
         } else {
           System.out.println("couldnt find user!!");
           msg = "failed";
@@ -231,7 +231,7 @@ public class UserDataHandlers {
   }
 
   /**
-   * Class which handles writing course codes to our database for a given user.
+   * Class which handles deleting course codes from our database for a given user.
    */
   public static class RemoveCourseHandler implements Route {
     private static final Gson GSON = new Gson();
@@ -271,11 +271,70 @@ public class UserDataHandlers {
           prep.setString(2, curCourses);
           prep.setString(3, hashedUsername);
           prep.executeUpdate();
-          msg = "updated";
+          msg = "updated removed course";
         } else {
           System.out.println("couldnt find user!!");
           msg = "failed";
         }
+      } catch (JSONException | SQLException e) {
+        e.printStackTrace();
+      }
+      Map<String, Object> variables = ImmutableMap.of("msg", msg);
+      return GSON.toJson(variables);
+    }
+  }
+
+  /**
+   * Class which handles writing course codes to our database for a given user.
+   */
+  public static class SetPreferenceHandler implements Route {
+    private static final Gson GSON = new Gson();
+    private Connection conn;
+
+    public SetPreferenceHandler(Connection c) {
+      this.conn = c;
+    }
+
+    @Override
+    public Object handle(Request request, Response response) {
+      String msg = "";
+      JSONObject data = null;
+      try {
+        data = new JSONObject(request.body());
+        String curUser = data.getString("username");
+        String preference = data.getString("pref");
+        double newVal = data.getDouble("value");
+        Base64.Encoder coder = Base64.getEncoder();
+        String hashedUsername = coder.encodeToString(curUser.getBytes());
+
+        String colToEdit = "";
+        switch (preference) {
+          case "avgHoursPref":
+            colToEdit = "course_rating_pref";
+            break;
+          case "crsRatingPref":
+            colToEdit = "avg_hrs_pref";
+            break;
+          case "maxHoursPref":
+            colToEdit = "max_hrs_pref";
+            break;
+          case "crsSizePref":
+            colToEdit = "class_size_pref";
+            break;
+          case "profRatingPref":
+            colToEdit = "prof_rating_pref";
+            break;
+          default:
+            System.out.println("ERROR: Error in SetPreferenceHandler, col was " + preference);
+        }
+
+        String query = "UPDATE user_data SET ?=? WHERE username = ?;";
+        PreparedStatement prep = conn.prepareStatement(query);
+        prep.setString(1, colToEdit);
+        prep.setDouble(2, newVal);
+        prep.setString(3, hashedUsername);
+        prep.executeUpdate();
+        msg = "Success!";
       } catch (JSONException | SQLException e) {
         e.printStackTrace();
       }
