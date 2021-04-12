@@ -90,6 +90,13 @@ class User {
         return this.getTaken()
     }
 
+    async clearTaken(): Promise<void> {
+        this.taken = [];
+        if (!this.isGuest) {
+            await new Promise(resolve => setTimeout(resolve, 2000));
+        }
+    }
+
     // preferences
 
     getPreferences(): SearchParams {
