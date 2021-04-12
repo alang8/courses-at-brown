@@ -1,5 +1,5 @@
-import React, { useState, useEffect} from "react";
-import { Button, Grid, Header, Icon, Modal } from 'semantic-ui-react';
+import React, { useState, useEffect } from "react";
+import { Button, Grid, Header, Icon, Modal, SemanticICONS } from 'semantic-ui-react';
 import { GetColor } from '../classes/Colors'
 import { Course } from '../classes/Course'
 
@@ -7,8 +7,12 @@ interface Params {
     course: Course;
     shouldDisplay: boolean;
     setDisplay: (set: boolean) => void;
-    add?: (addCourse: Course) => Promise<void>;
     membership?: (testCourse: Course) => boolean;
+    button?:  {
+        func: (addCourse: Course) => Promise<void>;
+        name?: string;
+        icon?: SemanticICONS;
+    }
 }
 
 const CourseInfo: React.FC<Params> = (props) => {
@@ -20,8 +24,12 @@ const CourseInfo: React.FC<Params> = (props) => {
 
     useEffect(() => {
         if (loading) {
-            props.add?.(course)
+            if (props.button) {
+                props.button!.func(course)
                 .then(() => setLoading(false));
+            } else {
+                setLoading(false);
+            }  
         }
     }, [loading])
 
@@ -50,6 +58,13 @@ const CourseInfo: React.FC<Params> = (props) => {
                     </Grid.Row>
                     <Grid.Row divided>
                         <Grid.Column width={10}>
+                        <Grid.Row>
+                                <p>
+                                    <Icon name="sitemap" />
+                                    <strong>Prereqs: </strong>
+                                    {course.prereqs ?? "None (or none listed)"}
+                                </p>
+                            </Grid.Row>
                             <Grid.Row>
                                 <p>
                                     <Icon name="star" />
@@ -94,8 +109,8 @@ const CourseInfo: React.FC<Params> = (props) => {
                                     labelPosition='left'
                                     className="fill" color={color}
                                     onClick={() => setLoading(true)}>
-                                    <Icon name='plus' />
-                                    {"Save Course"}
+                                    <Icon name={props.button?.icon ?? 'add'} />
+                                    {props.button?.name ?? "Save Course"}
                                 </Button>
                             </Grid.Row>
                         </Grid.Column>

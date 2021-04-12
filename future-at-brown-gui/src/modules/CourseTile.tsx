@@ -1,13 +1,19 @@
 import React, { useState } from "react";
-import { Card, Grid, Header, Icon } from 'semantic-ui-react';
+import { Card, Grid, Header, Icon, SemanticICONS } from 'semantic-ui-react';
 import { GetColor } from '../classes/Colors'
 import CourseInfo from "./CourseInfo";
 import { Course } from "../classes/Course";
 
 interface Params {
     course: Course;
-    key?: string;
+    key?: string | number;
     isMember?: (testCourse: Course) => boolean;
+    onClick?: () => void;
+    infoButton?: {
+        func: (addCourse: Course) => Promise<void>;
+        name?: string;
+        icon?: SemanticICONS;
+    }
 }
 
 const CourseTile: React.FC<Params> = (props) => {
@@ -19,7 +25,7 @@ const CourseTile: React.FC<Params> = (props) => {
     return (
         <Card className="class-card" color={GetColor(course.dept)} key={props.key}>
             <Card.Content>
-                <div onClick={() => setDisplay(true)}>
+                <div onClick={props.onClick ?? (() => setDisplay(true))}>
                     <Grid>
                         <Grid.Row >
                             <Grid.Column textAlign='left' width={12} columns={2}>
@@ -48,7 +54,8 @@ const CourseTile: React.FC<Params> = (props) => {
             <CourseInfo course={course}
                 setDisplay={setDisplay}
                 shouldDisplay={display}
-                membership={props.isMember}/>
+                membership={props.isMember}
+                button={props.infoButton}/>
         </Card>
     );
 }
