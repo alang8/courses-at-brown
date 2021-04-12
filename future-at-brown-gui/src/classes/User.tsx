@@ -173,15 +173,16 @@ class User {
     }
 
     async directlySetPreferences(newPref: SearchParams): Promise<void> {
+        console.log("hey!")
+        console.log(newPref);
         this.preferences = {...newPref};
+        await this.setPreferences(newPref);
     }
 
-    async setPreferences(prefName: SearchParamNames, newVal: number): Promise<SearchParams> {
-        this.preferences[prefName] = newVal;
+    async setPreferences(prefs: SearchParams): Promise<SearchParams> {
         const toSend = {
             username: this.username,
-            pref: prefName,
-            value: newVal
+            pref: prefs,
         };
 
         if (!this.isGuest) {
