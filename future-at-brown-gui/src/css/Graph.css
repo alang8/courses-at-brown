@@ -15,6 +15,6 @@ html, body
     z-index: 10;
 }
 
-canvas {
+#graphWrapper {
     margin:auto;
 }
