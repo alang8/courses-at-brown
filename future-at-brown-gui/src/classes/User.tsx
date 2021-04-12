@@ -51,7 +51,7 @@ class User {
         };
 
         if (!this.isGuest) {
-            axios.post(
+            await axios.post(
                 'http://localhost:4567/writecourse',
                 toSend,
                 config
@@ -84,7 +84,7 @@ class User {
             course: courseCode
         };
         if (!this.isGuest) {
-            axios.post(
+            await axios.post(
                 'http://localhost:4567/removecourse',
                 toSend,
                 config
@@ -117,7 +117,7 @@ class User {
         };
 
         if (!this.isGuest) {
-            axios.post(
+            await axios.post(
                 'http://localhost:4567/writecourse',
                 toSend,
                 config
@@ -143,7 +143,7 @@ class User {
         };
 
         if (!this.isGuest) {
-            axios.post(
+            await axios.post(
                 'http://localhost:4567/removecourse',
                 toSend,
                 config
@@ -173,19 +173,20 @@ class User {
     }
 
     async directlySetPreferences(newPref: SearchParams): Promise<void> {
+        console.log("hey!")
+        console.log(newPref);
         this.preferences = {...newPref};
+        await this.setPreferences(newPref);
     }
 
-    async setPreferences(prefName: SearchParamNames, newVal: number): Promise<SearchParams> {
-        this.preferences[prefName] = newVal;
+    async setPreferences(prefs: SearchParams): Promise<SearchParams> {
         const toSend = {
             username: this.username,
-            pref: prefName,
-            value: newVal
+            pref: prefs,
         };
 
         if (!this.isGuest) {
-            axios.post(
+            await axios.post(
                 'http://localhost:4567/setpreference',
                 toSend,
                 config
@@ -241,14 +242,12 @@ export const getUser = async (username: string): Promise<User> => {
     let preferences = defaultParams;
 
     //response has 'user', 'taken', 'saved'
-    axios.post(
+    await axios.post(
         'http://localhost:4567/loaduser',
         toSend,
         config
     )
         .then((response) => {
-            console.log("loaduser")
-            console.log(response.data)
             savedCourses = response.data['saved']
             takenCourses = response.data['taken']
             let u = response.data['user']
@@ -261,7 +260,7 @@ export const getUser = async (username: string): Promise<User> => {
         .catch((error) => {
             return Promise.reject(error);
         });
-    //TODO: ensure that this is working correctly - that saved/taken courses are actually arrays of courses
+
     return new User(
         username,
         savedCourses,
@@ -283,7 +282,7 @@ export const newUser = async (username: string, password: string): Promise<User>
         password: password
     };
 
-    return axios.post(
+    return await axios.post(
         'http://localhost:4567/signup',
         toSend,
         config

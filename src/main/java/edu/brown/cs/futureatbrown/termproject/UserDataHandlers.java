@@ -299,41 +299,21 @@ public class UserDataHandlers {
     @Override
     public Object handle(Request request, Response response) {
       String msg = "";
-      JSONObject data = null;
       try {
-        data = new JSONObject(request.body());
+        JSONObject data = new JSONObject(request.body());
+        System.out.println(data);
         String curUser = data.getString("username");
-        String preference = data.getString("pref");
-        double newVal = data.getDouble("value");
+        JSONObject pref = data.getJSONObject("pref");
         Base64.Encoder coder = Base64.getEncoder();
         String hashedUsername = coder.encodeToString(curUser.getBytes());
-
-        String colToEdit = "";
-        switch (preference) {
-          case "avgHoursPref":
-            colToEdit = "course_rating_pref";
-            break;
-          case "crsRatingPref":
-            colToEdit = "avg_hrs_pref";
-            break;
-          case "maxHoursPref":
-            colToEdit = "max_hrs_pref";
-            break;
-          case "crsSizePref":
-            colToEdit = "class_size_pref";
-            break;
-          case "profRatingPref":
-            colToEdit = "prof_rating_pref";
-            break;
-          default:
-            System.out.println("ERROR: Error in SetPreferenceHandler, col was " + preference);
-        }
-
-        String query = "UPDATE user_data SET ?=? WHERE username = ?;";
+        String query = "UPDATE user_data SET course_rating_pref=?, avg_hrs_pref=?, max_hrs_pref=?, class_size_pref=?, prof_rating_pref=? WHERE username = ?;";
         PreparedStatement prep = conn.prepareStatement(query);
-        prep.setString(1, colToEdit);
-        prep.setDouble(2, newVal);
-        prep.setString(3, hashedUsername);
+        prep.setDouble(1, pref.getDouble("crsRatingPref"));
+        prep.setDouble(2, pref.getDouble("avgHoursPref"));
+        prep.setDouble(3, pref.getDouble("maxHoursPref"));
+        prep.setDouble(4, pref.getDouble("crsSizePref"));
+        prep.setDouble(5, pref.getDouble("profRatingPref"));
+        prep.setString(6, hashedUsername);
         prep.executeUpdate();
         msg = "Success!";
       } catch (JSONException | SQLException e) {

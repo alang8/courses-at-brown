@@ -18,6 +18,7 @@ import User, { destringify } from './classes/User';
 
 const App: React.FC<{}> = () => {
   const [user, setUser] = useState<User | undefined>(destringify(localStorage.getItem("user")));
+  console.log("in app.tsx");
   console.log(user);
 
   // routes to be used if the user is not logged in (profile page otherwise)

@@ -29,7 +29,11 @@ const Login: React.FC<InAuthenticaedPageProps> = (props) => {
                     setPassError(loginErr);
                     if (loginErr.length === 0) {
                         getUser(username.current)
-                            .then(props.setLogin)
+                            .then((r) => {
+                                console.log("in login.tsx 33")
+                                console.log(r);
+                                props.setLogin(r)
+                            })
                             .catch(console.log)
                     } else {
                         setLoading(false);

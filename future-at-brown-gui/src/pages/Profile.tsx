@@ -13,7 +13,7 @@ const Profile: React.FC<AuthenticatedPageProps> = (props) => {
     const [loadingPrefs, setLoading] = useState<boolean>(false);
 
     useEffect(() => {
-        if (loadingPrefs === true) {
+        if (loadingPrefs) {
             props.user.directlySetPreferences(prefs)
                 .then(() => setLoading(false));
         }
