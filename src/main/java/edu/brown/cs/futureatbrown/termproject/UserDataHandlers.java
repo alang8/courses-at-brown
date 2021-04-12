@@ -286,7 +286,7 @@ public class UserDataHandlers {
   }
 
   /**
-   * Class which handles writing course codes to our database for a given user.
+   * Class which handles writing preferences for a given user to the user database.
    */
   public static class SetPreferenceHandler implements Route {
     private static final Gson GSON = new Gson();
