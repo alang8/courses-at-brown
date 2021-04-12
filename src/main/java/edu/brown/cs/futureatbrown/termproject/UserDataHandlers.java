@@ -342,4 +342,82 @@ public class UserDataHandlers {
       return GSON.toJson(variables);
     }
   }
+
+  /**
+   * Class which handles writing course codes to our database for a given user.
+   */
+  public static class LoadUserHandler implements Route {
+    private static final Gson GSON = new Gson();
+    private Connection userConn;
+    private Connection courseConn;
+
+    public LoadUserHandler(Connection uDB, Connection cDB) {
+      this.userConn = uDB;
+      this.courseConn = cDB;
+    }
+
+    /*
+    idea:
+    - get user preferences from udb
+    - get user taken classes from udb, split
+    - sql select for id in list
+    - for each return, map for all data needed for course object
+          - name: string;
+    dept: string;
+    code: string;
+    prereqs?: string[];
+    description?: string;
+    rating?: number;
+    latestProf?: string;
+    latestProfRating?: number;
+    maxHours?: number;
+    avgHours?: number;
+
+    - get user saved classes, split
+    - for each return, map same business.
+     */
+
+    @Override
+    public Object handle(Request request, Response response) {
+      String msg = "";
+      JSONObject data = null;
+      try {
+        data = new JSONObject(request.body());
+        String curUser = data.getString("username");
+        Base64.Encoder coder = Base64.getEncoder();
+        String hashedUsername = coder.encodeToString(curUser.getBytes());
+
+        String query = "SELECT * FROM user_data WHERE username = ?";
+        PreparedStatement prep = userConn.prepareStatement(query);
+        prep.setString(1, hashedUsername);
+        ResultSet rs = prep.executeQuery();
+
+        if (rs.next()) {
+          double crsRatingPref = rs.getDouble(3);
+          double avgHoursPref = rs.getDouble(4);
+          double maxHoursPref = rs.getDouble(5);
+          double crsSizePref = rs.getDouble(6);
+          double profRatingPref = rs.getDouble(7);
+          String svdCourses = rs.getString(8);
+          String tknCourses = rs.getString(9);
+          String[] savedCourses = svdCourses.split(",");
+          String[] takenCourses = tknCourses.split(",");
+        }
+
+
+      } catch (JSONException | SQLException e) {
+        e.printStackTrace();
+      }
+      Map<String, Object> variables = ImmutableMap.of("msg", msg);
+      return GSON.toJson(variables);
+    }
+
+    private Map<String, Map<String, Object>> getCourseInfo(String[] courses) {
+      Map<String, Map<String, Object>> courseInfo = new HashMap<>();
+      String query = "SELECT * FROM courseData INNER JOIN courseCR ON courseData.id=courseCR.id WHERE courseData.id = ANY (?);";
+//      PreparedStatement prep = new P
+      return courseInfo;
+    }
+  }
+
 }

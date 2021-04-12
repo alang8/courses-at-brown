@@ -1,1 +1,4 @@
 edu/brown/cs/futureatbrown/termproject/UserDataHandlers$WriteCourseHandler.class
+edu/brown/cs/futureatbrown/termproject/UserDataHandlers$SetPreferenceHandler.class
+edu/brown/cs/futureatbrown/termproject/UserDataHandlers$LoadUserHandler.class
+edu/brown/cs/futureatbrown/termproject/UserDataHandlers$RemoveCourseHandler.class

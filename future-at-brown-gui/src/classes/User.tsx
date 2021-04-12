@@ -75,6 +75,7 @@ class User {
     async removeSaved(toRemove: Course): Promise<Course[]> {
         this.saved.filter((c) => c !== toRemove);
 
+        let courseCode = toRemove.dept + " " + toRemove.code;
         const toSend = {
             username: this.username,
             column: "saved_courses",
@@ -129,10 +130,11 @@ class User {
 
     async removeTaken(toRemove: Course): Promise<Course[]> {
         this.taken.filter((c) => c !== toRemove);
+        let codeToRemove = toRemove.dept + " " + toRemove.code;
         const toSend = {
             username: this.username,
             column: "taken_courses",
-            course: courseCode
+            course: codeToRemove
         };
 
         if (!this.isGuest) {
