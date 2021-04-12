@@ -1,5 +1,5 @@
 import React from "react";
-import { Button, Container, Grid, GridColumn, Header, Icon, Segment, Sticky } from "semantic-ui-react";
+import { Button, Container, Grid, Header, Icon, Segment, Sticky } from "semantic-ui-react";
 import { AuthenticatedPageProps } from "../classes/Authentication";
 
 interface Props extends AuthenticatedPageProps {
@@ -30,7 +30,7 @@ const SignOutHeader: React.FC<Props> = (props) => {
                                     compact
                                     inverted color="red"
                                     onClick={handleClick}>
-                                    <Icon name="remove user" />
+                                    <Icon name="sign out" />
                                     {"Sign out" + (props.user.isGuest ? " of guest" : "")}
                                 </Button>
                             </div>

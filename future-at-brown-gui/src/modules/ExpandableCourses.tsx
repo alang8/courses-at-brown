@@ -1,7 +1,8 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Accordion, Button, Card, Header, Icon, Segment } from "semantic-ui-react";
 import CourseTile from "./CourseTile";
 import { Course } from "../classes/Course";
+import CourseSearch from "./CourseSearch";
 
 interface Params {
     title: string;
@@ -21,6 +22,12 @@ const ExpandableCourses: React.FC<Params> = (props) => {
     const initDisplay: JSX.Element[] = allCourses.splice(0, 4).map((elt, index) =>
         <CourseTile course={elt} key={String(index)} />
     );
+
+    // const remove= (rmv: Course): Promise<void> => {
+    //     if (props.removeCourse) {
+    //         return props.removeCourse(rmv.dept + rmv.code)
+    //     }
+    // }
 
     const addMore: JSX.Element = (
         <Card key="5">
@@ -45,7 +52,6 @@ const ExpandableCourses: React.FC<Params> = (props) => {
     if (props.modifiable) {
         initDisplay.push(addMore);
     } else if (allCourses.length > 0) {
-        console.log(props.modifiable, allCourses, initDisplay);
         initDisplay.push(
             <CourseTile course={allCourses[0]} key={String(5)} />);
         allCourses.shift();
@@ -53,7 +59,6 @@ const ExpandableCourses: React.FC<Params> = (props) => {
 
     const overflowCards: JSX.Element[] = allCourses.map(
         (elt, index) => <CourseTile course={elt} key={String(index + initDisplay.length)} />);
-
     return (
         <Segment>
             {(props.title) ? <Header as="h1" content={props.title} /> : undefined}
