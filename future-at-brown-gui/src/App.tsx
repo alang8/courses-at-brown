@@ -18,6 +18,7 @@ import User, { destringify } from './classes/User';
 
 const App: React.FC<{}> = () => {
   const [user, setUser] = useState<User | undefined>(destringify(localStorage.getItem("user")));
+  const [path, setPath] = useState<{[id:string]:number}>({});
   console.log("in app.tsx");
   console.log(user);
 
@@ -49,10 +50,10 @@ const App: React.FC<{}> = () => {
         <Route path="/test-components" component={TestComponent} />
         <Route path="/test-route" component={TestComponent2} />
         {InauthenticatedRoute("/", <Redirect to="/splash" />)}
-        {AuthenticatedRoute("/search", <Search user={user!} setUser={setUser}/>)}
+        {AuthenticatedRoute("/search", <Search user={user!} setUser={setUser} setPath={(p:{[id:string]:number}) => setPath(p)}/>)}
         {AuthenticatedRoute("/profile", <Profile user={user!} setUser={setUser}/>)}
         {InauthenticatedRoute("/splash", <SplashPage setLogin={setUser} />)}
-        {AuthenticatedRoute("/graph", <GraphDisplay user={user!} setUser={setUser}/>)}
+        {AuthenticatedRoute("/graph", <GraphDisplay user={user!} setUser={setUser} path={path}/>)}
         {InauthenticatedRoute("/login", <Login setLogin={setUser} />)}
         {InauthenticatedRoute("/signup", <Signup setLogin={setUser} />)}
         <Route path="*" component={NotFound} />
