@@ -8,7 +8,7 @@ import User from "../classes/User";
 
 interface Params {
     curUser?: User;
-    prefChange?: (newPref: SearchParams) => Promise<void>;
+    prefChange?: (newPref: SearchParams) => void;
     setLoading?: (set: boolean) => void;
 }
 
@@ -46,12 +46,9 @@ const ParamSlider: React.FC<Params> = (props) => {
                         }}
                         onAfterChange={(newVal: number) => {
                             if (props.prefChange) {
-                                props.setLoading?.(true)
                                 pref[id] = newVal;
-                                props.prefChange!({...pref})
-                                    .then(() => props.setLoading?.(false));
+                                props.prefChange({...pref})
                             }
-                            
                         }}
                         marks={[0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10]}
                     />

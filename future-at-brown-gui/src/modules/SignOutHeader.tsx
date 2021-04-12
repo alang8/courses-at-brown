@@ -31,7 +31,7 @@ const SignOutHeader: React.FC<Props> = (props) => {
                                     inverted color="red"
                                     onClick={handleClick}>
                                     <Icon name="remove user" />
-                                    {"Sign out"}
+                                    {"Sign out" + (props.user.isGuest ? " of guest" : "")}
                                 </Button>
                             </div>
                         </Grid.Column>

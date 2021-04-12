@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect} from "react";
 import { Button, Grid, Header, Icon, Modal } from 'semantic-ui-react';
 import { GetColor } from '../classes/Colors'
 import { Course } from '../classes/Course'
@@ -7,14 +7,24 @@ interface Params {
     course: Course;
     shouldDisplay: boolean;
     setDisplay: (set: boolean) => void;
-    add?: (addCourse: Course) => void;
-    remove?: (removeCourse: Course) => void;
+    add?: (addCourse: Course) => Promise<void>;
     membership?: (testCourse: Course) => boolean;
 }
 
 const CourseInfo: React.FC<Params> = (props) => {
+
     const course: Course = props.course;
-    const color = GetColor(course.dept)
+    const color = GetColor(course.dept);
+
+    const [loading, setLoading] = useState<boolean>(false);
+
+    useEffect(() => {
+        if (loading) {
+            props.add?.(course)
+                .then(() => setLoading(false));
+        }
+    }, [loading])
+
     return (
         <Modal
             closeIcon
@@ -78,7 +88,12 @@ const CourseInfo: React.FC<Params> = (props) => {
                         </Grid.Column>
                         <Grid.Column width={6} textAlign="center">
                             <Grid.Row centered>
-                                <Button icon labelPosition='left' className="fill" color={color}>
+                                <Button icon
+                                    disabled={props.membership?.(course)}
+                                    loading={loading}
+                                    labelPosition='left'
+                                    className="fill" color={color}
+                                    onClick={() => setLoading(true)}>
                                     <Icon name='plus' />
                                     {"Save Course"}
                                 </Button>

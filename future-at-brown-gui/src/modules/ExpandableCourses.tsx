@@ -2,15 +2,20 @@ import React, { useState } from "react";
 import { Accordion, Button, Card, Header, Icon, Segment } from "semantic-ui-react";
 import CourseTile from "./CourseTile";
 import { Course } from "../classes/Course";
+
 interface Params {
     title: string;
-    modifiable?: boolean;
     courses: Course[];
+    modifiable?: boolean;
+    addCourse?: (toAdd: Course) => Promise<void>;
+    removeCourse?: (toRemove: string) => Promise<void>;
 }
 
 const ExpandableCourses: React.FC<Params> = (props) => {
 
     const [showMore, setShowMore] = useState<boolean>(false);
+    const [isRemoving, setRemoving] = useState<boolean>(false);
+    const [isAdding, setAdding] = useState<boolean>(false);
 
     const allCourses = [...props.courses];
     const initDisplay: JSX.Element[] = allCourses.splice(0, 4).map((elt, index) =>
@@ -20,11 +25,17 @@ const ExpandableCourses: React.FC<Params> = (props) => {
     const addMore: JSX.Element = (
         <Card key="5">
             <Button.Group vertical className="fill">
-                <Button icon labelPosition='left' color={'green'}>
+                <Button icon
+                    labelPosition='left'
+                    color={'green'}
+                    onClick={() => setAdding(true)}>
                     <Icon name='plus' />
                     {"Add"}
                 </Button>
-                <Button icon labelPosition='left' color={'red'}>
+                <Button icon
+                    labelPosition='left'
+                    color={'red'}
+                    onClick={() => setRemoving(true)}>
                     <Icon name='x' />
                     {"Remove"}
                 </Button>

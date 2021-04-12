@@ -14,7 +14,7 @@ const GraphDisplay: React.FC<AuthenticatedPageProps> = (props) => {
     return <div className="total">
         <ProfileButton />
         <SearchButton />
-        <SignOutHeader setUser={props.setUser} user={props.user} />
+        <SignOutHeader setUser={props.setUser} user={props.user} heading={"Graph"}/>
 
         <div style={{ height: '100vh' }}>
             <ClassGraph path={samplePath} />

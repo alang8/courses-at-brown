@@ -172,6 +172,10 @@ class User {
         return { ...this.preferences }
     }
 
+    async directlySetPreferences(newPref: SearchParams): Promise<void> {
+        this.preferences = {...newPref};
+    }
+
     async setPreferences(prefName: SearchParamNames, newVal: number): Promise<SearchParams> {
         this.preferences[prefName] = newVal;
         const toSend = {
@@ -195,6 +199,17 @@ class User {
                 });
         }
         return this.getPreferences();
+    }
+
+    resetData() {
+        this.clearTaken();
+        this.clearSaved();
+        this.preferences = defaultParams;
+    }
+
+    deleteUser() {
+        // do some sql stuff
+        localStorage.removeItem("user");
     }
 
     stringify(): string {

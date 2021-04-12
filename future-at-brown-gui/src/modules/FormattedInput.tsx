@@ -9,7 +9,7 @@ export interface Error {
 interface Props {
     label: string;
     textChange?: (val: string) => void;
-    type?: "text" | "password" | "username";
+    type?: "text" | "password" | "username" | "search";
     id?: string;
     error?: Error;
 }
@@ -54,6 +54,7 @@ const FormattedInput: React.FC<Props> = (props) => {
 
     const getIcon = (): string | undefined => {
         switch (props.type) {
+            case "search": return "search";
             case "password": return "lock";
             case "username": return "user";
             default: return undefined;

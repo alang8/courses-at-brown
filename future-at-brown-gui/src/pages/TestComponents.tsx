@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import { Button, Card, Header } from "semantic-ui-react";
 import User from "../classes/User";
 import { ButtonFooter, ProfileButton, SearchButton } from "../modules/BottomButton";
+import CourseSearch from "../modules/CourseSearch";
 import CourseTile from "../modules/CourseTile";
 import ExpandableCourses from "../modules/ExpandableCourses";
 import FormattedInput from "../modules/FormattedInput";
@@ -20,7 +21,8 @@ const TestComponent: React.FC<{}> = () => {
       <FormattedInput label="Texte" />
       <FormattedInput label="Username" type="username" />
       <FormattedInput label="Password" type="password" error={{ messages: error, resolve: () => setError([]) }} />
-  
+      <CourseSearch searcher={() => Promise.resolve({code: "0320", dept: "CSCI", name: "Introduction to Software Engineering"})} setCourse={console.log} shouldDisplay={true} setDisplay={() => console.log("displayed")}
+       />
       <ExpandableCourses modifiable courses={[{code: "0320", dept: "CSCI", name: "Introduction to Software Engineering"}]} title="Test" />
       <ExpandableCourses courses={[{code: "0320", dept: "CSCI", name: "Introduction to Software Engineering"}, {code: "0320", dept: "CSCI", name: "Introduction to Software Engineering"}, {code: "0320", dept: "CSCI", name: "Introduction to Software Engineering"}, {code: "0320", dept: "CSCI", name: "Introduction to Software Engineering"}]} title="Test" />
       <ExpandableCourses courses={[{code: "0320", dept: "CSCI", name: "Introduction to Software Engineering"}, {code: "0320", dept: "CSCI", name: "Introduction to Software Engineering"}, {code: "0320", dept: "CSCI", name: "Introduction to Software Engineering"}, {code: "0320", dept: "CSCI", name: "Introduction to Software Engineering"}, {code: "0320", dept: "CSCI", name: "Introduction to Software Engineering"}, {code: "0320", dept: "CSCI", name: "Introduction to Software Engineering"}, {code: "0320", dept: "CSCI", name: "Introduction to Software Engineering"}, {code: "0320", dept: "CSCI", name: "Introduction to Software Engineering"}]} title="Test" />
