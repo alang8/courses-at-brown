@@ -49,8 +49,7 @@ class User {
             column: "saved_courses",
             course: courseCode
         };
-        // TODO:  replace with actuall adding course to dataabase
-        //
+
         if (!this.isGuest) {
             axios.post(
                 'http://localhost:4567/writecourse',
@@ -109,7 +108,7 @@ class User {
 
     async takeCourse(toAdd: Course): Promise<Course[]> {
         this.taken.push(toAdd);
-        // TODO:  replace with actuall adding course to dataabase
+
         let courseCode = toAdd.dept + " " + toAdd.code;
         const toSend = {
             username: this.username,
@@ -218,11 +217,40 @@ export default User;
  * @returns the user with the given username
  */
 export const getUser = async (username: string): Promise<User> => {
-    // TODO: actually get the user from the database
+    const toSend = {
+        username: username
+    };
+
+    let savedCourses = [];
+    let takenCourses = [];
+    let preferences = defaultParams;
+
+    //response has 'user', 'taken', 'saved'
+    axios.post(
+        'http://localhost:4567/loaduser',
+        toSend,
+        config
+    )
+        .then((response) => {
+            console.log("loaduser")
+            console.log(response.data)
+            savedCourses = response.data['saved']
+            takenCourses = response.data['taken']
+            let u = response.data['user']
+            preferences = {crsRatingPref: u['crsRatingPref'],
+                avgHoursPref: u['avgHoursPref'],
+                maxHoursPref: u['maxHoursPref'],
+                crsSizePref: u['crsSizePref'],
+                profRatingPref: u['profRatingPref']}
+        })
+        .catch((error) => {
+            return Promise.reject(error);
+        });
     return new User(
         username,
         [],
-        []
+        [],
+        preferences
     )
 }
 

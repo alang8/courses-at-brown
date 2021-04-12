@@ -12,6 +12,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.Arrays;
 import java.util.Base64;
 import java.util.HashMap;
 import java.util.Map;
@@ -344,7 +345,7 @@ public class UserDataHandlers {
   }
 
   /**
-   * Class which handles writing course codes to our database for a given user.
+   * Class which handles loading saved user data.
    */
   public static class LoadUserHandler implements Route {
     private static final Gson GSON = new Gson();
@@ -379,7 +380,6 @@ public class UserDataHandlers {
 
     @Override
     public Object handle(Request request, Response response) {
-      String msg = "";
       JSONObject data = null;
       try {
         data = new JSONObject(request.body());
@@ -393,30 +393,66 @@ public class UserDataHandlers {
         ResultSet rs = prep.executeQuery();
 
         if (rs.next()) {
-          double crsRatingPref = rs.getDouble(3);
-          double avgHoursPref = rs.getDouble(4);
-          double maxHoursPref = rs.getDouble(5);
-          double crsSizePref = rs.getDouble(6);
-          double profRatingPref = rs.getDouble(7);
+          Map<String, Double> userData = new HashMap<>();
+          userData.put("crsRatingPref", rs.getDouble(3));
+          userData.put("avgHoursPref", rs.getDouble(4));
+          userData.put("maxHoursPref", rs.getDouble(5));
+          userData.put("crsSizePref", rs.getDouble(6));
+          userData.put("profRatingPref", rs.getDouble(7));
           String svdCourses = rs.getString(8);
           String tknCourses = rs.getString(9);
           String[] savedCourses = svdCourses.split(",");
           String[] takenCourses = tknCourses.split(",");
+          Map[] savedCourseInfo = getCourseInfo(savedCourses);
+          Map[] takenCourseInfo = getCourseInfo(takenCourses);
+          Map<String, Object> variables = ImmutableMap.of("user", userData, "taken", takenCourseInfo, "saved", savedCourseInfo);
+          return GSON.toJson(variables);
+        } else {
+          System.out.println("ERROR: error in LoadUserHandler");
+          return null;
         }
-
-
       } catch (JSONException | SQLException e) {
         e.printStackTrace();
+        return null;
       }
-      Map<String, Object> variables = ImmutableMap.of("msg", msg);
-      return GSON.toJson(variables);
     }
 
-    private Map<String, Map<String, Object>> getCourseInfo(String[] courses) {
+    private Map<String, Object>[] getCourseInfo(String[] courses) {
       Map<String, Map<String, Object>> courseInfo = new HashMap<>();
-      String query = "SELECT * FROM courseData INNER JOIN courseCR ON courseData.id=courseCR.id WHERE courseData.id = ANY (?);";
-//      PreparedStatement prep = new P
-      return courseInfo;
+      try {
+        String query = "SELECT * FROM courseData INNER JOIN courseCR ON courseData.id=courseCR.id WHERE (courseData.id = ?";
+        for (int i = 1; i < courses.length; i++) {
+          query = query + " OR courseData.id = ?";
+        }
+        query = query + ");";
+        PreparedStatement prep = courseConn.prepareStatement(query);
+        for (int k = 1; k <= courses.length; k++) {
+          prep.setString(k, courses[k - 1]);
+        }
+        ResultSet rs = prep.executeQuery();
+        while (rs.next()) {
+          //cols are: id,name,instr,sem,rawprereq,prereq,desc,id,crsrat,profrat,avghr,maxhr,classsz
+          Map<String, Object> curCourseInfo = new HashMap<>();
+          curCourseInfo.put("name", rs.getString(2));
+          curCourseInfo.put("dept", rs.getString(1).substring(0, 4));
+          curCourseInfo.put("code", rs.getString(1).substring(5));
+          String prereqString = rs.getString(6);
+          String[] prereqInfo = prereqString.replaceAll("[&|()]+]", ",").split(",");
+          prereqInfo = Arrays.stream(prereqInfo).filter(s -> !s.isEmpty()).toArray(String[]::new);
+          curCourseInfo.put("prereqs", prereqInfo);
+          curCourseInfo.put("description", rs.getString(7));
+          curCourseInfo.put("rating", rs.getString(9));
+          curCourseInfo.put("latestProf", rs.getString(3));
+          curCourseInfo.put("latestProfRating", rs.getString(10));
+          curCourseInfo.put("maxHours", rs.getString(12));
+          curCourseInfo.put("avgHours", rs.getString(11));
+          courseInfo.put(rs.getString(1), curCourseInfo);
+        }
+        return courseInfo.values().toArray(Map[]::new);
+      } catch (SQLException e) {
+        e.printStackTrace();
+      }
+      return courseInfo.values().toArray(Map[]::new);
     }
   }
 
