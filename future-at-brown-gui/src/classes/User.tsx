@@ -106,6 +106,7 @@ class User {
     }
 
     async takeCourse(toAdd: Course): Promise<Course[]> {
+        console.log("user", this);
         this.taken.push(toAdd);
 
         let courseCode = GetCode(toAdd);

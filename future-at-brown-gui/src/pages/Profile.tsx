@@ -66,8 +66,8 @@ const Profile: React.FC<AuthenticatedPageProps> = (props) => {
                         title={"Taken courses"}
                         modify={{
                             searcher: FindCourse,
-                            addCourse: props.user.takeCourse,
-                            removeCourse: props.user.removeTaken
+                            addCourse: e => {return props.user.takeCourse(e);},
+                            removeCourse: c => {return props.user.removeTaken(c);}
                         }} />
                     </Grid.Column>
                 </Grid.Row>
