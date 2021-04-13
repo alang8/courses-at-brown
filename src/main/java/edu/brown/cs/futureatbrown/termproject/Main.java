@@ -207,7 +207,10 @@ public final class Main {
           if (rs.getString(6) == null) {
             thisCourseData.put("prereqs", "");
           } else {
-            thisCourseData.put("prereqs", rs.getString(6));
+            String encodedPrereq = rs.getString(6);
+            String prereqText = encodedPrereq.replaceAll("&", " and ");
+            prereqText = prereqText.replaceAll("\\|", " or ");
+            thisCourseData.put("prereqs", prereqText);
           }
           courses.add(thisCourseData);
         } else {
