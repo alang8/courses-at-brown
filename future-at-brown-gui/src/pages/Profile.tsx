@@ -75,7 +75,13 @@ const Profile: React.FC<AuthenticatedPageProps> = (props) => {
                 </Grid.Row>
                 <Grid.Row stretched>
                     <Grid.Column>
-                        <ExpandableCourses courses={props.user.getSaved()} title={"Saved courses"} />
+                        <ExpandableCourses
+                            courses={props.user.getSaved()}
+                            title={"Saved courses"}
+                            modify={{
+                                searcher: FindCourse,
+                                removeCourse: c => { return props.user.removeSaved(c); }
+                            }}/>
                     </Grid.Column>
                 </Grid.Row>
             </Grid>
