@@ -9,6 +9,7 @@ dbPath = "term-project-alang8-fkierzen-jwu175-rdai4/data/courseDatabase.sqlite3"
 connection = sqlite3.connect(dbPath)
 conn = connection.cursor()
 conn.execute('PRAGMA foreign_keys = ON')
+# INSERT INTO mathSCBCourses (id) SELECT id FROM courseData WHERE courseData.id LIKE "MATH%"
 # conn.execute('DROP TABLE courseData')
 # conn.execute('CREATE TABLE IF NOT EXISTS courseData (id TEXT, name TEXT, instr TEXT, sem INTEGER, PRIMARY KEY (id))')
 cur_dept = 'APMA'

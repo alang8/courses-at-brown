@@ -63,7 +63,7 @@ const Profile: React.FC<AuthenticatedPageProps> = (props) => {
                     <Grid.Column>
                         <ExpandableCourses 
                         courses={props.user.getTaken()}
-                        title={"Taken coures"}
+                        title={"Taken courses"}
                         modify={{
                             searcher: FindCourse,
                             addCourse: props.user.takeCourse,
@@ -73,7 +73,7 @@ const Profile: React.FC<AuthenticatedPageProps> = (props) => {
                 </Grid.Row>
                 <Grid.Row stretched>
                     <Grid.Column>
-                        <ExpandableCourses courses={props.user.getSaved()} title={"Saved coures"} />
+                        <ExpandableCourses courses={props.user.getSaved()} title={"Saved courses"} />
                     </Grid.Column>
                 </Grid.Row>
             </Grid>

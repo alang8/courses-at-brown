@@ -94,6 +94,7 @@ public final class Main {
     String loginDBPath = "data/userDatabase.sqlite3";
     String courseDBPath = "data/courseDatabase.sqlite3";
     try {
+      //Setting up database connections.
       Class.forName("org.sqlite.JDBC");
       String loginDBUrl = "jdbc:sqlite:" + loginDBPath;
       Connection userDataConn = DriverManager.getConnection(loginDBUrl);
@@ -101,6 +102,7 @@ public final class Main {
       Connection courseDataConn = DriverManager.getConnection(courseDBUrl);
       Spark.before((request, response) -> response.header("Access-Control-Allow-Origin", "*"));
 
+      //Setting up spark routes.
       Spark.post("/login", new UserDataHandlers.LoginHandler(userDataConn));
       Spark.post("/signup", new UserDataHandlers.SignUpHandler(userDataConn));
       Spark.post("/checkname", new UserDataHandlers.CheckUsernameHandler(userDataConn));
@@ -133,9 +135,7 @@ public final class Main {
       Collection<Map<String, String>> courses = new ArrayList<>();
       try {
         String query = "SELECT * FROM courseData INNER JOIN courseCR ON courseData.id=courseCR.id;";
-//        String query = "SELECT * FROM courseData INNER JOIN courseCR ON courseData.id=courseCR.id WHERE courseData.id LIKE ?;";
         PreparedStatement prep = conn.prepareStatement(query);
-//        prep.setString(1, "CSCI%");
         ResultSet rs = prep.executeQuery();
         //cols are: id,name,instr,sem,rawprereq,prereq,desc,id,crsrat,profrat,avghr,maxhr,classsz
         while (rs.next()) {
@@ -180,15 +180,19 @@ public final class Main {
     public Object handle(Request request, Response response) {
       Collection<Map<String, String>> courses = new ArrayList<>();
       Map<String, String> thisCourseData = new HashMap<>();
+      String dept = "";
+      String code = "";
       try {
         JSONObject data = new JSONObject(request.body());
-        String dept = data.getString("dept");
-        String code = data.getString("code");
+        dept = data.getString("dept");
+        code = data.getString("code");
         String courseCode = dept + " " + code;
+        System.out.println("coursecode: " + courseCode);
         String query = "SELECT * FROM courseData INNER JOIN courseCR ON courseData.id=courseCR.id WHERE courseData.id = ?;";
         PreparedStatement prep = conn.prepareStatement(query);
         prep.setString(1, courseCode);
         ResultSet rs = prep.executeQuery();
+
         //cols are: id,name,instr,sem,rawprereq,prereq,desc,id,crsrat,profrat,avghr,maxhr,classsz
         if (rs.next()) {
           thisCourseData.put("code", rs.getString(1).substring(5));
@@ -217,6 +221,3 @@ public final class Main {
     }
   }
 }
-
-
-

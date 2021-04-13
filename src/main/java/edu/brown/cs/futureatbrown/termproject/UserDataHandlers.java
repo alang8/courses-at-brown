@@ -20,7 +20,7 @@ import java.util.Map;
 public class UserDataHandlers {
 
   /**
-   * Class which ensures that a username isnt yet taken for our site.
+   * Class which ensures that a username isn't yet taken for our site.
    */
   public static class CheckUsernameHandler implements Route {
     private static final Gson GSON = new Gson();
@@ -82,7 +82,6 @@ public class UserDataHandlers {
         Base64.Encoder coder = Base64.getEncoder();
         String hashedUsername = coder.encodeToString(inputtedUsername.getBytes());
         String hashedPassword = coder.encodeToString(inputtedPassword.getBytes());
-
 
         double crsRatingPref = 5.0;
         double avgHoursPref = 5.0;
