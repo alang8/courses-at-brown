@@ -47,7 +47,14 @@ class User {
     }
 
     async saveCourse(toSave: Course): Promise<Course[]> {
-        this.saved.push(toSave);
+        console.log(this)
+        console.log(this.saved)
+        if (this.saved === undefined) {
+            this.saved = [toSave];
+        } else {
+            this.saved = [toSave, ...this.saved];
+        }
+
         let courseCode = GetCode(toSave);
         const toSend = {
             username: this.username,
