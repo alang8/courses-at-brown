@@ -31,16 +31,15 @@ export const FindCourse = async (inp: string): Promise<Course[]> => {
         code: sanatized.substring(4).toUpperCase()
     }
     console.log("sending", toSend);
-    return axios.post<Course>(
+    return await axios.post<Course>(
         'http://localhost:4567/courseinfo',
         toSend,
         config
-    )
-        .then((course) => { 
+    ).then((course) => {
             if (course.data.dept === "" && course.data.code === "") {
-                return Promise.resolve([course.data]);
-            } else {
                 return Promise.reject();
+            } else {
+                return Promise.resolve([course.data]);
             }
         })
 }   

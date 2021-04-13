@@ -5,7 +5,11 @@ import axios from "axios";
 import "../css/Graph.css"
 import {GetColorRaw} from '../classes/Colors'
 
-
+/**
+ * React component which deals with the actual graph display itself.
+ * @param props - the props for the component: just the path stored as map of {course codes:semester number}.
+ * @returns {JSX.Element} - an html object which holds the ForceGraph2D.
+ */
 const ClassGraph = (props) => {
     const fgRef = useRef();
     const [theNodes, setNodes] = useState([{}]);
@@ -17,7 +21,7 @@ const ClassGraph = (props) => {
     // let thePath = {"CSCI 0170":0, "CSCI 0220":1, "CSCI 0180":1, "CSCI 0330":2, "CSCI 1470":2, "CSCI 0320":3, "APMA 0360":5}
     let theSemester = {0:"Fall 2021", 1:"Spring 2022", 2:"Fall 2022", 3:"Spring 2023", 4:"Fall 2023", 5:"Spring 2024", 6:"Fall 2024", 7:"Spring 2025", 8:"Fall 2025", 9:"Spring 2026"}
 
-
+    //Config for axios.
     let config = {
         headers: {
             "Content-Type": "application/json",
@@ -25,6 +29,9 @@ const ClassGraph = (props) => {
         }
     }
 
+    /**
+     * Function to get all the course data to display on the graph.
+     */
     function getCourseData() {
         const toSend = {};
 
@@ -44,6 +51,9 @@ const ClassGraph = (props) => {
         });
     }
 
+    /**
+     * Function to setup the node and link array for the ForceGraph component.
+     */
     function setupNodes() {
         console.log("in classGraph")
         console.log(props.path)
@@ -76,16 +86,19 @@ const ClassGraph = (props) => {
         setGData({"nodes": nodeArray, "links":linkArray});
     }
 
+    //Want to get all course data upon load
     useEffect(() => {
         getCourseData();
-        }, []);
+    }, []);
 
+    //Want to setup the nodes once we recieved all the course info.
     useEffect(() => {
         console.log("setup nodes");
         console.log(theCourses);
         setupNodes();
     }, [theCourses])
 
+    //State vars for the popup window when clicking on a specific node.
     const [open, setOpen] = useState(true);
     const [curCourse, setCurCourse] = useState({name:"DEFAULT", dept:"DEFAULT", code:"DEFAULT"});
     const closeModal = () => setOpen(false);
@@ -93,6 +106,10 @@ const ClassGraph = (props) => {
     useEffect(() => setOpen(!open), [curCourse])
 
 
+    /**
+     * Function to retrieve the relevant data for the clicked course popup.
+     * @param nodeInfo - the information of the clicked node (basically just the dept + code as a string).
+     */
     function displayedCourseInfo(nodeInfo) {
         let classID = nodeInfo['id'];
         console.log(classID)
@@ -100,9 +117,6 @@ const ClassGraph = (props) => {
         let rawCourse = allCourseInfo[classID]
         console.log("displ course info")
         console.log(rawCourse)
-        let encodedPrereq = rawCourse['prereqs'];
-        let prereqText = encodedPrereq.replaceAll("&", " and ")
-        prereqText = prereqText.replaceAll("|", " or ")
         let clickedCourse = {
             name:rawCourse['name'],
             dept:classID.substring(0,4),
@@ -112,13 +126,19 @@ const ClassGraph = (props) => {
             latestProf: rawCourse['instr'],
             latestProfRating: rawCourse['profrat'],
             maxHours: rawCourse['maxhr'],
-            avgHours: rawCourse['avghr'],
-            prereqs: (prereqText === "" ? "None Listed": prereqText)}
-
+            avgHours: rawCourse['avghr']}
         setCurCourse(clickedCourse)
 
     }
 
+    /**
+     * Function to paint our nodes (painting ones in our path differently from others).
+     * @param id - the id of the node.
+     * @param x - the x coordinate of the node to draw.
+     * @param y - the y coordinate of the node to draw.
+     * @param color - the color of the node (based on course department).
+     * @param ctx - the context in which we will draw the node.
+     */
     function nodePaint({ id, x, y }, color, ctx) {
         if(id in props.path) {
             ctx.fillStyle = GetColorRaw(id.substring(0,4));
@@ -140,29 +160,30 @@ const ClassGraph = (props) => {
         }
     }
 
+    //Changing the force values to display our graph in a reasonable way.
     useEffect(() => {
         fgRef.current.d3Force("charge").strength(-15000);
         fgRef.current.d3Force("link").strength(0);
     });
 
     return <div>
-                <div id="graphWrapper">
-                    <ForceGraph2D
-                        graphData={gData}
-                        onNodeClick={(n, e) => {
-                            displayedCourseInfo(n);
-                        }}
-                        ref={fgRef}
-                        showNavInfo = {true}
-                        dagMode={"radialin"}
-                        dagLevelDistance={100}
-                        height={600}
-                        width={1125}
-                        nodeCanvasObject={(node, ctx) => nodePaint(node, "black", ctx)}
-                    />
-                </div>
-                <CourseInfo course={curCourse} setDisplay={closeModal} shouldDisplay={open}/>
-            </div>
+        <div id="graphWrapper">
+            <ForceGraph2D
+                graphData={gData}
+                onNodeClick={(n, e) => {
+                    displayedCourseInfo(n);
+                }}
+                ref={fgRef}
+                showNavInfo = {true}
+                dagMode={"radialin"}
+                dagLevelDistance={100}
+                height={600}
+                width={1125}
+                nodeCanvasObject={(node, ctx) => nodePaint(node, "black", ctx)}
+            />
+        </div>
+        <CourseInfo course={curCourse} setDisplay={closeModal} shouldDisplay={open}/>
+    </div>
 }
 
 export default ClassGraph;
