@@ -79,7 +79,7 @@ const ExpandableCourses: React.FC<Params> = (props) => {
 
     const overflowCards: JSX.Element[] = allCourses.map(
         (elt, index) => <CourseTile course={elt} key={String(index + initDisplay.length)} shouldDisable={alreadyIn}/>);
-    
+
     const searchers = (): JSX.Element[] =>
         [<CourseSearch key={1} 
             searcher={

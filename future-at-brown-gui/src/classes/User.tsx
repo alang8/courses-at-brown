@@ -47,7 +47,39 @@ class User {
     }
 
     async saveCourse(toSave: Course): Promise<Course[]> {
-        this.saved.push(toSave);
+        // this.saved.push(toSave);
+        // let courseCode = GetCode(toSave);
+        // const toSend = {
+        //     username: this.username,
+        //     column: "saved_courses",
+        //     course: courseCode
+        // };
+        //
+        // if (!this.isGuest) {
+        //     await axios.post(
+        //         'http://localhost:4567/writecourse',
+        //         toSend,
+        //         config
+        //     )
+        //         .then((response) => {
+        //             console.log("saveCourse")
+        //             console.log(response.data['msg'])
+        //         })
+        //         .catch((error) => {
+        //             return Promise.reject(error);
+        //         });
+        // }
+        // localStorage.setItem(MEMORY_LOCATION, this.stringify());
+        // return this.getSaved();
+        console.log(this)
+        console.log(this.saved)
+        // this.taken.push(toAdd);
+        if (this.saved === undefined) {
+            this.saved = [toSave];
+        } else {
+            this.saved = [toSave, ...this.saved];
+        }
+
         let courseCode = GetCode(toSave);
         const toSend = {
             username: this.username,
@@ -69,8 +101,9 @@ class User {
                     return Promise.reject(error);
                 });
         }
+
         localStorage.setItem(MEMORY_LOCATION, this.stringify());
-        return this.getSaved();
+        return this.getSaved()
     }
 
     async clearSaved(): Promise<void> {
