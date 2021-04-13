@@ -234,7 +234,6 @@ class User {
             saved: this.saved,
             prefs: this.preferences
         }
-        console.log(jsonVersion);
         return JSON.stringify(jsonVersion);
     }
 }
@@ -313,7 +312,6 @@ export const newUser = async (username: string, password: string): Promise<User>
 
 export const destringify = (json: string | null): User | undefined => {
     const value = JSON.parse(json ?? "{}");
-    console.log("stored", value);
     if (value["taken"] && value["saved"] && value["prefs"]) {
         return new User(
             value["username"],

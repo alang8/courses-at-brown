@@ -15,6 +15,7 @@ interface Params {
     }
     heading?: string;
     initialResults?: Course[];
+    shouldDisableCourse?: (testCourse: Course) => boolean;
 }
 
 const CourseSearch: React.FC<Params> = (props) => {
@@ -28,7 +29,10 @@ const CourseSearch: React.FC<Params> = (props) => {
     const displayResults = (): JSX.Element => {
         const resultCards: JSX.Element[] =
             results!.map((c: Course, index) =>
-                <CourseTile course={c} infoButton={props.resolveButton} key={index} />);
+                <CourseTile course={c}
+                    infoButton={props.resolveButton}
+                    key={index}
+                    shouldDisable={props.shouldDisableCourse} />);
         return <Grid.Row>
             <Grid.Column>
                 <Card.Group content={resultCards} />

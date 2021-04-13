@@ -7,7 +7,7 @@ import { Course, GetCode } from "../classes/Course";
 interface Params {
     course: Course;
     key?: string | number;
-    isMember?: (testCourse: Course) => boolean;
+    shouldDisable?: (testCourse: Course) => boolean;
     onClick?: () => void;
     infoButton?: {
         func: (inp: Course) => Promise<any>;
@@ -41,7 +41,7 @@ const CourseTile: React.FC<Params> = (props) => {
                                     name='graduation cap' />
                             </Grid.Column>
                         </Grid.Row>
-                        <Grid.Row textAlign='right'>
+                        <Grid.Row textAlign='right' >
                             <Grid.Column verticalAlign='bottom'>
                                 <div className="left-align">
                                     <Card.Meta content={course.name} />
@@ -54,7 +54,7 @@ const CourseTile: React.FC<Params> = (props) => {
             <CourseInfo course={course}
                 setDisplay={setDisplay}
                 shouldDisplay={display}
-                membership={props.isMember}
+                shouldDisable={props.shouldDisable}
                 button={props.infoButton}/>
         </Card>
     );

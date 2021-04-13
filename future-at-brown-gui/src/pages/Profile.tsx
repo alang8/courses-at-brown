@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react"
 import { Button, Container, Dropdown, Grid, GridColumn, Header, Segment, Sticky } from "semantic-ui-react"
 import { AuthenticatedPageProps } from "../classes/Authentication";
-import { FindCourse } from "../classes/Course";
+import { FindCourse, GetCode } from "../classes/Course";
 import { SearchParams } from "../classes/SearchParams";
 import { ButtonFooter, SearchButton } from "../modules/BottomButton";
 import ExpandableCourses from "../modules/ExpandableCourses";
@@ -38,7 +38,7 @@ const Profile: React.FC<AuthenticatedPageProps> = (props) => {
                                 <Dropdown.Divider />
                                 <Dropdown.Item text='Reset data' icon='refresh' onClick={props.user.resetData} />
                                 {(props.user.isGuest) ?
-                                    undefined : 
+                                    undefined :
                                     <Dropdown.Item text='Delete account' icon='remove user' onClick={props.user.deleteUser} />}
                             </Dropdown.Menu>
                         </Dropdown>
@@ -61,14 +61,14 @@ const Profile: React.FC<AuthenticatedPageProps> = (props) => {
                 </Grid.Row>
                 <Grid.Row stretched>
                     <Grid.Column>
-                        <ExpandableCourses 
-                        courses={props.user.getTaken()}
-                        title={"Taken courses"}
-                        modify={{
-                            searcher: FindCourse,
-                            addCourse: e => {return props.user.takeCourse(e);},
-                            removeCourse: c => {return props.user.removeTaken(c);}
-                        }} />
+                        <ExpandableCourses
+                            courses={props.user.getTaken()}
+                            title={"Taken courses"}
+                            modify={{
+                                searcher: FindCourse,
+                                addCourse: e => { return props.user.takeCourse(e); },
+                                removeCourse: c => { return props.user.removeTaken(c); }
+                            }} />
                     </Grid.Column>
                 </Grid.Row>
                 <Grid.Row stretched>

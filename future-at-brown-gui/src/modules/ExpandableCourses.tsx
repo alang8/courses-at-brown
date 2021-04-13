@@ -20,11 +20,15 @@ const ExpandableCourses: React.FC<Params> = (props) => {
     const [showMore, setShowMore] = useState<boolean>(false);
     const [isRemoving, setRemoving] = useState<boolean>(false);
     const [isAdding, setAdding] = useState<boolean>(false);
+    
+    const alreadyIn = (test: Course): boolean =>
+        displayed.find(c => GetCode(c) === GetCode(test)) !== undefined
 
     const allCourses = [...displayed];
     const initDisplay: JSX.Element[] = allCourses.splice(0, 4).map((elt, index) =>
-        <CourseTile course={elt} key={String(index)} />
+        <CourseTile course={elt} key={String(index)} shouldDisable={alreadyIn} />
     );
+
 
     useEffect(() => {
         setRemoving(false);
@@ -74,18 +78,18 @@ const ExpandableCourses: React.FC<Params> = (props) => {
     }
 
     const overflowCards: JSX.Element[] = allCourses.map(
-        (elt, index) => <CourseTile course={elt} key={String(index + initDisplay.length)} />);
+        (elt, index) => <CourseTile course={elt} key={String(index + initDisplay.length)} shouldDisable={alreadyIn}/>);
 
-    const searchers = ():JSX.Element[] => 
-        [<CourseSearch
+    const searchers = (): JSX.Element[] =>
+        [<CourseSearch key={1} 
             searcher={
                 async (inp: string) =>
                     displayed.filter((c) => (c.code + c.dept).toLowerCase().indexOf(inp.toLowerCase()) !== -1)}
             resolveButton={{ func: remove, icon: 'x', name: 'Remove course' }} initialResults={displayed}
             setDisplay={setRemoving} shouldDisplay={isRemoving} heading={"Find the course to remove"} />,
-        <CourseSearch
+        <CourseSearch key={2} shouldDisableCourse={alreadyIn}
             searcher={props.modify!.searcher} resolveButton={{ func: add }}
-            setDisplay={setAdding} shouldDisplay={isAdding} heading={"Find a course to add"} />] 
+            setDisplay={setAdding} shouldDisplay={isAdding} heading={"Find a course to add"} />]
 
     return (
         <Segment>

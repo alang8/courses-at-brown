@@ -7,7 +7,7 @@ interface Params {
     course: Course;
     shouldDisplay: boolean;
     setDisplay: (set: boolean) => void;
-    membership?: (testCourse: Course) => boolean;
+    shouldDisable?: (testCourse: Course) => boolean;
     button?:  {
         func: (addCourse: Course) => Promise<any>;
         name?: string;
@@ -104,7 +104,7 @@ const CourseInfo: React.FC<Params> = (props) => {
                         <Grid.Column width={6} textAlign="center">
                             <Grid.Row centered>
                                 <Button icon
-                                    disabled={props.membership?.(course)}
+                                    disabled={props.shouldDisable?.(course)}
                                     loading={loading}
                                     labelPosition='left'
                                     className="fill" color={color}
