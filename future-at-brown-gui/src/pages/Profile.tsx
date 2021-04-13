@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react"
 import { Button, Container, Dropdown, Grid, GridColumn, Header, Segment, Sticky } from "semantic-ui-react"
 import { AuthenticatedPageProps } from "../classes/Authentication";
+import { FindCourse } from "../classes/Course";
 import { SearchParams } from "../classes/SearchParams";
 import { ButtonFooter, SearchButton } from "../modules/BottomButton";
 import ExpandableCourses from "../modules/ExpandableCourses";
@@ -39,7 +40,6 @@ const Profile: React.FC<AuthenticatedPageProps> = (props) => {
                                 {(props.user.isGuest) ?
                                     undefined : 
                                     <Dropdown.Item text='Delete account' icon='remove user' onClick={props.user.deleteUser} />}
-
                             </Dropdown.Menu>
                         </Dropdown>
                     </Grid.Column>
@@ -61,7 +61,14 @@ const Profile: React.FC<AuthenticatedPageProps> = (props) => {
                 </Grid.Row>
                 <Grid.Row stretched>
                     <Grid.Column>
-                        <ExpandableCourses courses={props.user.getTaken()} title={"Taken coures"} modifiable />
+                        <ExpandableCourses 
+                        courses={props.user.getTaken()}
+                        title={"Taken coures"}
+                        modify={{
+                            searcher: FindCourse,
+                            addCourse: props.user.takeCourse,
+                            removeCourse: props.user.removeTaken
+                        }} />
                     </Grid.Column>
                 </Grid.Row>
                 <Grid.Row stretched>

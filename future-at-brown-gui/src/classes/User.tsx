@@ -1,5 +1,5 @@
 import axios from "axios";
-import { Course } from "./Course";
+import { Course, GetCode } from "./Course";
 import { defaultParams, SearchParamNames, SearchParams } from "./SearchParams";
 
 const config = {
@@ -43,7 +43,7 @@ class User {
 
     async saveCourse(toSave: Course): Promise<Course[]> {
         this.saved.push(toSave);
-        let courseCode = toSave.dept + " " + toSave.code;
+        let courseCode = GetCode(toSave);
         const toSend = {
             username: this.username,
             column: "saved_courses",
@@ -74,10 +74,9 @@ class User {
         }
     }
 
-    async removeSaved(toRemove: Course): Promise<Course[]> {
-        this.saved.filter((c) => c !== toRemove);
+    async removeSaved(courseCode: string): Promise<Course[]> {
+        this.taken = this.taken.filter((c) => GetCode(c) !== courseCode);
 
-        let courseCode = toRemove.dept + " " + toRemove.code;
         const toSend = {
             username: this.username,
             column: "saved_courses",
@@ -109,7 +108,7 @@ class User {
     async takeCourse(toAdd: Course): Promise<Course[]> {
         this.taken.push(toAdd);
 
-        let courseCode = toAdd.dept + " " + toAdd.code;
+        let courseCode = GetCode(toAdd);
         const toSend = {
             username: this.username,
             column: "taken_courses",
@@ -133,9 +132,10 @@ class User {
         return this.getTaken()
     }
 
-    async removeTaken(toRemove: Course): Promise<Course[]> {
-        this.taken.filter((c) => c !== toRemove);
-        let codeToRemove = toRemove.dept + " " + toRemove.code;
+    async removeTaken(codeToRemove: string): Promise<Course[]> {
+
+        this.taken = this.taken.filter((c) => GetCode(c) !== codeToRemove);
+
         const toSend = {
             username: this.username,
             column: "taken_courses",

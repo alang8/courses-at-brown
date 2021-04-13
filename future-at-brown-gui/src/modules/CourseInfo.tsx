@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Button, Grid, Header, Icon, Modal, SemanticICONS } from 'semantic-ui-react';
 import { GetColor } from '../classes/Colors'
-import { Course } from '../classes/Course'
+import { Course, GetCode } from '../classes/Course'
 
 interface Params {
     course: Course;
@@ -9,7 +9,7 @@ interface Params {
     setDisplay: (set: boolean) => void;
     membership?: (testCourse: Course) => boolean;
     button?:  {
-        func: (addCourse: Course) => Promise<void>;
+        func: (addCourse: Course) => Promise<any>;
         name?: string;
         icon?: SemanticICONS;
     }
@@ -41,7 +41,7 @@ const CourseInfo: React.FC<Params> = (props) => {
             <Modal.Header>
                 <Header
                     icon='graduation'
-                    content={course.dept + course.code}
+                    content={GetCode(course)}
                     color={color} />
             </Modal.Header>
 

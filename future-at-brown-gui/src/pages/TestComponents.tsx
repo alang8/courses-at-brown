@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import { Button, Card, Header } from "semantic-ui-react";
+import { FindCourse } from "../classes/Course";
 import User from "../classes/User";
 import { ButtonFooter, ProfileButton, SearchButton } from "../modules/BottomButton";
 import CourseSearch from "../modules/CourseSearch";
@@ -33,9 +34,9 @@ const TestComponent: React.FC<{}> = () => {
     <FormattedInput label="Texte" />
     <FormattedInput label="Username" type="username" />
     <FormattedInput label="Password" type="password" error={{ messages: error, resolve: () => setError([]) }} />
-    <ExpandableCourses modifiable courses={[{ code: "0320", dept: "CSCI", name: "Introduction to Software Engineering" }]} title="Test" />
+    <ExpandableCourses modify={{searcher: FindCourse}} courses={[{ code: "0320", dept: "CSCI", name: "Introduction to Software Engineering" }]} title="Test" />
     <ExpandableCourses courses={[{ code: "0320", dept: "CSCI", name: "Introduction to Software Engineering" }, { code: "0320", dept: "CSCI", name: "Introduction to Software Engineering" }, { code: "0320", dept: "CSCI", name: "Introduction to Software Engineering" }, { code: "0320", dept: "CSCI", name: "Introduction to Software Engineering" }]} title="Test" />
-    <ExpandableCourses modifiable courses={[{ code: "0220", dept: "CSCI", name: "Introduction to Software Engineering" }, { code: "0320", dept: "CSCI", name: "Introduction to Software Engineering" }, { code: "0321", dept: "1SCI", name: "Introduction to Software Engineering" }, { code: "1320", dept: "CSCI", name: "Introduction to Software Engineering" }, { code: "0325", dept: "C4CI", name: "Introduction to Software Engineering" }, { code: "0324", dept: "CS3I", name: "Introduction to Software Engineering" }, { code: "2320", dept: "CSCI", name: "Introduction to Software Engineering" }, { code: "0323", dept: "CSCI", name: "Introduction to Software Engineering" }]} title="Test" />
+    <ExpandableCourses modify={{searcher: FindCourse}} courses={[{ code: "0220", dept: "CSCI", name: "Introduction to Software Engineering" }, { code: "0320", dept: "CSCI", name: "Introduction to Software Engineering" }, { code: "0321", dept: "1SCI", name: "Introduction to Software Engineering" }, { code: "1320", dept: "CSCI", name: "Introduction to Software Engineering" }, { code: "0325", dept: "C4CI", name: "Introduction to Software Engineering" }, { code: "0324", dept: "CS3I", name: "Introduction to Software Engineering" }, { code: "2320", dept: "CSCI", name: "Introduction to Software Engineering" }, { code: "0323", dept: "CSCI", name: "Introduction to Software Engineering" }]} title="Test" />
     <Card.Group>
       <CourseTile course={{ code: "0320", dept: "APMA", name: "Introduction to Software Engineering" }} />
       <CourseTile course={{ code: "0320", dept: "CSCI", name: "Introduction to Software Engineering" }} />

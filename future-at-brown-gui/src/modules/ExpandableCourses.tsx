@@ -1,15 +1,17 @@
 import React, { useEffect, useState } from "react";
 import { Accordion, Button, Card, Header, Icon, Segment } from "semantic-ui-react";
 import CourseTile from "./CourseTile";
-import { Course } from "../classes/Course";
+import { Course, GetCode } from "../classes/Course";
 import CourseSearch from "./CourseSearch";
 
 interface Params {
     title: string;
     courses: Course[];
-    modifiable?: boolean;
-    addCourse?: (toAdd: Course) => Promise<void>;
-    removeCourse?: (toRemove: string) => Promise<void>;
+    modify?: {
+        searcher: (code: string) => Promise<Course[]>;
+        addCourse?: (toAdd: Course) => Promise<any>;
+        removeCourse?: (toRemove: string) => Promise<any>;
+    }
 }
 
 const ExpandableCourses: React.FC<Params> = (props) => {
@@ -30,10 +32,17 @@ const ExpandableCourses: React.FC<Params> = (props) => {
     }, [displayed]);
 
     const remove = async (rmv: Course): Promise<void> => {
-        if (props.removeCourse) {
-            await props.removeCourse(rmv.dept + rmv.code);
+        if (props.modify?.removeCourse) {
+            await props.modify!.removeCourse(GetCode(rmv));
         }
-        setDisplayed(displayed.filter((c) => c.dept + c.code !== rmv.dept + rmv.code));
+        setDisplayed(displayed.filter((c) => GetCode(c) !== GetCode(rmv)));
+    }
+
+    const add = async (added: Course): Promise<void> => {
+        if (props.modify?.addCourse) {
+            await props.modify!.addCourse(added);
+        }
+        setDisplayed(displayed.concat(added));
     }
 
     const addMore: JSX.Element = (
@@ -56,7 +65,7 @@ const ExpandableCourses: React.FC<Params> = (props) => {
             </Button.Group>
         </Card >);
 
-    if (props.modifiable) {
+    if (props.modify) {
         initDisplay.push(addMore);
     } else if (allCourses.length > 0) {
         initDisplay.push(
@@ -66,14 +75,21 @@ const ExpandableCourses: React.FC<Params> = (props) => {
 
     const overflowCards: JSX.Element[] = allCourses.map(
         (elt, index) => <CourseTile course={elt} key={String(index + initDisplay.length)} />);
+
+    const searchers = ():JSX.Element[] => 
+        [<CourseSearch
+            searcher={
+                async (inp: string) =>
+                    displayed.filter((c) => (c.code + c.dept).toLowerCase().indexOf(inp.toLowerCase()) !== -1)}
+            resolveButton={{ func: remove, icon: 'x', name: 'Remove course' }} initialResults={displayed}
+            setDisplay={setRemoving} shouldDisplay={isRemoving} heading={"Find the course to remove"} />,
+        <CourseSearch
+            searcher={props.modify!.searcher} resolveButton={{ func: add }}
+            setDisplay={setAdding} shouldDisplay={isAdding} heading={"Find a course to add"} />] 
+
     return (
         <Segment>
-            <CourseSearch
-                searcher={
-                    async (inp: string) =>
-                        displayed.filter((c) => (c.code + c.dept).toLowerCase().indexOf(inp.toLowerCase()) !== -1)}
-                resolveButton={{ func: remove, icon: 'x', name: 'Remove course' }} initialResults={displayed}
-                setDisplay={setRemoving} shouldDisplay={isRemoving} heading={"Find the course to remove"}/>
+            {props.modify ? searchers() : undefined}
             {(props.title) ? <Header as="h1" content={props.title} /> : undefined}
             {(initDisplay.length <= 0) ? <Header as="h3" content={"This selection is empty"} />
                 : <Card.Group content={initDisplay} centered itemsPerRow={5} />}
