@@ -67,16 +67,14 @@ public class CourseGraph implements Graph<CourseNode, CourseEdge> {
   /**
    * Sets up all the global parameters of the graph in this edge
    */
-  public void setGlobalParams(double crsRatingPref, double profRatingPref,
-                              double avgHoursPref, double avgHoursInput, int minNumClasses,
-                              int maxNumClasses, double balanceFactorPref, double maxHoursPref,
-                              double totalMaxHoursInput, double classSizePref, int classSizeInput,
-                              int classSizeMax) {
+  public void setGlobalParams(double crsRatingPref, double profRatingPref, double avgHoursPref,
+                              double avgHoursInput, int minNumClasses, int maxNumClasses,
+                              double balanceFactorPref, double totalMaxHoursInput, double classSizePref,
+                              int classSizeInput, int classSizeMax) {
     // SLIDER PREFERENCES
     this.crsRatingPref = crsRatingPref;
     this.profRatingPref = profRatingPref;
     this.avgHoursPref = avgHoursPref;
-    this.maxHoursPref = maxHoursPref;
     this.balanceFactorPref = balanceFactorPref;
     this.classSizePref = classSizePref;
 
@@ -93,9 +91,8 @@ public class CourseGraph implements Graph<CourseNode, CourseEdge> {
       for (CourseEdge edge : edgesFrom.values()) {
         edge.setGlobalParams(this.crsRatingPref, this.profRatingPref,
           this.avgHoursPref, this.avgHoursInput, this.minNumClasses,
-          this.maxNumClasses, this.balanceFactorPref, this.maxHoursPref,
-          this.totalMaxHoursInput, this.classSizePref, this.classSizeInput,
-          this.classSizeMax);
+          this.maxNumClasses, this.balanceFactorPref, this.totalMaxHoursInput,
+          this.classSizePref, this.classSizeInput, this.classSizeMax);
       }
     }
   }
@@ -166,6 +163,7 @@ public class CourseGraph implements Graph<CourseNode, CourseEdge> {
     for (HashMap<String, CourseEdge> edgesFrom: this.edgeMap.values()) {
       for (CourseEdge edge : edgesFrom.values()) {
         edge.setGlobalPrereqs(this.prereqs);
+        edge.setGlobalEnd(this.nodeMap.get(endID));
       }
     }
     System.out.println("PREREQS: " + this.prereqs);
@@ -187,9 +185,8 @@ public class CourseGraph implements Graph<CourseNode, CourseEdge> {
       try {
         edge.setGlobalParams(this.crsRatingPref, this.profRatingPref,
           this.avgHoursPref, this.avgHoursInput, this.minNumClasses,
-          this.maxNumClasses, this.balanceFactorPref, this.maxHoursPref,
-          this.totalMaxHoursInput, this.classSizePref, this.classSizeInput,
-          this.classSizeMax);
+          this.maxNumClasses, this.balanceFactorPref, this.totalMaxHoursInput,
+          this.classSizePref, this.classSizeInput, this.classSizeMax);
       } catch (NullPointerException e) {
         System.out.println("WARNING: Remember to Initialize the Global Parameters");
       }

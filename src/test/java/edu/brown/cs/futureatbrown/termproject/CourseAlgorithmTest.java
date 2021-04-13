@@ -89,13 +89,13 @@ public class CourseAlgorithmTest {
   public void PrereqTest() throws InvalidAlgorithmParameterException {
     setup();
     courseGraph.setGlobalParams(1, 1, 1,
-    10, 3, 5, 1, 1,
+    10, 1, 5, 1,
     100, 1, 50, 500);
     List<List<CourseEdge>> prereqPaths = courseAlgorithms.dijkstraPathTree("CSCI 0150" ,courseGraph);
     List<List<CourseEdge>> prereqPathSol = List.of(
       List.of(
-        courseGraph.getEdgeSet().get("CSCI 0150").get("MATH 0350"),
-        courseGraph.getEdgeSet().get("MATH 0350").get("APMA 1655")
+        courseGraph.getEdgeSet().get("CSCI 0150").get("MATH 0190"),
+        courseGraph.getEdgeSet().get("MATH 0190").get("APMA 1655")
       ),
       List.of(
         courseGraph.getEdgeSet().get("CSCI 0150").get("MATH 0090")
@@ -120,8 +120,8 @@ public class CourseAlgorithmTest {
         courseGraph.getEdgeSet().get("CSCI 0150").get("MATH 0190")
       ),
       List.of(
-        courseGraph.getEdgeSet().get("CSCI 0150").get("CSCI 0170"),
-        courseGraph.getEdgeSet().get("CSCI 0170").get("CSCI 0180")
+        courseGraph.getEdgeSet().get("CSCI 0150").get("CSCI 0190"),
+        courseGraph.getEdgeSet().get("CSCI 0190").get("CSCI 0180")
       ),
       List.of(
         courseGraph.getEdgeSet().get("CSCI 0150").get("CSCI 0190")
@@ -134,21 +134,21 @@ public class CourseAlgorithmTest {
         courseGraph.getEdgeSet().get("MATH 0090").get("MATH 0100")
       ),
       List.of(
-        courseGraph.getEdgeSet().get("CSCI 0150").get("CSCI 0160"),
-        courseGraph.getEdgeSet().get("CSCI 0160").get("CSCI 0220"),
+        courseGraph.getEdgeSet().get("CSCI 0150").get("CSCI 0190"),
+        courseGraph.getEdgeSet().get("CSCI 0190").get("CSCI 0220"),
         courseGraph.getEdgeSet().get("CSCI 0220").get("CSCI 1410")
       ),
       List.of(
         courseGraph.getEdgeSet().get("CSCI 0150").get("CSCI 0220")
       ),
       List.of(
-        courseGraph.getEdgeSet().get("CSCI 0150").get("MATH 0350"),
-        courseGraph.getEdgeSet().get("MATH 0350").get("APMA 1650")
+        courseGraph.getEdgeSet().get("CSCI 0150").get("MATH 0190"),
+        courseGraph.getEdgeSet().get("MATH 0190").get("APMA 1650")
       ),
       List.of(
-        courseGraph.getEdgeSet().get("CSCI 0150").get("MATH 0090"),
-        courseGraph.getEdgeSet().get("MATH 0090").get("MATH 0100"),
-        courseGraph.getEdgeSet().get("MATH 0100").get("CSCI 1450")
+        courseGraph.getEdgeSet().get("CSCI 0150").get("MATH 0190"),
+        courseGraph.getEdgeSet().get("MATH 0190").get("MATH 0070"),
+        courseGraph.getEdgeSet().get("MATH 0070").get("CSCI 1450")
       )
     );
 
@@ -171,15 +171,15 @@ public class CourseAlgorithmTest {
 
     List<CourseEdge> pathToProbComp = courseAlgorithms.dijkstraPath("CSCI 0150", "CSCI 1450", courseGraph);
     Assert.assertEquals(pathToProbComp, List.of(
-      courseGraph.getEdgeSet().get("CSCI 0150").get("MATH 0090"),
-      courseGraph.getEdgeSet().get("MATH 0090").get("MATH 0100"),
-      courseGraph.getEdgeSet().get("MATH 0100").get("CSCI 1450")
+      courseGraph.getEdgeSet().get("CSCI 0150").get("MATH 0190"),
+      courseGraph.getEdgeSet().get("MATH 0190").get("MATH 0070"),
+      courseGraph.getEdgeSet().get("MATH 0070").get("CSCI 1450")
       ));
 
     List<CourseEdge> pathToAI = courseAlgorithms.dijkstraPath("CSCI 0150", "CSCI 1410", courseGraph);
     Assert.assertEquals(pathToAI, List.of(
-      courseGraph.getEdgeSet().get("CSCI 0150").get("CSCI 0160"),
-      courseGraph.getEdgeSet().get("CSCI 0160").get("CSCI 0220"),
+      courseGraph.getEdgeSet().get("CSCI 0150").get("CSCI 0190"),
+      courseGraph.getEdgeSet().get("CSCI 0190").get("CSCI 0220"),
       courseGraph.getEdgeSet().get("CSCI 0220").get("CSCI 1410")
     ));
 
@@ -188,12 +188,87 @@ public class CourseAlgorithmTest {
 
   @Test
   public void SliderTests() throws InvalidAlgorithmParameterException {
+
+    ////////////////////////////////
+    // COURSE RATING - PRIORITIZE //
+    ////////////////////////////////
+    setup();
+    courseGraph.setGlobalParams(10, 0, 0,
+      10, 1, 5, 0,
+      100, 0, 50, 500);
+
+    // Went from CS190 to CS160 because CS160 has a slightly higher course rating and the preference for course
+    // rating is MAXED OUT.
+    List<CourseEdge> highCourseRatingAI = courseAlgorithms.dijkstraPath("CSCI 0150", "CSCI 1410", courseGraph);
+    Assert.assertEquals(highCourseRatingAI, List.of(
+      courseGraph.getEdgeSet().get("CSCI 0150").get("CSCI 0220"),
+      courseGraph.getEdgeSet().get("CSCI 0220").get("CSCI 0160"),
+      courseGraph.getEdgeSet().get("CSCI 0160").get("CSCI 1410")
+    ));
+    teardown();
+
+    ///////////////////////////////////
+    // PROFESSOR RATING - PRIORITIZE //
+    ///////////////////////////////////
+    setup();
+    courseGraph.setGlobalParams(0, 10, 0,
+      10, 1, 5, 0,
+      100, 0, 50, 500);
+
+    // Went from MATH0070 to MATH0090 because MATH0090 has a slightly higher course Professor rating
+    // and the preference for Professor rating is MAXED OUT.
+    // Not MATH0060 because of the prerequisite of MATH0050.
+    List<CourseEdge> highProfRatingProbClass = courseAlgorithms.dijkstraPath("CSCI 0150", "CSCI 1450", courseGraph);
+    Assert.assertEquals(highProfRatingProbClass, List.of(
+      courseGraph.getEdgeSet().get("CSCI 0150").get("MATH 0190"),
+      courseGraph.getEdgeSet().get("MATH 0190").get("MATH 0090"),
+      courseGraph.getEdgeSet().get("MATH 0090").get("CSCI 1450")
+    ));
+    teardown();
+
+    /////////////////////////////////
+    // AVGERAGE HOURS - PRIORITIZE //
+    /////////////////////////////////
+    setup();
+    courseGraph.setGlobalParams(0, 0, 10,
+      10, 1, 5, 0,
+      100, 0, 50, 500);
+
+    // CS0190's AVG Hours are slightly closer to 10 than CS0160's
+    List<CourseEdge> closeAVGHourProbClass = courseAlgorithms.dijkstraPath("CSCI 0150", "CSCI 1410", courseGraph);
+    Assert.assertEquals(closeAVGHourProbClass, List.of(
+      courseGraph.getEdgeSet().get("CSCI 0150").get("CSCI 0190"),
+      courseGraph.getEdgeSet().get("CSCI 0190").get("CSCI 0220"),
+      courseGraph.getEdgeSet().get("CSCI 0220").get("CSCI 1410")
+    ));
+    teardown();
+
+    //////////////////////////////
+    // CLASS SIZE  - PRIORITIZE //
+    //////////////////////////////
+    setup();
+    courseGraph.setGlobalParams(0, 0, 0,
+      10, 1, 5, 0,
+      100, 10, 50, 500);
+
+    // CS0190 > CS0160 because it is much much closer to a class size of 50.
+    List<CourseEdge> closeClassSizeAI = courseAlgorithms.dijkstraPath("CSCI 0150", "CSCI 1410", courseGraph);
+    Assert.assertEquals(closeClassSizeAI, List.of(
+      courseGraph.getEdgeSet().get("CSCI 0150").get("CSCI 0190"),
+      courseGraph.getEdgeSet().get("CSCI 0190").get("CSCI 0220"),
+      courseGraph.getEdgeSet().get("CSCI 0220").get("CSCI 1410")
+    ));
+    teardown();
+  }
+
+  @Test
+  public void LimiterTests() throws InvalidAlgorithmParameterException {
     ///////////////////////////
     // MAX NUMBER OF CLASSES //
     ///////////////////////////
     setup();
     courseGraph.setGlobalParams(1, 1, 1,
-      10, 1, 3, 1, 1,
+      10, 1, 3, 1,
       100, 1, 50, 500);
 
     // Notice that the Max number of classes is 3 classes but we need at least 4 to include the starting node and
@@ -202,39 +277,34 @@ public class CourseAlgorithmTest {
     Assert.assertNull(blockedFromAI);
     teardown();
 
-    ////////////////////////////////
-    // COURSE RATING - PRIORITIZE //
-    ////////////////////////////////
+    ///////////////////////////
+    // MIN NUMBER OF CLASSES //
+    ///////////////////////////
     setup();
-    courseGraph.setGlobalParams(10, 1, 1,
-      10, 3, 5, 1, 1,
+    courseGraph.setGlobalParams(1, 1, 1,
+      10, 3, 5, 1,
       100, 1, 50, 500);
 
-    // Went from CS190 to CS160 because CS160 has a slightly higher course rating and the preference for course
-    // rating is MAXED OUT.
-    List<CourseEdge> highCourseRatingAI = courseAlgorithms.dijkstraPath("CSCI 0150", "CSCI 1450", courseGraph);
-    Assert.assertEquals(highCourseRatingAI, List.of(
-      courseGraph.getEdgeSet().get("CSCI 0150").get("MATH 0090"),
-      courseGraph.getEdgeSet().get("MATH 0090").get("MATH 0100"),
-      courseGraph.getEdgeSet().get("MATH 0100").get("CSCI 1450")
+    // Resultant path has at least 3 nodes now, more than before.
+    List<CourseEdge> longerPath = courseAlgorithms.dijkstraPath("CSCI 0150", "CSCI 0170", courseGraph);
+    Assert.assertEquals(longerPath, List.of(
+      courseGraph.getEdgeSet().get("CSCI 0150").get("CSCI 0190"),
+      courseGraph.getEdgeSet().get("CSCI 0190").get("CSCI 0170")
     ));
     teardown();
 
-    ///////////////////////////////////
-    // PROFESSOR RATING - PRIORITIZE //
-    ///////////////////////////////////
+    /////////////////////////
+    // MAX NUMBER OF HOURS //
+    /////////////////////////
     setup();
-    courseGraph.setGlobalParams(1, 10, 1,
-      10, 3, 5, 1, 1,
-      100, 1, 50, 500);
+    courseGraph.setGlobalParams(1, 1, 1,
+      10, 1, 5, 1,
+      1, 1, 50, 500);
 
-    // TODO: FIX NULL CASE - Null should be average not 0
-//    List<CourseEdge> highProfRatingAI = courseAlgorithms.dijkstraPath("CSCI 0150", "CSCI 1450", courseGraph);
-//    Assert.assertEquals(highProfRatingAI, List.of(
-//      courseGraph.getEdgeSet().get("CSCI 0150").get("CSCI 0160"),
-//      courseGraph.getEdgeSet().get("CSCI 0160").get("CSCI 0220"),
-//      courseGraph.getEdgeSet().get("CSCI 0220").get("CSCI 1410")
-//    ));
+    // Since we're only allowing 1 Max Hour there is no possible way of taking the
+    // 4 classes needed for AI, or even 1 class at all. Thus the path is blocked off.
+    List<CourseEdge> notEnoughTimeAI = courseAlgorithms.dijkstraPath("CSCI 0150", "CSCI 1410", courseGraph);
+    Assert.assertNull(notEnoughTimeAI);
     teardown();
   }
 }

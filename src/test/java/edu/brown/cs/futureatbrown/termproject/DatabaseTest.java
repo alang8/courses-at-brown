@@ -63,9 +63,9 @@ public class DatabaseTest {
     Assert.assertEquals(
       Database.getCourseNode("CSCI 1410"),
       new CourseNode("CSCI 1410", "Artificial Intelligence", "G. Konidaris", 1,
-      " Prerequisites: CSCI 0160, CSCI 0180 or CSCI 0190; and one of CSCI0220 or CSCI1450 or APMA1650 or APMA1655",
-      "(CSCI 0160|CSCI 0180|CSCI 0190)&(CSCI 0220|CSCI 1450|APMA 1650| APMA 1655) ",
-      "Practical approaches to designing intelligent systems. Topics include search and optimization, uncertainty, learning, and decision making. Application areas include natural language processing, machine vision, machine learning, and robotics. Prerequisites: CSCI 0160, CSCI 0180 or CSCI 0190; and one of CSCI0220 or CSCI1450 or APMA1650 or APMA1655.",
+        " Prerequisites: CSCI 0160, CSCI 0180 or CSCI 0190; and one of CSCI0220 or CSCI1450 or APMA1650 or APMA1655",
+        "(CSCI 0160|CSCI 0180|CSCI 0190)&(CSCI 0220|CSCI 1450|APMA 1650|APMA 1655)",
+        "Practical approaches to designing intelligent systems. Topics include search and optimization, uncertainty, learning, and decision making. Application areas include natural language processing, machine vision, machine learning, and robotics. Prerequisites: CSCI 0160, CSCI 0180 or CSCI 0190; and one of CSCI0220 or CSCI1450 or APMA1650 or APMA1655.",
         3.97, 4.47, 6.3, 12.3, 142)
     );
     Assert.assertEquals(

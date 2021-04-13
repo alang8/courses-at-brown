@@ -9,6 +9,14 @@ import java.util.stream.Collectors;
  * Specific edge implementation that links a start CourseNode to an end CourseNode.
  */
 public class CourseEdge extends GraphEdge<CourseNode> {
+  // CONSTANTS
+  private static final double MIN_RATING_PREF = 0;
+  private static final double MAX_RATING_PREF = 10;
+  private static final double MIN_RATING = 0;
+  private static final double MAX_RATING = 5;
+  private static final int DEFAULT_MIN_CLASSES = 0;
+  private static final int DEFAULT_MAX_CLASSES = 32; // 8 Semesters * 4 Classes per Semesters
+
   // Edge Specific Variables
   private final String id;
   private CourseNode start;
@@ -23,7 +31,6 @@ public class CourseEdge extends GraphEdge<CourseNode> {
   private Double profRatingPref; // Number from 1 - 10 [Inclusive]
   private Double avgHoursPref; // Number from 1 - 10 [Inclusive]
   private Double balanceFactorPref; // Number from 1 - 10 [Inclusive]
-  private Double maxHoursPref; // Number from 1 - 10 [Inclusive]
   private Double classSizePref; // Number from 1 - 10 [Inclusive]
 
   // HARD INPUTS
@@ -34,6 +41,8 @@ public class CourseEdge extends GraphEdge<CourseNode> {
   private Integer minNumClasses; // Minimum Number of Classes
   private Integer maxNumClasses; // Maximum Number of Classes
 
+  // GLOBAL Dijkstra Specific Inputs
+  private CourseNode globalEnd;
   private Set<List<CourseNode>> prereqs; //Global Prerequisites of the target end node
 
   /**
@@ -79,16 +88,14 @@ public class CourseEdge extends GraphEdge<CourseNode> {
   /**
    * Sets up all the global parameters of the graph in this edge
    */
-  public void setGlobalParams(double crsRatingPref, double profRatingPref,
-                              double avgHoursPref, double avgHoursInput, int minNumClasses,
-                              int maxNumClasses, double balanceFactorPref, double maxHoursPref,
-                              double totalMaxHoursInput, double classSizePref, int classSizeInput,
-                              int classSizeMax) {
+  public void setGlobalParams(double crsRatingPref, double profRatingPref, double avgHoursPref,
+                              double avgHoursInput, int minNumClasses, int maxNumClasses,
+                              double balanceFactorPref, double totalMaxHoursInput, double classSizePref,
+                              int classSizeInput, int classSizeMax) {
     // SLIDER PREFERENCES
     this.crsRatingPref = crsRatingPref;
     this.profRatingPref = profRatingPref;
     this.avgHoursPref = avgHoursPref;
-    this.maxHoursPref = maxHoursPref;
     this.balanceFactorPref = balanceFactorPref;
     this.classSizePref = classSizePref;
 
@@ -107,6 +114,13 @@ public class CourseEdge extends GraphEdge<CourseNode> {
    */
    public void setGlobalPrereqs(Set<List<CourseNode>> prereqs) {
      this.prereqs = prereqs;
+   }
+
+  /**
+   * Sets up the Global End Node for the specific dijkstra run
+   */
+   public void setGlobalEnd(CourseNode end) {
+    this.globalEnd = end;
    }
 
   /**
@@ -133,6 +147,8 @@ public class CourseEdge extends GraphEdge<CourseNode> {
    * @return weight - Calculated weight
    */
    private double calculateWeight() {
+     double AVG_RATING_PREF = (MIN_RATING_PREF + MAX_RATING_PREF) / 2;
+     double AVG_RATING = (MIN_RATING + MAX_RATING) / 2;
 
      //////////////////////////////////////
      // OVERRIDE: MANUAL WEIGHT INPUTTED //
@@ -173,7 +189,11 @@ public class CourseEdge extends GraphEdge<CourseNode> {
      ///////////////////////////////////////////////
      // PENALTY: MUST REACH MIN NUMBER OF CLASSES //
      ///////////////////////////////////////////////
-     // TODO: AFTER REDOING CACHING
+     if (null != this.minNumClasses &&
+         previousPath.size() < this.minNumClasses &&
+         this.end.equals(this.globalEnd)) {
+       return Double.POSITIVE_INFINITY;
+     }
 
      ////////////////////////////////////////
      // PENALTY: REQUIREMENTS FOR PATHWAYS //
@@ -193,58 +213,134 @@ public class CourseEdge extends GraphEdge<CourseNode> {
      /////////////////////////////////////
      // SLIDER COMPONENT: COURSE RATING //
      /////////////////////////////////////
+     double courseRating;
 
-     if (null != this.crsRatingPref && null != this.end.getCourse_rating()) {
-       this.weight +=  Math.pow(2, this.end.getCourse_rating()) / this.crsRatingPref;
+     // Default Course Rating Preference to 5 if null (Halfway between 0 - 10)
+     if (null == this.crsRatingPref) {
+       this.crsRatingPref = AVG_RATING_PREF;
      }
+
+     // Default Course Rating to 2.5 if null (Halfway between 0 - 5)
+     if (null == this.end.getCourse_rating()) {
+       courseRating = AVG_RATING;
+     } else {
+       courseRating = this.end.getCourse_rating();
+     }
+
+     // Calculate the Slider Weight
+     this.weight +=  Math.pow(2, this.crsRatingPref) / courseRating;
+
 
      ////////////////////////////////////////
      // SLIDER COMPONENT: PROFESSOR RATING //
      ////////////////////////////////////////
+     double professorRating;
 
-     if (null != this.profRatingPref && null != this.end.getProf_rating()) {
-       this.weight += Math.pow(2, this.end.getProf_rating()) / this.profRatingPref;
+     // Default Professor Rating Preference to 5 if null (Halfway between 0 - 10)
+     if (null == this.profRatingPref) {
+       this.profRatingPref = AVG_RATING_PREF;
      }
+
+     // Default Professor Rating to 2.5 if null (Halfway between 0 - 5)
+     if (null == this.end.getProf_rating()) {
+       professorRating = AVG_RATING;
+     } else {
+       professorRating = this.end.getProf_rating();
+     }
+
+     // Calculate the Slider Weight
+     this.weight += Math.pow(2, this.profRatingPref) / professorRating;
 
      /////////////////////////////////
      // SLIDER COMPONENT: AVG HOURS //
      /////////////////////////////////
 
-     if (null != this.avgHoursPref && null != this.start.getPrevTotalAvgHours() && null != this.end.getAvg_hours() &&
-       null != this.maxNumClasses && null != this.minNumClasses && null != this.avgHoursInput) {
-       // Get the Total Avg Hours up to this point
-       Double totalAvgHours = this.start.getPrevTotalAvgHours();
-       totalAvgHours += this.end.getAvg_hours();
-       this.end.setPrevTotalAvgHours(totalAvgHours);
+     double prevTotalAvgHours;
+     double avgNumClasses;
+     double classAvgHours;
 
-       // Calculate Desired total avg hours
-       double desiredTotalAvgHours = (this.maxNumClasses + this.minNumClasses) * this.avgHoursInput / 2;
+     // Default Average Hours Preference to 5 if null (Halfway between 0 - 10)
+     if (null == this.avgHoursPref) {
+       this.avgHoursPref = AVG_RATING_PREF;
+     }
 
-       // Penalize by distance if it goes over, Penalize by balance if it is under
-       if (totalAvgHours > desiredTotalAvgHours) {
-         this.weight += Math.pow(2, this.avgHoursPref) * 0.2 * (totalAvgHours - desiredTotalAvgHours) / desiredTotalAvgHours;
-       } else {
-         this.weight += Math.pow(2, this.balanceFactorPref) * 0.2 * Math.abs(this.end.getAvg_hours() - this.avgHoursInput) / this.avgHoursInput;
-       }
+     if (null == this.balanceFactorPref) {
+       this.balanceFactorPref = AVG_RATING_PREF;
+     }
+
+     // Initialize the total avg hours to 0 if null
+     if (null == this.start.getPrevTotalAvgHours()) {
+       prevTotalAvgHours = 0;
+     } else {
+       prevTotalAvgHours = this.start.getPrevTotalAvgHours();
+     }
+
+     if (null == this.minNumClasses) {
+       this.minNumClasses = DEFAULT_MIN_CLASSES;
+     }
+
+     if (null == this.maxNumClasses) {
+       this.maxNumClasses = DEFAULT_MAX_CLASSES;
+     }
+
+     avgNumClasses = (this.minNumClasses + this.maxNumClasses) / 2;
+
+     // According to the credit hour guidance average hours per class should
+     // be 12 hours (4 hours class + 8 hours out of class)
+
+     if (null == this.end.getAvg_hours()) {
+       classAvgHours = 12;
+     } else  {
+       classAvgHours =  this.end.getAvg_hours();
+     }
+
+     if (null == this.avgHoursInput) {
+       this.avgHoursInput = 12.0;
+     }
+
+     // Get the Total Avg Hours up to this point
+     Double totalAvgHours = prevTotalAvgHours;
+     totalAvgHours += classAvgHours;
+     this.end.setPrevTotalAvgHours(totalAvgHours);
+
+     // Calculate Desired total avg hours
+     double desiredTotalAvgHours = avgNumClasses * this.avgHoursInput;
+
+     // Penalize by distance if it goes over, Penalize by balance if it is under
+     if (totalAvgHours > desiredTotalAvgHours) {
+       this.weight += Math.pow(2, this.avgHoursPref) * 0.2 * (totalAvgHours - desiredTotalAvgHours) / desiredTotalAvgHours;
+     } else {
+       this.weight += Math.pow(2, this.balanceFactorPref) * 0.2 * Math.abs(classAvgHours - this.avgHoursInput) / this.avgHoursInput;
      }
 
 
-       /////////////////////////////////
-       // SLIDER COMPONENT: MAX HOURS //
-       /////////////////////////////////
+     /////////////////////////////////
+     // SLIDER COMPONENT: MAX HOURS //
+     /////////////////////////////////
+     double prevMaxHours;
+     double classMaxHours;
 
-       if (null != this.maxHoursPref && null != this.start.getPrevTotalMaxHours() && null != this.end.getMax_hours() &&
-         null != this.totalMaxHoursInput) {
 
+
+     if (null == this.start.getPrevTotalMaxHours()) {
+       prevMaxHours = 0;
+     } else {
+       prevMaxHours = this.start.getPrevTotalMaxHours();
+     }
+
+     if (null == this.end.getMax_hours()) {
+       classMaxHours = 0;
+     } else {
+       classMaxHours = this.end.getMax_hours();
+     }
+
+     if (null != this.totalMaxHoursInput) {
          // Get the Total Max Hours up to this point
-         double totalMaxHours = this.start.getPrevTotalMaxHours();
-         System.out.println("PREVIOUS TOTAL MAX HOURS: " + totalMaxHours);
-         totalMaxHours += this.end.getMax_hours();
-         System.out.println("NEW MAX HOURS: " + this.end.getMax_hours());
+         double totalMaxHours = prevMaxHours;
+         totalMaxHours += classMaxHours;
          this.end.setPrevTotalMaxHours(totalMaxHours);
 
          if (totalMaxHours > this.totalMaxHoursInput) {
-           System.out.println("EXCEEDED MAX HOURS: " + totalMaxHours + " > " + this.totalMaxHoursInput);
            return Double.POSITIVE_INFINITY;
          }
        }
@@ -252,9 +348,27 @@ public class CourseEdge extends GraphEdge<CourseNode> {
        //////////////////////////////////
        // SLIDER COMPONENT: CLASS SIZE //
        //////////////////////////////////
-       if (null != this.classSizePref && null != this.end.getClass_size() && null != this.classSizeInput && null != this.classSizeMax) {
-         this.weight += Math.pow(2, this.classSizePref) * 0.2 * Math.abs(this.end.getClass_size() - this.classSizeInput) / this.classSizeMax;
+       int courseClassSize;
+
+       if (null == this.classSizePref) {
+         this.classSizePref = AVG_RATING_PREF;
        }
+
+       if (null == this.end.getClass_size()) {
+         courseClassSize = 0;
+       } else {
+         courseClassSize = this.end.getClass_size();
+       }
+
+       if (null == this.classSizeInput) {
+         this.classSizeInput = 0;
+       }
+
+       if (null == this.classSizeMax) {
+         this.classSizeMax = 500;
+       }
+
+       this.weight += Math.pow(2, this.classSizePref) * 0.2 * Math.abs(courseClassSize - this.classSizeInput) / this.classSizeMax;
 
       ////////////////////////////////////////////////////////
       //  PENALTY: +2000 PER PREREQUISITE GROUP UNSATISFIED //
