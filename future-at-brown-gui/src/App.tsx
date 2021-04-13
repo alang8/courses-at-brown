@@ -28,7 +28,6 @@ const App: React.FC<{}> = () => {
 
   // routes to be used if the user is not logged in (profile page otherwise)
   const InauthenticatedRoute = (route: string, loginProcess: JSX.Element): JSX.Element => {
-    console.log("inauth check", user);
     return <Route exact path={route}>
       {(user) ? <Redirect to="/profile" /> : loginProcess}
     </Route>
@@ -36,7 +35,6 @@ const App: React.FC<{}> = () => {
 
   // routes to be used if the user is logged in (splash page otherwise)
   const AuthenticatedRoute = (route: string, protectedContent: JSX.Element): JSX.Element => {
-    console.log("auth check", user);
     return <Route exact path={route}>
       {(user) ? protectedContent : <Redirect to="/splash" />}
     </Route>;

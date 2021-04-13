@@ -9,7 +9,7 @@ const config = {
     }
 }
 
-export const MEMOTY_LOCATION = "user";
+export const MEMORY_LOCATION = "user";
 
 class User {
 
@@ -27,19 +27,17 @@ class User {
     constructor(user: string | undefined, saved: Course[], taken: Course[], prefs: SearchParams);
     constructor(user?: string, saved?: Course[], taken?: Course[], prefs?: SearchParams) {
         this.username = user || "guest";
-        // this.saved = [...(saved ?? [])];
-        // this.taken = [...(taken ?? [])];
-        this.saved = [];
-        this.taken = [];
+        this.saved = [...(saved ?? [])];
+        this.taken = [...(taken ?? [])];
         this.preferences = prefs ?? defaultParams;
         if (user) {
             this.isGuest = false;
         } else {
             this.isGuest = true;
         }
-        console.log("in user const")
-        console.log(this.saved);
-        console.log(this.taken);
+        // console.log("in user const")
+        // console.log(this.saved);
+        // console.log(this.taken);
     }
 
     // saved courses
@@ -71,7 +69,7 @@ class User {
                     return Promise.reject(error);
                 });
         }
-        localStorage.setItem(MEMOTY_LOCATION, this.stringify());
+        localStorage.setItem(MEMORY_LOCATION, this.stringify());
         return this.getSaved();
     }
 
@@ -80,7 +78,7 @@ class User {
         if (!this.isGuest) {
             await new Promise(resolve => setTimeout(resolve, 2000));
         }
-        localStorage.setItem(MEMOTY_LOCATION, this.stringify());
+        localStorage.setItem(MEMORY_LOCATION, this.stringify());
     }
 
     async removeSaved(courseCode: string): Promise<Course[]> {
@@ -105,7 +103,7 @@ class User {
                     return Promise.reject(error);
                 });
         }
-        localStorage.setItem(MEMOTY_LOCATION, this.stringify());
+        localStorage.setItem(MEMORY_LOCATION, this.stringify());
         return this.getSaved();
     }
 
@@ -147,7 +145,7 @@ class User {
                 });
         }
 
-        localStorage.setItem(MEMOTY_LOCATION, this.stringify());
+        localStorage.setItem(MEMORY_LOCATION, this.stringify());
         return this.getTaken()
     }
 
@@ -175,7 +173,7 @@ class User {
                     return Promise.reject(error);
                 });
         }
-        localStorage.setItem(MEMOTY_LOCATION, this.stringify());
+        localStorage.setItem(MEMORY_LOCATION, this.stringify());
         return this.getTaken()
     }
 
@@ -184,7 +182,7 @@ class User {
         if (!this.isGuest) {
             await new Promise(resolve => setTimeout(resolve, 2000));
         }
-        localStorage.setItem(MEMOTY_LOCATION, this.stringify());
+        localStorage.setItem(MEMORY_LOCATION, this.stringify());
     }
 
     // preferences
@@ -213,7 +211,7 @@ class User {
                     return Promise.reject(error);
                 });
         }
-        localStorage.setItem(MEMOTY_LOCATION, this.stringify());
+        localStorage.setItem(MEMORY_LOCATION, this.stringify());
         return this.getPreferences();
     }
 
@@ -221,7 +219,7 @@ class User {
         this.clearTaken();
         this.clearSaved();
         this.preferences = defaultParams;
-        localStorage.setItem(MEMOTY_LOCATION, this.stringify());
+        localStorage.setItem(MEMORY_LOCATION, this.stringify());
     }
 
     deleteUser() {
@@ -315,6 +313,7 @@ export const newUser = async (username: string, password: string): Promise<User>
 
 export const destringify = (json: string | null): User | undefined => {
     const value = JSON.parse(json ?? "{}");
+    console.log("stored", value);
     if (value["taken"] && value["saved"] && value["prefs"]) {
         return new User(
             value["username"],
