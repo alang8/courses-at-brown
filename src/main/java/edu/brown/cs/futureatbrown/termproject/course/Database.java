@@ -8,6 +8,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 
@@ -30,17 +31,6 @@ public final class Database {
     Class.forName("org.sqlite.JDBC");
     String urlToDB = "jdbc:sqlite:" + filepath;
     conn = DriverManager.getConnection(urlToDB);
-  }
-
-  /**
-   * Closes the connection to the database.
-   */
-  public static void closeDB() {
-    try {
-      conn.close();
-    } catch (SQLException e) {
-      throw new SQLRuntimeException(e);
-    }
   }
 
   /**
@@ -84,5 +74,57 @@ public final class Database {
     return CourseConversions.iterateResults(res, CourseConversions::resultToCourseNode);
   }
 
+  /**
+   * Queries a HashMap of a Pathway groups based on the user inputted id. Returns null if not found.
+   *
+   * @param id the id of the Pathway
+   * @return the found HashMap of groups
+   */
+  public static HashMap<String, Integer> getGroups(String id) {
+    try (PreparedStatement statement = conn.prepareStatement("SELECT * FROM ?")) {
+      statement.setString(1, id);
+      try (ResultSet results = statement.executeQuery()) {
+        if (results.isClosed()) {
+          return null;
+        }
+        return CourseConversions.resultToGroupMap(results);
+      }
+    } catch (SQLException e) {
+      throw new SQLRuntimeException(e);
+    }
+  }
+
+  /**
+   * Queries a HashMap of CourseWays based on the user inputted id. Returns null if not found.
+   *
+   * @param id the id of the Pathway
+   * @return the found HashMap of CourseWays
+   */
+  public static HashMap<String, CourseWay> get(String id) {
+    try (PreparedStatement statement = conn.prepareStatement("SELECT * FROM ?")) {
+      statement.setString(1, id);
+      try (ResultSet results = statement.executeQuery()) {
+        if (results.isClosed()) {
+          return null;
+        }
+        return CourseConversions.resultToCourseWayMap(results);
+      }
+    } catch (SQLException e) {
+      throw new SQLRuntimeException(e);
+    }
+  }
+
+  /**
+   * Closes the connection to the database.
+   */
+  public static void closeDB() {
+    try {
+      conn.close();
+    } catch (SQLException e) {
+      throw new SQLRuntimeException(e);
+    }
+  }
+
   // Can't query or interact with CourseEdges in this class because they aren't in the database.
+  // However, can interact with CourseWays because they are in the database.
 }

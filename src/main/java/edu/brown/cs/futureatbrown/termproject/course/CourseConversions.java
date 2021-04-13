@@ -4,6 +4,8 @@ import com.google.common.collect.Iterators;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.Arrays;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
@@ -22,7 +24,7 @@ public final class CourseConversions {
   /**
    * Converts the first result to a CourseNode. Does not advance the ResultSet's row.
    *
-   * @param results a ResultSet with CourseNode data.
+   * @param results a ResultSet with CourseNode data
    * @return the CourseNode represented at the result's current row, or null if there are none left
    * @throws SQLException if the ResultSet's data cannot be queried
    */
@@ -131,6 +133,55 @@ public final class CourseConversions {
         });
       }
     };
+  }
+
+  /**
+   * Converts the ResultSet to a HashMap of groups.
+   *
+   * @param results a ResultSet with group data
+   * @return the converted ResultSet
+   * @throws SQLException if the ResultSet's data cannot be queried
+   */
+  public static HashMap<String, Integer> resultToGroupMap(ResultSet results) throws SQLException {
+    if (results.isClosed()) {
+      throw new SQLException("Closed results");
+    }
+    HashMap<String, Integer> groups = new HashMap<>();
+    try {
+      while (results.next()) {
+        groups.put(results.getString("id"),
+            Integer.parseInt(results.getString("num_courses")));
+      }
+    } catch (NumberFormatException e) {
+      throw new SQLException("Invalid number format");
+    }
+    return groups;
+  }
+
+  /**
+   * Converts the ResultSet to a HashMap of CourseWays.
+   *
+   * @param results a ResultSet with CourseWay data
+   * @return the converted ResultSet
+   * @throws SQLException if the ResultSet's data cannot be queried
+   */
+  public static HashMap<String, CourseWay> resultToCourseWayMap(ResultSet results) throws SQLException {
+    if (results.isClosed()) {
+      throw new SQLException("Closed results");
+    }
+    HashMap<String, CourseWay> courseWays = new HashMap<>();
+    try {
+      while (results.next()) {
+        String id = results.getString("id");
+        Set<String> sequence =
+            new HashSet<String>(Arrays.asList(results.getString("id").split(",")));
+        int group_id = Integer.parseInt(results.getString("group_id"));
+        courseWays.put(id, new CourseWay(id, sequence, group_id));
+      }
+    } catch (NumberFormatException e) {
+      throw new SQLException("Invalid number format");
+    }
+    return courseWays;
   }
 
   /**
