@@ -1,5 +1,6 @@
 import {useEffect, useRef, useState} from "react"
 import CourseInfo from "../modules/CourseInfo";
+import CourseTile from "../modules/CourseTile";
 import { ForceGraph2D } from 'react-force-graph';
 import axios from "axios";
 import "../css/Graph.css"
@@ -7,7 +8,7 @@ import {GetColorRaw} from '../classes/Colors'
 
 /**
  * React component which deals with the actual graph display itself.
- * @param props - the props for the component: just the path stored as map of {course codes:semester number}.
+ * @param props - the props for the component: 'path': {course codes:semester number}, .
  * @returns {JSX.Element} - an html object which holds the ForceGraph2D.
  */
 const ClassGraph = (props) => {
@@ -186,8 +187,13 @@ const ClassGraph = (props) => {
                 nodeCanvasObject={(node, ctx) => nodePaint(node, "black", ctx)}
             />
         </div>
-        <CourseInfo course={curCourse} setDisplay={closeModal} shouldDisplay={open}/>
+        <CourseInfo course={curCourse} setDisplay={closeModal} shouldDisplay={open} button={{func: props.saveFunction}}/>
     </div>
 }
+//put a button?:  {
+//         func: (addCourse: Course) => Promise<any>;
+//         name?: string;
+//         icon?: SemanticICONS;
+//     }
 
 export default ClassGraph;

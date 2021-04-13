@@ -74,7 +74,7 @@ class User {
     }
 
     async clearSaved(): Promise<void> {
-        this.saved = [];
+        this.saved = [...[]];
         if (!this.isGuest) {
             await new Promise(resolve => setTimeout(resolve, 2000));
         }
@@ -178,11 +178,15 @@ class User {
     }
 
     async clearTaken(): Promise<void> {
-        this.taken = [];
+        console.log("in clear taken")
+        console.log(this.getTaken())
+        if (this.taken !== undefined) {
+            this.taken = this.taken.filter((c) => false);
+        }
         if (!this.isGuest) {
             await new Promise(resolve => setTimeout(resolve, 2000));
         }
-        localStorage.setItem(MEMORY_LOCATION, this.stringify());
+        // localStorage.setItem(MEMORY_LOCATION, this.stringify());
     }
 
     // preferences

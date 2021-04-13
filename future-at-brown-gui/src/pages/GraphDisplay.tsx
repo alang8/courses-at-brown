@@ -4,6 +4,7 @@ import "../css/Graph.css"
 import SignOutHeader from "../modules/SignOutHeader";
 import { ProfileButton, SearchButton } from "../modules/BottomButton";
 import User from "../classes/User";
+import { Course, GetCode } from "../classes/Course";
 import { Header } from "semantic-ui-react";
 
 //Props interface, pass in the current user, a method to set the user, and the current path taken.
@@ -29,7 +30,7 @@ const GraphDisplay: React.FC<Params> = (props) => {
         <SignOutHeader setUser={props.setUser} user={props.user}
             heading={{ title: "Graph", information: "A visual display of the suggested courses you should take at Brown" }} />
         <div style={{ height: '100vh' }}>
-            <ClassGraph path={samplePath} />
+            <ClassGraph path={samplePath} saveFunction={(c:Course) => props.user.saveCourse(c)} />
             {/* {props.path ? <ClassGraph path={props.path!} /> : <Header as="h1" content={"Enter a search to see a graph"} />} */}
         </div>
     </div>
