@@ -44,7 +44,7 @@ const takenUsername = async (inp: string): Promise<string> => {
     };
 
     let isTaken = true;
-    
+
     await axios.post(
         'http://localhost:4567/checkname',
         toSend,

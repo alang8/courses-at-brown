@@ -100,6 +100,9 @@ const ClassGraph = (props) => {
         let rawCourse = allCourseInfo[classID]
         console.log("displ course info")
         console.log(rawCourse)
+        let encodedPrereq = rawCourse['prereqs'];
+        let prereqText = encodedPrereq.replaceAll("&", " and ")
+        prereqText = prereqText.replaceAll("|", " or ")
         let clickedCourse = {
             name:rawCourse['name'],
             dept:classID.substring(0,4),
@@ -109,7 +112,9 @@ const ClassGraph = (props) => {
             latestProf: rawCourse['instr'],
             latestProfRating: rawCourse['profrat'],
             maxHours: rawCourse['maxhr'],
-            avgHours: rawCourse['avghr']}
+            avgHours: rawCourse['avghr'],
+            prereqs: prereqText}
+
         setCurCourse(clickedCourse)
 
     }
