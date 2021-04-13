@@ -18,7 +18,11 @@ import User, { destringify } from './classes/User';
 
 const App: React.FC<{}> = () => {
   const [user, setUser] = useState<User | undefined>(destringify(localStorage.getItem("user")));
-  const [path, setPath] = useState<{[id:string]:number}>({});
+  // const [path, setPath] = useState<{[id:string]:number}>({});
+  let path = {}
+  const setPath = (p:{[id:string]:number}) => {
+      path = p;
+  }
   console.log("in app.tsx");
   console.log(user);
 

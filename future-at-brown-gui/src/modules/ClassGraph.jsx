@@ -3,7 +3,7 @@ import CourseInfo from "../modules/CourseInfo";
 import { ForceGraph2D } from 'react-force-graph';
 import axios from "axios";
 import "../css/Graph.css"
-import { GetColor } from '../classes/Colors'
+import {GetColorRaw} from '../classes/Colors'
 
 
 const ClassGraph = (props) => {
@@ -45,6 +45,8 @@ const ClassGraph = (props) => {
     }
 
     function setupNodes() {
+        console.log("in classGraph")
+        console.log(props.path)
         let nodeArray= [];
         let linkArray = [];
         let i;
@@ -56,9 +58,6 @@ const ClassGraph = (props) => {
             let prereqInfo = theCourses[i]['prereqs']
             const courseCodeReg = /[A-Z]{4}\s[0-9]{4}[A-Z]?/g;
             const prereqIDs = prereqInfo.match(courseCodeReg)
-            console.log("prereq info");
-            console.log(prereqInfo)
-            console.log(prereqIDs)
             if (prereqIDs !== null) {
                 let z;
                 for (z = 0; z < prereqIDs.length; z++) {
@@ -117,11 +116,11 @@ const ClassGraph = (props) => {
 
     function nodePaint({ id, x, y }, color, ctx) {
         if(id in props.path) {
-            ctx.fillStyle = GetColor(id.substring(0,4));
+            ctx.fillStyle = GetColorRaw(id.substring(0,4));
             ctx.beginPath();
             ctx.arc(x, y, 100, 0, 2 * Math.PI, false);
             ctx.fill();
-            ctx.fillStyle = "black"
+            ctx.fillStyle = "white"
             ctx.font = '24px Sans-Serif';
             ctx.textAlign = 'center';
             ctx.textBaseline = 'middle';

@@ -71,7 +71,6 @@ const Search: React.FC<Params> = (props) => {
                     </Grid.Column>
                 </Grid.Row>
             </Grid>
-
             <ButtonFooter />
         </Container>
     </div>
