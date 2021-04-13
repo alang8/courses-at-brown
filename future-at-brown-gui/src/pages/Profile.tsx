@@ -15,7 +15,7 @@ const Profile: React.FC<AuthenticatedPageProps> = (props) => {
 
     useEffect(() => {
         if (loadingPrefs) {
-            props.user.directlySetPreferences(prefs)
+            props.user.setPreferences(prefs)
                 .then(() => setLoading(false));
         }
     }, [loadingPrefs]);

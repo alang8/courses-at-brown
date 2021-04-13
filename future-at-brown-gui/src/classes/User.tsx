@@ -9,6 +9,8 @@ const config = {
     }
 }
 
+export const MEMOTY_LOCATION = "user";
+
 class User {
 
     // accesible variables
@@ -64,6 +66,7 @@ class User {
                     return Promise.reject(error);
                 });
         }
+        localStorage.setItem(MEMOTY_LOCATION, this.stringify());
         return this.getSaved();
     }
 
@@ -72,6 +75,7 @@ class User {
         if (!this.isGuest) {
             await new Promise(resolve => setTimeout(resolve, 2000));
         }
+        localStorage.setItem(MEMOTY_LOCATION, this.stringify());
     }
 
     async removeSaved(courseCode: string): Promise<Course[]> {
@@ -96,6 +100,7 @@ class User {
                     return Promise.reject(error);
                 });
         }
+        localStorage.setItem(MEMOTY_LOCATION, this.stringify());
         return this.getSaved();
     }
 
@@ -130,6 +135,8 @@ class User {
                     return Promise.reject(error);
                 });
         }
+
+        localStorage.setItem(MEMOTY_LOCATION, this.stringify());
         return this.getTaken()
     }
 
@@ -157,6 +164,7 @@ class User {
                     return Promise.reject(error);
                 });
         }
+        localStorage.setItem(MEMOTY_LOCATION, this.stringify());
         return this.getTaken()
     }
 
@@ -165,19 +173,13 @@ class User {
         if (!this.isGuest) {
             await new Promise(resolve => setTimeout(resolve, 2000));
         }
+        localStorage.setItem(MEMOTY_LOCATION, this.stringify());
     }
 
     // preferences
 
     getPreferences(): SearchParams {
         return { ...this.preferences }
-    }
-
-    async directlySetPreferences(newPref: SearchParams): Promise<void> {
-        console.log("hey!")
-        console.log(newPref);
-        this.preferences = {...newPref};
-        await this.setPreferences(newPref);
     }
 
     async setPreferences(prefs: SearchParams): Promise<SearchParams> {
@@ -200,6 +202,7 @@ class User {
                     return Promise.reject(error);
                 });
         }
+        localStorage.setItem(MEMOTY_LOCATION, this.stringify());
         return this.getPreferences();
     }
 
@@ -207,6 +210,7 @@ class User {
         this.clearTaken();
         this.clearSaved();
         this.preferences = defaultParams;
+        localStorage.setItem(MEMOTY_LOCATION, this.stringify());
     }
 
     deleteUser() {
@@ -221,6 +225,7 @@ class User {
             saved: this.saved,
             prefs: this.preferences
         }
+        console.log(jsonVersion);
         return JSON.stringify(jsonVersion);
     }
 }
