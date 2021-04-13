@@ -14,12 +14,13 @@ import Profile from './pages/Profile';
 import GraphDisplay from "./pages/GraphDisplay";
 import TestComponent, { TestComponent2 } from './pages/TestComponents';
 import NotFound from './pages/NotFound';
-import User, { destringify } from './classes/User';
+import User, { GetStoredUser } from './classes/User';
+import { GetStoredPath, Path, StorePath } from './classes/Path';
 
 const App: React.FC<{}> = () => {
 
-  const [user, setUser] = useState<User | undefined>(destringify(localStorage.getItem("user")));
-  const [path, setPath] = useState<{[id:string]:number} | undefined>(undefined);
+  const [user, setUser] = useState<User | undefined>(GetStoredUser());
+  const [path, setPath] = useState<Path | undefined>(GetStoredPath());
   const [redirectGraph, setRedirect] = useState<boolean>(false);
   // let path = {}
   // const setPath = (p:{[id:string]:number}) => {
@@ -42,13 +43,10 @@ const App: React.FC<{}> = () => {
     </Route>;
   }
 
+  // redirect only if path changes to a defined value
   useEffect(() => {
-    console.log("Rerender app");
-    if (!user) {
-      setPath({});
-    } else if (path) {
-      setRedirect(true);
-    }}, [path]);
+    if (path) setRedirect(true);
+    }, [path]);
 
   return (
     <Router>
@@ -57,7 +55,7 @@ const App: React.FC<{}> = () => {
         <Route path="/test-route" component={TestComponent2} />
         {redirectGraph ? <Route path="/search"><Redirect to="/graph"/></Route> : undefined}
         {InauthenticatedRoute("/", <Redirect to="/splash" />)}
-        {AuthenticatedRoute("/search", <Search user={user!} setUser={setUser} setPath={setPath}/>)}
+        {AuthenticatedRoute("/search", <Search user={user!} setUser={setUser} setPath={StorePath(setPath)}/>)}
         {AuthenticatedRoute("/profile", <Profile user={user!} setUser={setUser}/>)}
         {InauthenticatedRoute("/splash", <SplashPage setLogin={setUser} />)}
         {AuthenticatedRoute("/graph", <GraphDisplay user={user!} setUser={setUser} path={path} onRender={() => setRedirect(false)}/>)}

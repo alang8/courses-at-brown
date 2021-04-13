@@ -4,8 +4,7 @@ import "../css/Graph.css"
 import SignOutHeader from "../modules/SignOutHeader";
 import { ProfileButton, SearchButton } from "../modules/BottomButton";
 import User from "../classes/User";
-import { Course, GetCode } from "../classes/Course";
-import { Header } from "semantic-ui-react";
+import { Course } from "../classes/Course";
 
 //Props interface, pass in the current user, a method to set the user, and the current path taken.
 interface Params {
