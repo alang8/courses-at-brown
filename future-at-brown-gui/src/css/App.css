@@ -62,6 +62,12 @@ ul {
     background-size: cover;
 }
 
+.search-bar {
+    width: 100%;
+    align-items: center;
+    display: flex;
+}
+
 .total.image .container .content {
     min-height: 50vh;
     display: flex;
@@ -149,9 +155,10 @@ div.total {
 }
 
 .card.class-card .content .grid {
-    height: calc(100% + 2em);
+    height: calc(100% + 4em);
     word-wrap: normal;
     text-overflow: ellipsis;
+    vertical-align: bottom;
 }
 
 .input-box {

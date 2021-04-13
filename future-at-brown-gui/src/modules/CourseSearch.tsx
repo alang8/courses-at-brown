@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
-import { Button, Card, Grid, Header, Modal, SemanticICONS } from 'semantic-ui-react';
+import { Button, Card, Form, Grid, Header, Modal, SemanticICONS } from 'semantic-ui-react';
 import { Course } from '../classes/Course'
 import CourseTile from "./CourseTile";
 import FormattedInput from "./FormattedInput";
@@ -52,6 +52,7 @@ const CourseSearch: React.FC<Params> = (props) => {
         } else {
             setResults(undefined);
             setLoading(false);
+            setError(undefined);
         }
     }, [props.shouldDisplay]);
     return (
@@ -60,31 +61,29 @@ const CourseSearch: React.FC<Params> = (props) => {
             open={props.shouldDisplay}
             onClose={() => {
                 props.setDisplay(false);
-                
+
             }}>
             <Modal.Header>
-                <Grid>
-                    <Grid.Row textAlign="center">
-                        <Grid.Column>
-                            <Header content={props.heading ?? "Find a course"} subheading={""}/>
-                        </Grid.Column>
-                    </Grid.Row>
-                    <Grid.Row verticalAlign="middle">
-                        <Grid.Column width={14}>
-                            <FormattedInput
-                                label="search"
-                                type="search"
-                                textChange={(newStr: string) => query.current = newStr}
-                                error={(error) ? { messages: [error!], resolve: () => setError(undefined) } : undefined} />
-                        </Grid.Column>
-                        <Grid.Column width={2}>
+                <Header content={props.heading ?? "Find a course"} subheading={""} />
+                <Form onSubmit={() => setLoading(true)}>
+                    <Form.Group className="search-bar" widths="16">
+                        <FormattedInput
+                            label="search"
+                            type="search"
+                            textChange={(newStr: string) => query.current = newStr}
+                            error={(error) ? { messages: [error!], resolve: () => setError(undefined) } : undefined}
+                            width={15} />
+                        <Form.Field width={1}>
                             <Button loading={loading} disabled={loading}
                                 circular icon="search"
                                 className="gradient"
-                                onClick={() => setLoading(true)} />
-                        </Grid.Column>
-                    </Grid.Row>
-                </Grid>
+                                type="submit" />
+                        </Form.Field>
+                    </Form.Group>
+                </Form>
+
+
+
             </Modal.Header>
 
             <Modal.Content scrolling>

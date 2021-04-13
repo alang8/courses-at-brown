@@ -1,5 +1,4 @@
-import React, { useRef } from "react"
-import { Button, Container, Header, Segment, Sticky } from "semantic-ui-react"
+import React from "react"
 import ClassGraph from "../modules/ClassGraph.jsx";
 import "../css/Graph.css"
 import SignOutHeader from "../modules/SignOutHeader";

@@ -120,7 +120,6 @@ class User {
             this.taken = [toAdd, ...this.taken];
         }
 
-
         let courseCode = GetCode(toAdd);
         const toSend = {
             username: this.username,
