@@ -1,12 +1,8 @@
-import React, { useRef } from "react"
-import { Button, Container, Header, Segment, Sticky } from "semantic-ui-react"
+import React from "react"
 import ClassGraph from "../modules/ClassGraph.jsx";
-import { Link } from "react-router-dom";
 import "../css/Graph.css"
-import { AuthenticatedPageProps } from "../classes/Authentication";
 import SignOutHeader from "../modules/SignOutHeader";
 import { ProfileButton, SearchButton } from "../modules/BottomButton";
-import {Course} from "../classes/Course";
 import User from "../classes/User";
 
 interface Params {

@@ -1,5 +1,6 @@
 import React, { useState } from "react";
-import { Form, Input, Label } from 'semantic-ui-react';
+import { Form, Input, Label, SemanticWIDTHS } from 'semantic-ui-react';
+import 'semantic-ui-css/package.json'
 
 export interface Error {
     messages: Array<String>;
@@ -12,6 +13,8 @@ interface Props {
     type?: "text" | "password" | "username" | "search";
     id?: string;
     error?: Error;
+    width?: SemanticWIDTHS;
+    isLoading?: boolean;
 }
 
 const FormattedInput: React.FC<Props> = (props) => {
@@ -62,7 +65,7 @@ const FormattedInput: React.FC<Props> = (props) => {
     }
 
     return (
-        <Form.Field className={"input-box"} id={props.id}>
+        <Form.Field className={"input-box"} id={props.id} width={props.width}>
             {getError()}
             <Input
                 fluid
@@ -75,6 +78,8 @@ const FormattedInput: React.FC<Props> = (props) => {
                 placeholder={props.label + '...'}
                 onChange={handleChange}
                 error={inError}
+                loading={props.isLoading}
+                disabled={props.isLoading}
             />
         
             <div className={getColor()}>
