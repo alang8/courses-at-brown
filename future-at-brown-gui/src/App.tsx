@@ -48,14 +48,14 @@ const App: React.FC<{}> = () => {
       setPath({});
     } else if (path) {
       setRedirect(true);
-    }}, [user, path]);
+    }}, [path]);
 
   return (
     <Router>
       <Switch>
         <Route path="/test-components" component={TestComponent} />
         <Route path="/test-route" component={TestComponent2} />
-        {redirectGraph ? <Route path="/search"><Redirect to="/graph" /></Route> : undefined}
+        {redirectGraph ? <Route path="/search"><Redirect to="/graph"/></Route> : undefined}
         {InauthenticatedRoute("/", <Redirect to="/splash" />)}
         {AuthenticatedRoute("/search", <Search user={user!} setUser={setUser} setPath={setPath}/>)}
         {AuthenticatedRoute("/profile", <Profile user={user!} setUser={setUser}/>)}

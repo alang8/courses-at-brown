@@ -201,10 +201,9 @@ public class UserDataHandlers {
         Base64.Encoder coder = Base64.getEncoder();
         String hashedUsername = coder.encodeToString(curUser.getBytes());
 
-        String query = "SELECT ? FROM user_data WHERE username = ?;";
+        String query = "SELECT "+ colToAppend + " FROM user_data WHERE username = ?;";
         PreparedStatement prep = conn.prepareStatement(query);
-        prep.setString(1, colToAppend);
-        prep.setString(2, hashedUsername);
+        prep.setString(1, hashedUsername);
         ResultSet rs = prep.executeQuery();
 
         if (rs.next()) {
@@ -213,11 +212,10 @@ public class UserDataHandlers {
             curCourses = "";
           }
           curCourses = curCourses + codeToAdd + ",";
-          query = "UPDATE user_data SET ? = ? WHERE username = ?;";
+          query = "UPDATE user_data SET " + colToAppend + " = ? WHERE username = ?;";
           prep = conn.prepareStatement(query);
-          prep.setString(1, colToAppend);
-          prep.setString(2, curCourses);
-          prep.setString(3, hashedUsername);
+          prep.setString(1, curCourses);
+          prep.setString(2, hashedUsername);
           prep.executeUpdate();
           msg = "updated added course";
         } else {
@@ -255,10 +253,9 @@ public class UserDataHandlers {
         Base64.Encoder coder = Base64.getEncoder();
         String hashedUsername = coder.encodeToString(curUser.getBytes());
 
-        String query = "SELECT ? FROM user_data WHERE username = ?;";
+        String query = "SELECT " + colToEdit + " FROM user_data WHERE username = ?;";
         PreparedStatement prep = conn.prepareStatement(query);
-        prep.setString(1, colToEdit);
-        prep.setString(2, hashedUsername);
+        prep.setString(1, hashedUsername);
         ResultSet rs = prep.executeQuery();
 
         if (rs.next()) {
@@ -267,11 +264,10 @@ public class UserDataHandlers {
             curCourses = "";
           }
           curCourses = curCourses.replace(codeToRemove + ",", "");
-          query = "UPDATE user_data SET ? = ? WHERE username = ?;";
+          query = "UPDATE user_data SET " + colToEdit + " = ? WHERE username = ?;";
           prep = conn.prepareStatement(query);
-          prep.setString(1, colToEdit);
-          prep.setString(2, curCourses);
-          prep.setString(3, hashedUsername);
+          prep.setString(1, curCourses);
+          prep.setString(2, hashedUsername);
           prep.executeUpdate();
           msg = "updated removed course";
         } else {
