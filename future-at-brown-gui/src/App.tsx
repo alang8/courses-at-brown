@@ -17,14 +17,16 @@ import NotFound from './pages/NotFound';
 import User, { destringify } from './classes/User';
 
 const App: React.FC<{}> = () => {
+
   const [user, setUser] = useState<User | undefined>(destringify(localStorage.getItem("user")));
-  // const [path, setPath] = useState<{[id:string]:number}>({});
-  let path = {}
-  const setPath = (p:{[id:string]:number}) => {
-      path = p;
-  }
-  console.log("in app.tsx");
-  console.log(user);
+  const [path, setPath] = useState<{[id:string]:number} | undefined>(undefined);
+  const [redirectGraph, setRedirect] = useState<boolean>(false);
+  // let path = {}
+  // const setPath = (p:{[id:string]:number}) => {
+  //     path = p;
+  // }
+  // console.log("in app.tsx");
+  // console.log(user);
 
   // routes to be used if the user is not logged in (profile page otherwise)
   const InauthenticatedRoute = (route: string, loginProcess: JSX.Element): JSX.Element => {
@@ -41,21 +43,24 @@ const App: React.FC<{}> = () => {
   }
 
   useEffect(() => {
-    if (user) {
-      localStorage.setItem("user", user.stringify());
-    }
-  }, [user]);
+    console.log("Rerender app");
+    if (!user) {
+      setPath({});
+    } else if (path) {
+      setRedirect(true);
+    }}, [user, path]);
 
   return (
     <Router>
       <Switch>
         <Route path="/test-components" component={TestComponent} />
         <Route path="/test-route" component={TestComponent2} />
+        {redirectGraph ? <Route path="/search"><Redirect to="/graph" /></Route> : undefined}
         {InauthenticatedRoute("/", <Redirect to="/splash" />)}
-        {AuthenticatedRoute("/search", <Search user={user!} setUser={setUser} setPath={(p:{[id:string]:number}) => setPath(p)}/>)}
+        {AuthenticatedRoute("/search", <Search user={user!} setUser={setUser} setPath={setPath}/>)}
         {AuthenticatedRoute("/profile", <Profile user={user!} setUser={setUser}/>)}
         {InauthenticatedRoute("/splash", <SplashPage setLogin={setUser} />)}
-        {AuthenticatedRoute("/graph", <GraphDisplay user={user!} setUser={setUser} path={path}/>)}
+        {AuthenticatedRoute("/graph", <GraphDisplay user={user!} setUser={setUser} path={path} onRender={() => setRedirect(false)}/>)}
         {InauthenticatedRoute("/login", <Login setLogin={setUser} />)}
         {InauthenticatedRoute("/signup", <Signup setLogin={setUser} />)}
         <Route path="*" component={NotFound} />

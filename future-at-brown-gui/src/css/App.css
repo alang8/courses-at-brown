@@ -11,6 +11,13 @@ ul {
 
 /* Splash page */
 
+.header-title {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-content: center;
+}
+
 .signout-button {
     width: 100%;
     display: flex;

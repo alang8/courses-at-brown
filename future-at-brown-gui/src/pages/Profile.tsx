@@ -23,7 +23,9 @@ const Profile: React.FC<AuthenticatedPageProps> = (props) => {
     return <div className="total">
         <SearchButton />
         <Container>
-            <SignOutHeader setUser={props.setUser} user={props.user} heading={"Profile"} />
+            <SignOutHeader setUser={props.setUser} user={props.user} heading={{
+                information: "A place to explore the courses you saved, manage saved user data, and change your default search settings",
+                title: "Profile"}}/>
             <Grid padded centered>
                 <Grid.Row columns={2}>
                     <Grid.Column textAlign="left">

@@ -8,6 +8,7 @@ import CourseSearch from "../modules/CourseSearch";
 import CourseTile from "../modules/CourseTile";
 import ExpandableCourses from "../modules/ExpandableCourses";
 import FormattedInput from "../modules/FormattedInput";
+import InfoPopup from "../modules/InfoPopup";
 import ParamSlider from "../modules/ParamSliders";
 
 const TestComponent: React.FC<{}> = () => {
@@ -19,7 +20,7 @@ const TestComponent: React.FC<{}> = () => {
   return <div className="App">
     <SearchButton />
     <ProfileButton />
-    <Header as="h1" className="logo">Future @ Brown</Header>
+    <Header as="h1" className="logo">Future @ Brown </Header><InfoPopup message={"test"} />
     <Link to="/test-route"><Button content="test route" className="gradient" /></Link>
     <Button content={"Show search"} onClick={() => setDispSearch(true)} />
     <CourseSearch shouldDisplay={dispSearch} setDisplay={setDispSearch} resolveButton={{func: (c) => {

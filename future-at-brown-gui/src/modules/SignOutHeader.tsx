@@ -1,9 +1,13 @@
 import React from "react";
 import { Button, Container, Grid, Header, Icon, Segment, Sticky } from "semantic-ui-react";
 import { AuthenticatedPageProps } from "../classes/Authentication";
+import InfoPopup from "./InfoPopup";
 
 interface Props extends AuthenticatedPageProps {
-    heading?: string
+    heading?: {
+        title: string
+        information: string
+    }
 }
 const SignOutHeader: React.FC<Props> = (props) => {
     const handleClick = () => {
@@ -19,7 +23,11 @@ const SignOutHeader: React.FC<Props> = (props) => {
                             <Header as="h1" className="logo" content="F@B" />
                         </Grid.Column>
                         <Grid.Column textAlign="center">
-                            <Header as="h1" content={props.heading} />
+                            <div className="header-title" >
+                                <Header as="h1" content={props.heading?.title} />
+                                <InfoPopup message={props.heading?.information} />
+                            </div>
+
                         </Grid.Column>
                         <Grid.Column textAlign="right">
                             <div className="signout-button">

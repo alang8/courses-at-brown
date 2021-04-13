@@ -1,5 +1,5 @@
-import React, {createRef, useEffect, useState} from "react"
-import { Button, Container, Grid, GridColumn, Header, Segment, Sticky } from "semantic-ui-react"
+import React, { createRef, useCallback, useEffect, useState } from "react"
+import { Button, Container, Dimmer, Grid, GridColumn, Header, Loader, Segment, Sticky } from "semantic-ui-react"
 import { AuthenticatedPageProps } from "../classes/Authentication";
 import { Course, FindCourse, GetCode } from "../classes/Course";
 import { SearchParams } from "../classes/SearchParams";
@@ -20,28 +20,34 @@ import {
 interface Params {
     user: User;
     setUser: (user: User | undefined) => void;
-    setPath : (path:{[id:string]:number}) => void;
+    setPath: (path: { [id: string]: number }) => void;
 }
 
 const Search: React.FC<Params> = (props) => {
     const [prefs, setPrefs] = useState<SearchParams>(props.user.getPreferences());
     const [takenCourses, setTakenCourses] = useState<Course[]>(props.user.getTaken());
-    const [loadingPrefs, setLoading] = useState<boolean>(false);
+    const [loadingPath, setLoading] = useState<boolean>(false);
 
     useEffect(() => {
-        if (loadingPrefs) {
+        if (loadingPath) {
             //TODO: put actual axios request here to get the pathway from backend
-            let thePath = {"CSCI 0170":0, "CSCI 0220":1, "CSCI 0180":1, "CSCI 0330":2, "CSCI 1470":2, "CSCI 0320":3, "APMA 0360":5}
-            props.setPath(thePath);
+            let thePath = { "CSCI 0170": 0, "CSCI 0220": 1, "CSCI 0180": 1, "CSCI 0330": 2, "CSCI 1470": 2, "CSCI 0320": 3, "APMA 0360": 5 }
+            console.log("HERE start");
+            new Promise(resolve => setTimeout(resolve, 2000))
+                .then(() => { console.log("should redirect now");
+                    props.setPath(thePath)})
             //redirect now to /graph
         }
-    }, [loadingPrefs]);
+    }, [loadingPath]);
 
     const setPrefsAsync = async (pref: SearchParams) => setPrefs(pref)
 
     return <div className="total">
         <ProfileButton />
         <Container >
+            <Dimmer active={loadingPath} >
+                <Loader />
+            </Dimmer>
             <SignOutHeader setUser={props.setUser} user={props.user} />
             <Header as="h1" content={"New search"} />
             <Grid padded stretched centered>
@@ -64,14 +70,12 @@ const Search: React.FC<Params> = (props) => {
                 </Grid.Row>
                 <Grid.Row stretched>
                     <Grid.Column>
-                        <Link to="/graph" onClick={()=>setLoading(true)}>
-                            Submit
-                        </Link>
-                        {/*<Button*/}
-                        {/*    loading={loadingPrefs}*/}
-                        {/*    content={"Submit"}*/}
-                        {/*    className={"gradient"}*/}
-                        {/*    />*/}
+                        <Button
+                            onClick={() => setLoading(true)}
+                            loading={loadingPath}
+                            content={"Submit"}
+                            className={"gradient"}
+                        />
                     </Grid.Column>
                 </Grid.Row>
             </Grid>
