@@ -113,7 +113,7 @@ const ClassGraph = (props) => {
             latestProfRating: rawCourse['profrat'],
             maxHours: rawCourse['maxhr'],
             avgHours: rawCourse['avghr'],
-            prereqs: prereqText}
+            prereqs: (prereqText === "" ? "None Listed": prereqText)}
 
         setCurCourse(clickedCourse)
 
