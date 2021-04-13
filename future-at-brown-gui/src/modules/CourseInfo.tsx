@@ -3,6 +3,8 @@ import { Button, Grid, Header, Icon, Modal, SemanticICONS } from 'semantic-ui-re
 import { GetColor } from '../classes/Colors'
 import { Course, GetCode } from '../classes/Course'
 
+//Format for the input parameters for a CourseInfo component, the course information, boolean representing
+// if should be visible, setter for that boolean, optional functions for disabling and other utility buttons (ex 'save course')
 interface Params {
     course: Course;
     shouldDisplay: boolean;
@@ -15,13 +17,16 @@ interface Params {
     }
 }
 
+/**
+ * Component which represents a popup displaying all of a courses information.
+ * @param props - all of the information we have about the course/display, formatted as described above.
+ */
 const CourseInfo: React.FC<Params> = (props) => {
-
     const course: Course = props.course;
     const color = GetColor(course.dept);
-
     const [loading, setLoading] = useState<boolean>(false);
 
+    //If button is clicked, set button to loading and execute optional button functionality.
     useEffect(() => {
         if (loading) {
             if (props.button) {
@@ -115,9 +120,7 @@ const CourseInfo: React.FC<Params> = (props) => {
                             </Grid.Row>
                         </Grid.Column>
                     </Grid.Row>
-
                 </Grid>
-
             </Modal.Content>
         </Modal>
     );

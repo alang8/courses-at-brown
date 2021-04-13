@@ -47,8 +47,6 @@ class User {
     }
 
     async saveCourse(toSave: Course): Promise<Course[]> {
-        console.log(this)
-        console.log(this.saved)
         if (this.saved === undefined) {
             this.saved = [toSave];
         } else {
@@ -56,6 +54,8 @@ class User {
         }
 
         let courseCode = GetCode(toSave);
+        console.log("course code to save in savecourse")
+        console.log(courseCode)
         const toSend = {
             username: this.username,
             column: "saved_courses",
@@ -90,7 +90,9 @@ class User {
     }
 
     async removeSaved(courseCode: string): Promise<Course[]> {
-        this.taken = this.taken.filter((c) => GetCode(c) !== courseCode);
+        this.saved = this.saved.filter((c) => GetCode(c) !== courseCode);
+        console.log("remove saved taken")
+        console.log(this.saved)
 
         const toSend = {
             username: this.username,

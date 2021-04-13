@@ -1,6 +1,5 @@
 import {useEffect, useRef, useState} from "react"
 import CourseInfo from "../modules/CourseInfo";
-import CourseTile from "../modules/CourseTile";
 import { ForceGraph2D } from 'react-force-graph';
 import axios from "axios";
 import "../css/Graph.css"
@@ -13,7 +12,6 @@ import {GetColorRaw} from '../classes/Colors'
  */
 const ClassGraph = (props) => {
     const fgRef = useRef();
-    const [theNodes, setNodes] = useState([{}]);
     const [theCourses, setCourses] = useState([]);
     const [allCourseInfo, setAllCourseinfo] = useState({});
     const [gData, setGData] = useState({"nodes":[{}], "links":[{}]});
@@ -105,7 +103,6 @@ const ClassGraph = (props) => {
     const closeModal = () => setOpen(false);
 
     useEffect(() => setOpen(!open), [curCourse])
-
 
     /**
      * Function to retrieve the relevant data for the clicked course popup.

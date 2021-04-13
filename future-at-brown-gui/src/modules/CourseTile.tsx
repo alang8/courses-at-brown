@@ -4,6 +4,8 @@ import { GetColor } from '../classes/Colors'
 import CourseInfo from "./CourseInfo";
 import { Course, GetCode } from "../classes/Course";
 
+//parameter specification for this component: the course it represents, key (if in a list), optional method for
+//dealing with the popup when clicked, optional button for the popup (enabling removal of course from list).
 interface Params {
     course: Course;
     key?: string | number;
@@ -16,10 +18,13 @@ interface Params {
     }
 }
 
+/**
+ * Component for a course tile object (for our list of taken and saved courses).
+ * @param props - the parameters for the component, as specified above.
+ */
 const CourseTile: React.FC<Params> = (props) => {
 
     const [display, setDisplay] = useState<boolean>(false);
-
     const course = props.course;
 
     return (

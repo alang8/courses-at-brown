@@ -4,6 +4,10 @@ import { Course } from '../classes/Course'
 import CourseTile from "./CourseTile";
 import FormattedInput from "./FormattedInput";
 
+/*
+Parameters for this component: function to search for a course given a string, boolean and functions to enable popping up,
+optional parameters for header, default results, etc.
+ */
 interface Params {
     searcher: (code: string) => Promise<Course[]>;
     shouldDisplay: boolean;
@@ -18,14 +22,19 @@ interface Params {
     shouldDisableCourse?: (testCourse: Course) => boolean;
 }
 
+/**
+ * Component for the search window when searching for specific courses to take/save.
+ * @param props - the inputs for the component, specified above.
+ */
 const CourseSearch: React.FC<Params> = (props) => {
-
     const query = useRef<string>("");
-
     const [results, setResults] = useState<Course[] | undefined>(undefined);
     const [error, setError] = useState<string | undefined>(undefined);
     const [loading, setLoading] = useState<boolean>(false);
 
+    /**
+     * Function to return the html which displays the results of a search.
+     */
     const displayResults = (): JSX.Element => {
         const resultCards: JSX.Element[] =
             results!.map((c: Course, index) =>
@@ -40,6 +49,7 @@ const CourseSearch: React.FC<Params> = (props) => {
         </Grid.Row>
     }
 
+    //If clicked and loading, execute the search.
     useEffect(() => {
         if (loading) {
             setResults(undefined);
@@ -50,6 +60,7 @@ const CourseSearch: React.FC<Params> = (props) => {
         }
     }, [loading])
 
+    //handle popup functionality of search bar.
     useEffect(() => {
         if (props.shouldDisplay) {
             setResults(props.initialResults);
@@ -59,14 +70,12 @@ const CourseSearch: React.FC<Params> = (props) => {
             setError(undefined);
         }
     }, [props.shouldDisplay]);
+
     return (
         <Modal
             closeIcon
             open={props.shouldDisplay}
-            onClose={() => {
-                props.setDisplay(false);
-
-            }}>
+            onClose={() => {props.setDisplay(false);}}>
             <Modal.Header>
                 <Header content={props.heading ?? "Find a course"} subheading={""} />
                 <Form onSubmit={() => setLoading(true)}>
@@ -85,15 +94,11 @@ const CourseSearch: React.FC<Params> = (props) => {
                         </Form.Field>
                     </Form.Group>
                 </Form>
-
-
-
             </Modal.Header>
-
             <Modal.Content scrolling>
                 {(results) ? displayResults() : undefined}
             </Modal.Content>
-        </Modal >
+        </Modal>
     );
 }
 
