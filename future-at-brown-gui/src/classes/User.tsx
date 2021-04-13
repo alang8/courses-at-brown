@@ -15,8 +15,8 @@ class User {
     readonly username: string;
     readonly isGuest: boolean;
 
-    private saved: Course[];
-    private taken: Course[];
+    private saved: Course[] = [];
+    private taken: Course[] = [];
     private preferences: SearchParams;
 
     constructor();
@@ -25,14 +25,19 @@ class User {
     constructor(user: string | undefined, saved: Course[], taken: Course[], prefs: SearchParams);
     constructor(user?: string, saved?: Course[], taken?: Course[], prefs?: SearchParams) {
         this.username = user || "guest";
-        this.saved = [...(saved ?? [])];
-        this.taken = [...(taken ?? [])];
+        // this.saved = [...(saved ?? [])];
+        // this.taken = [...(taken ?? [])];
+        this.saved = [];
+        this.taken = [];
         this.preferences = prefs ?? defaultParams;
         if (user) {
             this.isGuest = false;
         } else {
             this.isGuest = true;
         }
+        console.log("in user const")
+        console.log(this.saved);
+        console.log(this.taken);
     }
 
     // saved courses
@@ -106,7 +111,15 @@ class User {
     }
 
     async takeCourse(toAdd: Course): Promise<Course[]> {
-        this.taken.push(toAdd);
+        console.log(this)
+        console.log(this.taken)
+        // this.taken.push(toAdd);
+        if (this.taken === undefined) {
+            this.taken = [toAdd];
+        } else {
+            this.taken = [toAdd, ...this.taken];
+        }
+
 
         let courseCode = GetCode(toAdd);
         const toSend = {
@@ -129,7 +142,7 @@ class User {
                     return Promise.reject(error);
                 });
         }
-        return this.getTaken()
+        return [...this.taken]
     }
 
     async removeTaken(codeToRemove: string): Promise<Course[]> {
@@ -156,7 +169,7 @@ class User {
                     return Promise.reject(error);
                 });
         }
-        return this.getTaken()
+        return [...this.taken]
     }
 
     async clearTaken(): Promise<void> {
