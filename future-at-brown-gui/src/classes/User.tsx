@@ -9,7 +9,7 @@ const config = {
     }
 }
 
-export const MEMORY_LOCATION = "user";
+const USER_LOCATION = "user";
 
 class User {
 
@@ -76,9 +76,8 @@ class User {
                     return Promise.reject(error);
                 });
         }
-
-        localStorage.setItem(MEMORY_LOCATION, this.stringify());
-        return this.getSaved()
+        localStorage.setItem(USER_LOCATION, this.stringify());
+        return this.getSaved();
     }
 
     async clearSaved(): Promise<void> {
@@ -86,7 +85,7 @@ class User {
         if (!this.isGuest) {
             await new Promise(resolve => setTimeout(resolve, 2000));
         }
-        localStorage.setItem(MEMORY_LOCATION, this.stringify());
+        localStorage.setItem(USER_LOCATION, this.stringify());
     }
 
     async removeSaved(courseCode: string): Promise<Course[]> {
@@ -113,7 +112,7 @@ class User {
                     return Promise.reject(error);
                 });
         }
-        localStorage.setItem(MEMORY_LOCATION, this.stringify());
+        localStorage.setItem(USER_LOCATION, this.stringify());
         return this.getSaved();
     }
 
@@ -155,7 +154,7 @@ class User {
                 });
         }
 
-        localStorage.setItem(MEMORY_LOCATION, this.stringify());
+        localStorage.setItem(USER_LOCATION, this.stringify());
         return this.getTaken()
     }
 
@@ -183,7 +182,7 @@ class User {
                     return Promise.reject(error);
                 });
         }
-        localStorage.setItem(MEMORY_LOCATION, this.stringify());
+        localStorage.setItem(USER_LOCATION, this.stringify());
         return this.getTaken()
     }
 
@@ -225,7 +224,7 @@ class User {
                     return Promise.reject(error);
                 });
         }
-        localStorage.setItem(MEMORY_LOCATION, this.stringify());
+        localStorage.setItem(USER_LOCATION, this.stringify());
         return this.getPreferences();
     }
 
@@ -233,12 +232,12 @@ class User {
         this.clearTaken();
         this.clearSaved();
         this.preferences = defaultParams;
-        localStorage.setItem(MEMORY_LOCATION, this.stringify());
+        localStorage.setItem(USER_LOCATION, this.stringify());
     }
 
     deleteUser() {
         // do some sql stuff
-        localStorage.removeItem("user");
+        localStorage.removeItem(USER_LOCATION);
     }
 
     stringify(): string {
@@ -279,22 +278,26 @@ export const getUser = async (username: string): Promise<User> => {
             savedCourses = response.data['saved']
             takenCourses = response.data['taken']
             let u = response.data['user']
-            preferences = {crsRatingPref: u['crsRatingPref'],
+            preferences = {
+                crsRatingPref: u['crsRatingPref'],
                 avgHoursPref: u['avgHoursPref'],
                 maxHoursPref: u['maxHoursPref'],
                 crsSizePref: u['crsSizePref'],
-                profRatingPref: u['profRatingPref']}
+                profRatingPref: u['profRatingPref']
+            }
         })
         .catch((error) => {
             return Promise.reject(error);
         });
 
-    return new User(
+    const user = new User(
         username,
         savedCourses,
         takenCourses,
         preferences
-    )
+    );
+    localStorage.setItem(USER_LOCATION, user.stringify());
+    return user;
 }
 
 /**
@@ -316,7 +319,9 @@ export const newUser = async (username: string, password: string): Promise<User>
         config
     )
         .then(() => {
-            return new User(username);
+            const user = new User(username);
+            localStorage.setItem(USER_LOCATION, user.stringify());
+            return user;
         })
         .catch((error) => {
             return Promise.reject(error);
@@ -324,8 +329,10 @@ export const newUser = async (username: string, password: string): Promise<User>
 
 }
 
-export const destringify = (json: string | null): User | undefined => {
-    const value = JSON.parse(json ?? "{}");
+export const GetStoredUser = (): User | undefined => {
+
+    const value = JSON.parse(localStorage.getItem(USER_LOCATION) ?? "{}");
+
     if (value["taken"] && value["saved"] && value["prefs"]) {
         return new User(
             value["username"],
@@ -337,3 +344,5 @@ export const destringify = (json: string | null): User | undefined => {
         return undefined;
     }
 }
+
+export const ClearStoredUser = () => localStorage.removeItem(USER_LOCATION);
