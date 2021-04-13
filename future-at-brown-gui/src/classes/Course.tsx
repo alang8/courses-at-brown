@@ -34,14 +34,15 @@ export const FindCourse = async (inp: string): Promise<Course[]> => {
     return await axios.post<Course>(
         'http://localhost:4567/courseinfo',
         toSend,
-        config
-    ).then((course) => {
-            if (course.data.dept === "" && course.data.code === "") {
-                return Promise.reject();
-            } else {
+        config).then((course) => {
+            if (course.data.dept.length !== 0 && course.data.code.length !== 0) {
+                console.log("accept", course.data);
                 return Promise.resolve([course.data]);
+            } else {
+                console.log("reject", course.data);
+                return Promise.reject();
             }
-        })
+        });
 }   
 
 export const GetCode = (test: Course): string => test.dept + " " + test.code;
