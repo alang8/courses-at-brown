@@ -36,15 +36,9 @@ export const FindCourse = async (inp: string): Promise<Course[]> => {
         toSend,
         config
     )
-        .then((course) => { 
-            if (course.data.dept.length !== 0 && course.data.code.length !== 0) {
-                console.log("accept", course.data);
-                return Promise.resolve([course.data]);
-            } else {
-                console.log("reject", course.data);
-                return Promise.reject();
-            }
-        })
+        .then((course) => (course.data.dept.length !== 0 && course.data.code.length !== 0)
+         ? Promise.resolve([course.data]) : Promise.reject())
+        
 }   
 
 export const GetCode = (test: Course): string => test.dept + " " + test.code;

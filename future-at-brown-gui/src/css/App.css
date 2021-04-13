@@ -142,7 +142,6 @@ div.total {
     width: 100%;
     display: flex;
     justify-content: flex-end;
-    align-content: flex-end;
 }
 
 .card.class-card .meta {
@@ -156,9 +155,10 @@ div.total {
 }
 
 .card.class-card .content .grid {
-    height: calc(100% + 2em);
+    height: calc(100% + 4em);
     word-wrap: normal;
     text-overflow: ellipsis;
+    vertical-align: bottom;
 }
 
 .input-box {
