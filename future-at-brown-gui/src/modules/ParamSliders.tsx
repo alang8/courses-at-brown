@@ -63,7 +63,7 @@ const ParamSlider: React.FC<Params> = (props) => {
 
     return (
         <div className={"sliders"}>
-            <Header as="h4" subheader content="Rank these options from 0 (least important) to 10 (most important)" />
+            <Header as="h4" content="Rank these options from 0 (least important) to 10 (most important)" />
             {makeSlider("red", "Average Hours", "avgHoursPref")}
             {makeSlider("goldenRod", "Max Hours", "maxHoursPref")}
             {makeSlider("springGreen", "Class Rating", "crsRatingPref")}

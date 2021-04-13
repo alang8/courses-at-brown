@@ -52,7 +52,7 @@ public class UserDataHandlers {
         variables = ImmutableMap.of("isTaken", isTaken);
       } catch (JSONException | SQLException e) {
         variables = ImmutableMap.of("message", "ERROR: SignUpHandler", "isTaken", true);
-        System.out.println("ERROR: in UserDataHandlers.java - error w/ json/SQL in SignUpHandler");
+        System.out.println("ERROR: in UserDataHandlers.java - error w/ json/SQL in CheckUsernameHandler");
       }
       return GSON.toJson(variables);
     }
@@ -84,18 +84,18 @@ public class UserDataHandlers {
         String hashedPassword = coder.encodeToString(inputtedPassword.getBytes());
 
 
-        double crsRatingPref = 2.5;
-        double avgHoursPref = 10.0;
-        double maxHoursPref = 12.0;
-        double crsSizePref = 20.0;
-        double profRatingPref = 2.5;
+        double crsRatingPref = 5.0;
+        double avgHoursPref = 5.0;
+        double maxHoursPref = 5.0;
+        double crsSizePref = 5.0;
+        double profRatingPref = 5.0;
         presets.put("crsRatingPref", crsRatingPref);
         presets.put("avgHoursPref", avgHoursPref);
         presets.put("maxHoursPref", maxHoursPref);
         presets.put("crsSizePref", crsSizePref);
         presets.put("profRatingPref", profRatingPref);
         msg = "Account Added!";
-        String query = "INSERT INTO user_data VALUES (?, ?, ?, ?, ?, ?, ?);";
+        String query = "INSERT INTO user_data VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?);";
         PreparedStatement prep = conn.prepareStatement(query);
         prep.setString(1, hashedUsername);
         prep.setString(2, hashedPassword);
@@ -104,6 +104,8 @@ public class UserDataHandlers {
         prep.setDouble(5, maxHoursPref);
         prep.setDouble(6, crsSizePref);
         prep.setDouble(7, profRatingPref);
+        prep.setString(8, null);
+        prep.setString(9, null);
         prep.executeUpdate();
         variables = ImmutableMap.of("message", msg, "presets", presets);
         System.out.println("Inserted user!");

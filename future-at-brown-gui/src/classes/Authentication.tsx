@@ -39,34 +39,28 @@ const notBlank = (inp: string): string => {
 }
 
 const takenUsername = async (inp: string): Promise<string> => {
+    const toSend = {
+        username: inp
+    };
 
-    const wait = async (input: string): Promise<boolean> => {
-        const toSend = {
-            username: input
-        };
+    let isTaken = true;
 
-        let isTaken = true;
+    await axios.post(
+        'http://localhost:4567/checkname',
+        toSend,
+        config
+    ).then(response => {
+        isTaken = response.data["isTaken"];
+    }).catch(function (error) {
+        console.log(error);
+        isTaken = true;
+    });
 
-        await axios.post(
-            'http://localhost:4567/checkname',
-            toSend,
-            config
-        ).then(response => {
-            isTaken = response.data["isTaken"];
-        }).catch(function (error) {
-            console.log(error);
-        });
-        console.log("in taken username 58")
-        console.log(isTaken)
-        return isTaken
+    if (isTaken) {
+        return '"' + inp + '" has already been taken';
+    } else {
+        return "";
     }
-
-
-
-    return wait(inp)
-        .then((isTaken: boolean): string =>
-            (isTaken) ? '"' + inp + '" has already been taken' : ""
-        );
 }
 
 const matchingLogin = async (user: string, pass: string): Promise<string> => {
@@ -126,7 +120,6 @@ export const ValidLogin = async (user: string, pass: string): Promise<string[]> 
 }
 
 export const ValidNewUser = async (user: string): Promise<string[]> => {
-    return Promise.resolve([]);
     const syncTests = ValidUser(user);
     if (syncTests.length === 0) {
         const valid = await takenUsername(user);

@@ -12,7 +12,7 @@ const SignOutHeader: React.FC<Props> = (props) => {
     }
     return <Sticky>
         <Container>
-            <Segment clasName="signheader">
+            <Segment className="signheader">
                 <Grid columns='equal' textAlign="center">
                     <Grid.Row verticalAlign="middle">
                         <Grid.Column textAlign="left" >
