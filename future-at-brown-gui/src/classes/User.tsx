@@ -1,5 +1,6 @@
 import axios from "axios";
 import { Course, GetCode } from "./Course";
+import { ClearStoredPath } from "./Path";
 import { defaultParams, SearchParamNames, SearchParams } from "./SearchParams";
 
 const config = {
@@ -224,16 +225,17 @@ class User {
         return this.getPreferences();
     }
 
-    resetData() {
-        this.clearTaken();
-        this.clearSaved();
+    async resetData(): Promise<void> {
         this.preferences = defaultParams;
-        localStorage.setItem(USER_LOCATION, this.stringify());
+        return this.clearTaken()
+            .then(() => this.clearSaved()
+                .then(() => localStorage.setItem(USER_LOCATION, this.stringify())))
     }
 
-    deleteUser() {
+    async deleteUser(): Promise<void> {
         // do some sql stuff
         localStorage.removeItem(USER_LOCATION);
+        return new Promise(resolve => setTimeout(resolve, 2000);
     }
 
     stringify(): string {
@@ -342,3 +344,9 @@ export const GetStoredUser = (): User | undefined => {
 }
 
 export const ClearStoredUser = () => localStorage.removeItem(USER_LOCATION);
+
+export const SignOutUser = (userSetter: (user: User | undefined) => void) => {
+    ClearStoredUser();
+    ClearStoredPath();
+    userSetter(undefined);
+}

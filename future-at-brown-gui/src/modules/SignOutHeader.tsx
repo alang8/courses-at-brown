@@ -2,7 +2,7 @@ import React from "react";
 import { Button, Container, Grid, Header, Icon, Segment, Sticky } from "semantic-ui-react";
 import { AuthenticatedPageProps } from "../classes/Authentication";
 import { ClearStoredPath } from "../classes/Path";
-import { ClearStoredUser } from "../classes/User";
+import { ClearStoredUser, SignOutUser } from "../classes/User";
 import InfoPopup from "./InfoPopup";
 
 interface Props extends AuthenticatedPageProps {
@@ -12,12 +12,6 @@ interface Props extends AuthenticatedPageProps {
     }
 }
 const SignOutHeader: React.FC<Props> = (props) => {
-
-    const handleClick = () => {
-        ClearStoredUser();
-        ClearStoredPath();
-        props.setUser(undefined);
-    }
 
     return <Sticky>
         <Container>
@@ -41,7 +35,7 @@ const SignOutHeader: React.FC<Props> = (props) => {
                                 <Button icon labelPosition='left'
                                     compact
                                     inverted color="red"
-                                    onClick={handleClick}>
+                                    onClick={() => SignOutUser(props.setUser)}>
                                     <Icon name="sign out" />
                                     {"Sign out" + (props.user.isGuest ? " of guest" : "")}
                                 </Button>

@@ -3,6 +3,7 @@ import { Accordion, Button, Container, Dropdown, Grid, GridColumn, Header, Segme
 import { AuthenticatedPageProps } from "../classes/Authentication";
 import { FindCourse, GetCode } from "../classes/Course";
 import { SearchParams } from "../classes/SearchParams";
+import { SignOutUser } from "../classes/User";
 import { ButtonFooter, SearchButton } from "../modules/BottomButton";
 import ExpandableCourses from "../modules/ExpandableCourses";
 import ParamSlider from "../modules/ParamSliders";
@@ -26,10 +27,10 @@ const Profile: React.FC<AuthenticatedPageProps> = (props) => {
         <Container>
             <SignOutHeader setUser={props.setUser} user={props.user} heading={{
                 information: "A place to explore the courses you saved, manage saved user data, "
-                + "and change your default search settings. The SAVED COURSES pane shows courses "
-                + "you've saved after searching. The SEARCH SETTINGS dropdown allows you to modify "
-                + "your default serach settings. The DATA SETTINGS allow you to change and delete "
-                + "what data is stored on the server.",
+                    + "and change your default search settings. The SAVED COURSES pane shows courses "
+                    + "you've saved after searching. The SEARCH SETTINGS dropdown allows you to modify "
+                    + "your default serach settings. The DATA SETTINGS allow you to change and delete "
+                    + "what data is stored on the server.",
                 title: "Profile"
             }} />
             <Grid padded centered>
@@ -42,16 +43,27 @@ const Profile: React.FC<AuthenticatedPageProps> = (props) => {
                         <Dropdown floating text="Data settings " icon="setting">
                             <Dropdown.Menu>
                                 <Dropdown.Item text='Clear saved courses' icon='x'
-                                    onClick={props.user.clearSaved} />
+                                    onClick={() =>
+                                        props.user.clearSaved()
+                                            .then(() => setPrefs({ ...prefs }))
+                                    } />
                                 <Dropdown.Item text='Clear taken courses' icon='x'
-                                    onClick={props.user.clearTaken} />
+                                    onClick={() =>
+                                        props.user.clearTaken()
+                                            .then(() => setPrefs({ ...prefs }))
+                                    } />
                                 <Dropdown.Divider />
                                 <Dropdown.Item text='Reset data' icon='refresh'
-                                    onClick={props.user.resetData} />
+                                    onClick={() =>
+                                        props.user.resetData()
+                                            .then(() => setPrefs({ ...prefs }))
+                                    } />
                                 {(props.user.isGuest) ?
                                     undefined :
                                     <Dropdown.Item text='Delete account' icon='remove user'
-                                        onClick={props.user.deleteUser} />}
+                                        onClick={() => 
+                                        props.user.deleteUser()
+                                        .then(() => SignOutUser(props.setUser))} />}
                             </Dropdown.Menu>
                         </Dropdown>
                     </Grid.Column>
