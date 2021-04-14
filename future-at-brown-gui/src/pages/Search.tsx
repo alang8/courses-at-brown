@@ -1,6 +1,6 @@
-import React, { createRef, useCallback, useEffect, useState } from "react"
+import React, { useEffect, useState } from "react"
+import axios from "axios";
 import { Button, Container, Dimmer, Grid, GridColumn, Header, Loader, Segment, Sticky } from "semantic-ui-react"
-import { AuthenticatedPageProps } from "../classes/Authentication";
 import { Course, FindCourse, GetCode } from "../classes/Course";
 import { SearchParams } from "../classes/SearchParams";
 import User from "../classes/User";
@@ -8,14 +8,13 @@ import { ButtonFooter, ProfileButton } from "../modules/BottomButton";
 import ExpandableCourses from "../modules/ExpandableCourses";
 import ParamSlider from "../modules/ParamSliders";
 import SignOutHeader from "../modules/SignOutHeader";
-import {
-    BrowserRouter as Router,
-    Route,
-    Switch,
-    Redirect,
-    Link
-} from "react-router-dom";
 
+const config = {
+    headers: {
+        "Content-Type": "application/json",
+        'Access-Control-Allow-Origin': '*',
+    }
+}
 
 interface Params {
     user: User;
@@ -28,15 +27,29 @@ const Search: React.FC<Params> = (props) => {
     const [takenCourses, setTakenCourses] = useState<Course[]>(props.user.getTaken());
     const [loadingPath, setLoading] = useState<boolean>(false);
 
+    const getPath = async (): Promise<void> => {
+        const toSend = {
+            prefs: props.user.getPreferences()
+        };
+        console.log("requesting path")
+        await axios.post(
+            'http://localhost:4567/path',
+            toSend,
+            config
+        )
+            .then((response) => {
+                console.log("path recieved")
+                console.log(response.data['path'])
+                props.setPath(response.data['path']);
+            })
+            .catch((error) => {
+                return Promise.reject(error);
+            });
+    }
+
     useEffect(() => {
         if (loadingPath) {
-            //TODO: put actual axios request here to get the pathway from backend
-            let thePath = { "CSCI 0170": 0, "CSCI 0220": 1, "CSCI 0180": 1, "CSCI 0330": 2, "CSCI 1470": 2, "CSCI 0320": 3, "APMA 0360": 5 }
-            console.log("HERE start");
-            new Promise(resolve => setTimeout(resolve, 2000))
-                .then(() => { console.log("should redirect now");
-                    props.setPath(thePath)})
-            //redirect now to /graph
+            getPath();
         }
     }, [loadingPath]);
 

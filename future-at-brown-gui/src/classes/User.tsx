@@ -35,13 +35,9 @@ class User {
         } else {
             this.isGuest = true;
         }
-        // console.log("in user const")
-        // console.log(this.saved);
-        // console.log(this.taken);
     }
 
     // saved courses
-
     getSaved(): Course[] {
         return [...this.saved];
     }

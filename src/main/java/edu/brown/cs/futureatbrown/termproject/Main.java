@@ -112,8 +112,41 @@ public final class Main {
       Spark.post("/removecourse", new UserDataHandlers.RemoveCourseHandler(userDataConn));
       Spark.post("/setpreference", new UserDataHandlers.SetPreferenceHandler(userDataConn));
       Spark.post("/loaduser", new UserDataHandlers.LoadUserHandler(userDataConn, courseDataConn));
+      Spark.post("/path", new GetPathHandler());
     } catch (ClassNotFoundException | SQLException e) {
       System.out.println("Couldnt connect to SQL user data!");
+    }
+  }
+
+  /**
+   * Handler for getting all the course data from the database.
+   */
+  private static class GetPathHandler implements Route {
+    private static final Gson GSON = new Gson();
+
+    GetPathHandler() {
+      return;
+    }
+
+    @Override
+    public Object handle(Request request, Response response) {
+      Map<String, Integer> thePath = new HashMap<>();
+      try {
+        JSONObject data = new JSONObject(request.body());
+        JSONObject prefJSON = data.getJSONObject("prefs");
+        System.out.println("in getpath handler");
+        System.out.println(prefJSON);
+        System.out.println(prefJSON.getDouble("avgHoursPref"));
+        thePath.put("CSCI 0170", 0);
+        thePath.put("CSCI 0180", 1);
+        thePath.put("MATH 0540", 1);
+        thePath.put("CSCI 0220", 2);
+        thePath.put("APMA 0350", 2);
+      } catch (JSONException e) {
+        e.printStackTrace();
+      }
+      Map<String, Object> variables = ImmutableMap.of("path", thePath);
+      return GSON.toJson(variables);
     }
   }
 

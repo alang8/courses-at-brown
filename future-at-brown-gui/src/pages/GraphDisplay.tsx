@@ -20,7 +20,6 @@ interface Params {
  */
 const GraphDisplay: React.FC<Params> = (props) => {
 
-    const samplePath = { "CSCI 0170": 0, "CSCI 0220": 1, "CSCI 0180": 1, "CSCI 0330": 2, "CSCI 1470": 2, "CSCI 0320": 3, "APMA 0360": 5 };
     props.onRender?.();
 
     return <div className="total">
@@ -29,8 +28,7 @@ const GraphDisplay: React.FC<Params> = (props) => {
         <SignOutHeader setUser={props.setUser} user={props.user}
             heading={{ title: "Graph", information: "A visual display of the suggested courses you should take at Brown" }} />
         <div style={{ height: '100vh' }}>
-            <ClassGraph path={samplePath} saveFunction={(c:Course) => props.user.saveCourse(c)} />
-            {/* {props.path ? <ClassGraph path={props.path!} /> : <Header as="h1" content={"Enter a search to see a graph"} />} */}
+            <ClassGraph path={props.path} saveFunction={(c:Course) => props.user.saveCourse(c)} />
         </div>
     </div>
 }
