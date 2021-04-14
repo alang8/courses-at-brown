@@ -16,17 +16,23 @@ const config = {
     }
 }
 
+//The parameters for our search page: the current user, a method to set the user, and a method to set the path.
 interface Params {
     user: User;
     setUser: (user: User | undefined) => void;
     setPath: (path: { [id: string]: number }) => void;
 }
 
+/**
+ * Component that serves as the search page of our website.
+ * @param props - the useful parameters of the search page, specified above.
+ */
 const Search: React.FC<Params> = (props) => {
     const [prefs, setPrefs] = useState<SearchParams>(props.user.getPreferences());
     const [takenCourses, setTakenCourses] = useState<Course[]>(props.user.getTaken());
     const [loadingPath, setLoading] = useState<boolean>(false);
 
+    //Function to get the path
     const getPath = async (): Promise<void> => {
         const toSend = {
             prefs: props.user.getPreferences(),

@@ -4,6 +4,7 @@ import CourseTile from "./CourseTile";
 import { Course, GetCode } from "../classes/Course";
 import CourseSearch from "./CourseSearch";
 
+//The parameters of a course box: the title of the box, the courses to display, and optional functions to add/remove courses.
 interface Params {
     title: string;
     courses: Course[];
@@ -14,8 +15,12 @@ interface Params {
     }
 }
 
+/**
+ * Component which represents the variable size box that holds course tiles for the saved and taken course boxes.
+ * @param props - the parameters for a course box, as specified above.
+ */
 const ExpandableCourses: React.FC<Params> = (props) => {
-
+    //State variables to keep track of the state of the display box.
     const [displayed, setDisplayed] = useState<Course[]>(props.courses);
     const [showMore, setShowMore] = useState<boolean>(false);
     const [isRemoving, setRemoving] = useState<boolean>(false);
@@ -29,12 +34,12 @@ const ExpandableCourses: React.FC<Params> = (props) => {
         <CourseTile course={elt} key={String(index)} shouldDisable={alreadyIn} />
     );
 
-
     useEffect(() => {
         setRemoving(false);
         setAdding(false);
     }, [displayed]);
 
+    //Function to remove a course from the box.
     const remove = async (rmv: Course): Promise<void> => {
         if (props.modify?.removeCourse) {
             await props.modify!.removeCourse(GetCode(rmv));
@@ -42,6 +47,7 @@ const ExpandableCourses: React.FC<Params> = (props) => {
         setDisplayed(displayed.filter((c) => GetCode(c) !== GetCode(rmv)));
     }
 
+    //Function to add a course to the box.
     const add = async (added: Course): Promise<void> => {
         if (props.modify?.addCourse) {
             await props.modify!.addCourse(added);
@@ -49,6 +55,7 @@ const ExpandableCourses: React.FC<Params> = (props) => {
         setDisplayed(displayed.concat(added));
     }
 
+    //Buttons for adding/removing courses.
     const addMore: JSX.Element = (
         <Card key="5">
             <Button.Group vertical className="fill" compact>
@@ -77,9 +84,11 @@ const ExpandableCourses: React.FC<Params> = (props) => {
         allCourses.shift();
     }
 
+    //Components for all courses, used when show more is clicked
     const overflowCards: JSX.Element[] = allCourses.map(
         (elt, index) => <CourseTile course={elt} key={String(index + initDisplay.length)} shouldDisable={alreadyIn}/>);
 
+    //Component for search bars when adding/removing courses.
     const searchers = (): JSX.Element[] =>
         [<CourseSearch key={1} 
             searcher={
@@ -112,7 +121,6 @@ const ExpandableCourses: React.FC<Params> = (props) => {
                 : undefined}
         </Segment>
     );
-
 }
 
 export default ExpandableCourses;

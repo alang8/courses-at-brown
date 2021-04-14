@@ -23,7 +23,6 @@ interface Params {
  * @param props - the parameters for the component, as specified above.
  */
 const CourseTile: React.FC<Params> = (props) => {
-
     const [display, setDisplay] = useState<boolean>(false);
     const course = props.course;
 

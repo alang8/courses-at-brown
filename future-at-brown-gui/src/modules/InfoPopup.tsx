@@ -5,6 +5,7 @@ interface Props {
     message?: string
 }
 
+//Module which represents the an information popup to describe how our site works.
 const InfoPopup: React.FC<Props> = (props) =>
     (props.message) ? <Popup
         content={props.message}

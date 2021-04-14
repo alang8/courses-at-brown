@@ -126,7 +126,7 @@ public final class Main {
   }
 
   /**
-   * Handler for getting all the course data from the database.
+   * Handler for getting the Path for a user.
    */
   private static class GetPathHandler implements Route {
     private static final Gson GSON = new Gson();

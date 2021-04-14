@@ -8,6 +8,7 @@ const config = {
     }
 }
 
+//Function to ensure that the inputted string does not contain invalid characters (prevent SQL injection).
 const withoutChars = (chars: string): (inp: string) => string => {
     return (inp: string) => {
         const invalid: string =
@@ -20,6 +21,7 @@ const withoutChars = (chars: string): (inp: string) => string => {
     }
 }
 
+//Function to ensure that the inputted string is of a certain length.
 const certainLength = (length: number): (inp: string) => string => {
     return (inp: string) => {
         if (inp.length >= length) {
@@ -30,6 +32,7 @@ const certainLength = (length: number): (inp: string) => string => {
     }
 }
 
+//Function to ensure that the inputted string isnt blank.
 const notBlank = (inp: string): string => {
     if (inp.length === 0) {
         return "cannot be blank"
@@ -38,6 +41,7 @@ const notBlank = (inp: string): string => {
     }
 }
 
+//Function to ensure that the inputted username isnt already taken.
 const takenUsername = async (inp: string): Promise<string> => {
     const toSend = {
         username: inp
@@ -63,6 +67,7 @@ const takenUsername = async (inp: string): Promise<string> => {
     }
 }
 
+//Function to ensure that the inputted username and password are valid for a user.
 const matchingLogin = async (user: string, pass: string): Promise<string> => {
 
     const wait = async (u: string, p: string): Promise<boolean> => {
@@ -93,6 +98,7 @@ const matchingLogin = async (user: string, pass: string): Promise<string> => {
         );
 }
 
+//Function to ensure that the input passes our various tests for valid username/password.
 const passTests = (inp: string, tests: Array<(inp: string) => string>): string[] => {
     return tests.reduce((acc: string[], test: (inp: string) => string) => {
         if (test(inp) !== "") {
@@ -102,14 +108,17 @@ const passTests = (inp: string, tests: Array<(inp: string) => string>): string[]
     }, []);
 }
 
+//Function that ensures a password is valid.
 export const ValidPass = (pass: string): string[] => {
     return passTests(pass, [withoutChars("\\\"\'"), certainLength(8)]);
 }
 
+//Function to ensure that a username is valid.
 export const ValidUser = (user: string): string[] => {
     return passTests(user, [withoutChars("\\\"\' !"), notBlank]);
 }
 
+//Function that checks if a login attempt is valid.
 export const ValidLogin = async (user: string, pass: string): Promise<string[]> => {
     const syncTests = ValidPass(pass).concat(ValidUser(user));
     if (syncTests.length === 0) {
@@ -119,6 +128,7 @@ export const ValidLogin = async (user: string, pass: string): Promise<string[]> 
     return syncTests;
 }
 
+//Function to ensure that a sign up attempt is valid.
 export const ValidNewUser = async (user: string): Promise<string[]> => {
     const syncTests = ValidUser(user);
     if (syncTests.length === 0) {
@@ -128,11 +138,13 @@ export const ValidNewUser = async (user: string): Promise<string[]> => {
     return syncTests;
 }
 
+//Props for authenticated pages (pages you can only view if signed in).
 export interface AuthenticatedPageProps {
     user: User;
     setUser: (user: User | undefined) => void;
 }
 
+//Props for Unauthenticated pages (pages anyone can see).
 export interface InAuthenticaedPageProps {
     setLogin: (user: User) => void;
 }

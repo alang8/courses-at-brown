@@ -16,8 +16,6 @@ const ClassGraph = (props) => {
     const [allCourseInfo, setAllCourseinfo] = useState({});
     const [gData, setGData] = useState({"nodes":[{}], "links":[{}]});
 
-    //TEST PATH
-    // let thePath = {"CSCI 0170":0, "CSCI 0220":1, "CSCI 0180":1, "CSCI 0330":2, "CSCI 1470":2, "CSCI 0320":3, "APMA 0360":5}
     let theSemester = {0:"Fall 2021", 1:"Spring 2022", 2:"Fall 2022", 3:"Spring 2023", 4:"Fall 2023", 5:"Spring 2024", 6:"Fall 2024", 7:"Spring 2025", 8:"Fall 2025", 9:"Spring 2026"}
 
     //Config for axios.
@@ -172,9 +170,7 @@ const ClassGraph = (props) => {
         <div id="graphWrapper">
             <ForceGraph2D
                 graphData={gData}
-                onNodeClick={(n, e) => {
-                    displayedCourseInfo(n);
-                }}
+                onNodeClick={(n, e) => {displayedCourseInfo(n);}}
                 ref={fgRef}
                 showNavInfo = {true}
                 dagMode={"radialin"}

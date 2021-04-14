@@ -4,6 +4,7 @@ import FormattedInput from "../modules/FormattedInput";
 import { InAuthenticaedPageProps, ValidNewUser, ValidPass } from "../classes/Authentication";
 import { newUser } from "../classes/User";
 import { HomeButton } from "../modules/BottomButton";
+import InfoPopup from "../modules/InfoPopup";
 
 const Signup: React.FC<InAuthenticaedPageProps> = (props) => {
 
@@ -68,6 +69,10 @@ const Signup: React.FC<InAuthenticaedPageProps> = (props) => {
                             error={{ messages: confError, resolve: () => setConfError([]) }} />
                         <Button type="submit" content="Submit" className="gradient" />
                     </Form>
+                    <InfoPopup message={"User preferences and courses are used to generate concentration plans that are customized for each user. Plans often change, so preferences/courses are saved to make revisiting your path at Brown easy! You can clear your data at anytime through profile settings."} />
+                    <div style={{color: "gray", float:'left', marginLeft:10}}>
+                        How is my data used?
+                    </div>
                 </Segment>
             </Container>
         </div>
