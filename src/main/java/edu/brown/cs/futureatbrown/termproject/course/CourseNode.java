@@ -33,6 +33,8 @@ public class CourseNode extends GraphNode<CourseEdge> implements Locatable {
   private Double prevTotalAvgHours;
   private Double prevTotalMaxHours;
   private final double[] coordinates;
+  private int currentGroup = 1;
+  private int currentNumInGroup = 0;
 
   /**
    * Constructs a new CourseNode with the given parameters.
@@ -79,10 +81,29 @@ public class CourseNode extends GraphNode<CourseEdge> implements Locatable {
 
   /**
    * Resets the Hours back to 0.0 at the beginning of every dijkstra call
+   * Also Resets current Group back to 1
    */
-  public void resetHours() {
+  public void resetHoursAndGroups() {
     this.prevTotalAvgHours = 0.0;
     this.prevTotalMaxHours = 0.0;
+    this.currentGroup = 1;
+    this.currentNumInGroup = 0;
+  }
+
+  public int getCurrentGroup() {
+    return currentGroup;
+  }
+
+  public void setCurrentGroup(int currentGroup) {
+    this.currentGroup = currentGroup;
+  }
+
+  public int getCurrentNumInGroup() {
+    return currentNumInGroup;
+  }
+
+  public void setCurrentNumInGroup(int currentNumInGroup) {
+    this.currentNumInGroup = currentNumInGroup;
   }
 
   /**

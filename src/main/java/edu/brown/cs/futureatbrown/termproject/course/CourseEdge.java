@@ -42,10 +42,13 @@ public class CourseEdge extends GraphEdge<CourseNode> {
   private Integer classSizeMax; // Max Class Size
   private Integer minNumClasses; // Minimum Number of Classes
   private Integer maxNumClasses; // Maximum Number of Classes
+  private HashMap<String, Integer> groupData;
+  private HashMap<String, CourseWay> courseWayData;
 
   // GLOBAL Dijkstra Specific Inputs
   private CourseNode globalEnd;
   private Set<List<CourseNode>> prereqs; //Global Prerequisites of the target end node
+
 
   /**
    * Constructs a CourseEdge with the given id, start id, and end id.
@@ -106,12 +109,15 @@ public class CourseEdge extends GraphEdge<CourseNode> {
    * @param classSizeInput User Inputted Optimal Class Size, Penalized for distance from Input.
    * @param classSizeMax User Inputted Max Class size, Penalty decreases if user can tolerate a larger class size
    * and increases if the user cannot.
+   * @param groupData Map of Group ID to number of courses required to satisify in that group for the particular pathway
+   * @param courseWayData Map of Course ID to the courseWay (CourseID, Sequence, GroupID)
    */
 
   public void setGlobalParams(double crsRatingPref, double profRatingPref, double avgHoursPref,
                               double avgHoursInput, int minNumClasses, int maxNumClasses,
                               double balanceFactorPref, double totalMaxHoursInput,
-                              double classSizePref, int classSizeInput, int classSizeMax) {
+                              double classSizePref, int classSizeInput, int classSizeMax,
+                              HashMap<String, Integer> groupData, HashMap<String, CourseWay> courseWayData) {
     // SLIDER PREFERENCES
     this.crsRatingPref = crsRatingPref;
     this.profRatingPref = profRatingPref;
@@ -126,6 +132,8 @@ public class CourseEdge extends GraphEdge<CourseNode> {
     this.maxNumClasses = maxNumClasses;
     this.classSizeInput = classSizeInput;
     this.classSizeMax = classSizeMax;
+    this.groupData = groupData;
+    this.courseWayData = courseWayData;
   }
 
   /**
@@ -175,6 +183,7 @@ public class CourseEdge extends GraphEdge<CourseNode> {
     // OVERRIDE: MANUAL WEIGHT INPUTTED //
     //////////////////////////////////////
     if (this.overrideWeightCalc) {
+//      System.out.println("OVERRIDE WEIGHT");
       return this.weight;
     }
 
@@ -203,7 +212,7 @@ public class CourseEdge extends GraphEdge<CourseNode> {
 
     // If they aren't satisfied then nullify the path
     if (!satisfiedAllPrereqs) {
-      System.out.println("FAILED PREREQS");
+//      System.out.println("FAILED PREREQS");
       return Double.POSITIVE_INFINITY;
     }
 
@@ -213,20 +222,16 @@ public class CourseEdge extends GraphEdge<CourseNode> {
     if (null != this.minNumClasses &&
         previousPath.size() < this.minNumClasses &&
         this.end.equals(this.globalEnd)) {
+//      System.out.println("ENDING BUT HASN'T REACHED MIN EDGE");
       return Double.POSITIVE_INFINITY;
     }
-
-    ////////////////////////////////////////
-    // PENALTY: REQUIREMENTS FOR PATHWAYS //
-    ////////////////////////////////////////
-    // TODO: AFTER REDOING CACHING
 
     //////////////////////////////////////////////////
     // PENALTY: CANNOT EXCEED MAX NUMBER OF CLASSES //
     //////////////////////////////////////////////////
     if (null != this.maxNumClasses) {
       if (previousPath.size() >= this.maxNumClasses) {
-        System.out.println("EXCEEDED MAX NUM CLASSES");
+//        System.out.println("EXCEEDED MAX NUM CLASSES");
         return Double.POSITIVE_INFINITY;
       }
     }
@@ -249,6 +254,7 @@ public class CourseEdge extends GraphEdge<CourseNode> {
     }
 
     // Calculate the Slider Weight
+//    System.out.println("COURSE RATING INCORPORATED");
     this.weight +=  Math.pow(2, this.crsRatingPref) / courseRating;
 
     ////////////////////////////////////////
@@ -269,6 +275,7 @@ public class CourseEdge extends GraphEdge<CourseNode> {
     }
 
     // Calculate the Slider Weight
+//    System.out.println("PROFESSOR RATING INCORPORATED");
     this.weight += Math.pow(2, this.profRatingPref) / professorRating;
 
     /////////////////////////////////
@@ -326,9 +333,11 @@ public class CourseEdge extends GraphEdge<CourseNode> {
 
     // Penalize by distance if it goes over, Penalize by balance if it is under
     if (totalAvgHours > desiredTotalAvgHours) {
+//      System.out.println("AVG HOURS RAN OVER LIMIT");
       this.weight += Math.pow(2, this.avgHoursPref) * 0.2 * (totalAvgHours - desiredTotalAvgHours)
           / desiredTotalAvgHours;
     } else {
+//      System.out.println("BALANCE OF AVG HOURS - CLASSES SELECTED");
       this.weight += Math.pow(2, this.balanceFactorPref) * 0.2
           * Math.abs(classAvgHours - this.avgHoursInput) / this.avgHoursInput;
     }
@@ -358,6 +367,7 @@ public class CourseEdge extends GraphEdge<CourseNode> {
       this.end.setPrevTotalMaxHours(totalMaxHours);
 
       if (totalMaxHours > this.totalMaxHoursInput) {
+//        System.out.println("EXCEEDED MAX HOURS");
         return Double.POSITIVE_INFINITY;
       }
     }
@@ -385,12 +395,13 @@ public class CourseEdge extends GraphEdge<CourseNode> {
       this.classSizeMax = 500;
     }
 
+//    System.out.println("CLASS SIZE CONSIDERED");
     this.weight += Math.pow(2, this.classSizePref) * 0.2
         * Math.abs(courseClassSize - this.classSizeInput) / this.classSizeMax;
 
-    ////////////////////////////////////////////////////////
-    //  PENALTY: +2000 PER PREREQUISITE GROUP UNSATISFIED //
-    ////////////////////////////////////////////////////////
+    /////////////////////////////////////////////////////
+    //  REWARD: -2000 PER PREREQUISITE GROUP SATISFIED //
+    /////////////////////////////////////////////////////
     if (null != this.prereqs) {
       for (List<CourseNode> group : this.prereqs) {
         List<String> groupIDs = group.stream()
@@ -405,6 +416,65 @@ public class CourseEdge extends GraphEdge<CourseNode> {
         }
       }
     }
+
+    /////////////////////////////////////////////////////
+    // REWARD: -5000 PER PATHWAY REQUIREMENT SATISFIED //
+    /////////////////////////////////////////////////////
+
+    // FROM NOW ON INCLUDE END NODE IN PREVIOUS PATH
+    List<String> totalPath = new ArrayList<>(previousPath);
+    totalPath.add(this.end.getID());
+    int currentGroup = this.start.getCurrentGroup();
+    int currentNumInGroup = this.start.getCurrentNumInGroup();
+
+    boolean satisfiedAllPathwayReqs = true;
+//    System.out.println("Total Path: " + totalPath);
+
+    if (null != this.courseWayData && null != this.groupData) {
+      // REWARD IT FOR SATISFYING PATHWAY REQUIREMENTS
+      for(String courseID : this.courseWayData.keySet()) {
+
+        CourseWay courseway = this.courseWayData.get(courseID);
+        String coursewayGroupID = Integer.toString(courseway.getGroupID());
+        boolean readyForProcessing = Integer.parseInt(coursewayGroupID) == currentGroup;
+        if (Integer.parseInt(coursewayGroupID) >= currentGroup) {
+          satisfiedAllPathwayReqs = false;
+          if (readyForProcessing) {
+            List<String> sequence = new ArrayList<>(courseway.getSequence());
+            sequence.add(courseID);
+//            System.out.println("SEQUENCE: " + sequence);
+
+            if (previousPath.containsAll(sequence)) {
+              continue;
+            }
+
+            if (totalPath.containsAll(sequence)) {
+              currentNumInGroup += 1;
+              this.weight -= 5000;
+              int numReq = this.groupData.get(coursewayGroupID);
+
+              if (numReq == currentNumInGroup) {
+                currentGroup += 1;
+                this.end.setCurrentGroup(currentGroup);
+                this.end.setCurrentNumInGroup(0);
+//                System.out.println("CURRENT GROUP UPDATING TO " + currentGroup);
+              } else {
+                this.end.setCurrentGroup(currentGroup);
+                this.end.setCurrentNumInGroup(currentNumInGroup);
+              }
+            }
+          }
+        }
+      }
+
+      // PENALTY: STOP IT FROM FINISHING IF IT DOESN'T SATISFY ALL PATHWAY REQUIREMENTS
+//      System.out.println("SATISFIED ALL PATHWAYS? - " + satisfiedAllPathwayReqs);
+      if (!satisfiedAllPathwayReqs && this.end.equals(this.globalEnd)) {
+//        System.out.println("PATHWAY BLOCK");
+        return Double.POSITIVE_INFINITY;
+      }
+    }
+
     return this.weight;
   }
 
@@ -487,6 +557,6 @@ public class CourseEdge extends GraphEdge<CourseNode> {
    */
   @Override
   public String toString() {
-    return "EDGE: (" + id + ": " + start + "to " + end + ")";
+    return "EDGE: (" + id + ": " + start + " to " + end + ")";
   }
 }
