@@ -14,7 +14,6 @@ import User from "../classes/User";
 interface Params {
     user: User;
     setUser: (user: User | undefined) => void;
-    deleteAccount: (isDeleted: boolean) => void;
 }
 
 const Profile: React.FC<Params> = (props) => {
@@ -22,6 +21,9 @@ const Profile: React.FC<Params> = (props) => {
     const [prefs, setPrefs] = useState<SearchParams>(props.user.getPreferences());
     const [loadingPrefs, setLoading] = useState<boolean>(false);
     const [showSettings, setSettings] = useState<boolean>(false);
+    const [curRender, setCurRerender] = useState<boolean>(false);
+
+    const forceRerender = () => setCurRerender(!curRender);
 
     useEffect(() => {
         if (loadingPrefs) {
@@ -29,11 +31,6 @@ const Profile: React.FC<Params> = (props) => {
                 .then(() => setLoading(false));
         }
     }, [loadingPrefs]);
-
-    // const deleteUserHandle = async () => {
-    //     await props.user.deleteUser();
-    //     props.deleteAccount(true);
-    // }
 
     return <div className="total">
         <SearchButton />
@@ -58,25 +55,25 @@ const Profile: React.FC<Params> = (props) => {
                                 <Dropdown.Item text='Clear saved courses' icon='x'
                                     onClick={() =>
                                         props.user.clearSaved(props.user)
-                                            .then(() => setPrefs({ ...prefs }))
+                                            .then(forceRerender)
                                     } />
                                 <Dropdown.Item text='Clear taken courses' icon='x'
                                     onClick={() =>
                                         props.user.clearTaken(props.user)
-                                            .then(() => setPrefs({ ...prefs }))
+                                            .then(forceRerender)
                                     } />
                                 <Dropdown.Divider />
                                 <Dropdown.Item text='Reset data' icon='refresh'
                                     onClick={() =>
                                         props.user.resetData(props.user)
-                                            .then(() => setPrefs({ ...prefs }))
+                                            .then(forceRerender)
                                     } />
                                 {(props.user.isGuest) ?
                                     undefined :
                                     <Dropdown.Item text='Delete account' icon='remove user'
-                                        onClick={() => 
-                                        props.user.deleteUser()
-                                        .then(() => SignOutUser(props.setUser))} />}
+                                        onClick={() =>
+                                            props.user.deleteUser()
+                                                .then(() => SignOutUser(props.setUser))} />}
                             </Dropdown.Menu>
                         </Dropdown>
                     </Grid.Column>
@@ -85,12 +82,12 @@ const Profile: React.FC<Params> = (props) => {
                     <Grid.Column>
                         <ExpandableCourses
                             courses={props.user.getSaved()}
-                            title={"Saved courses"}
+                            title={curRender ? "Saved courses" : "Saved courses"}
                             modify={{
                                 searcher: FindCourse,
                                 addCourse: e => { return props.user.saveCourse(e); },
                                 removeCourse: c => { return props.user.removeSaved(c); }
-                            }} />
+                            }} key={curRender ? 0 : 1}/>
                     </Grid.Column>
                 </Grid.Row>
                 <Accordion className="long-accordion">
@@ -124,7 +121,7 @@ const Profile: React.FC<Params> = (props) => {
                                         searcher: FindCourse,
                                         addCourse: e => { return props.user.takeCourse(e); },
                                         removeCourse: c => { return props.user.removeTaken(c); }
-                                    }} />
+                                    }} key={curRender ? 0 : 1}/>
                             </Grid.Column>
                         </Grid.Row>
                     </Accordion.Content>
