@@ -36,7 +36,6 @@ public class UserDataHandlers {
       boolean isTaken = false;
       try {
         JSONObject data = new JSONObject(request.body());
-
         String inputtedUsername = data.getString("username");
         Base64.Encoder coder = Base64.getEncoder();
         String hashedUsername = coder.encodeToString(inputtedUsername.getBytes());
@@ -153,7 +152,6 @@ public class UserDataHandlers {
         presets.put("maxHoursPref", 12.0);
         presets.put("crsSizePref", 20.0);
         presets.put("profRatingPref", 2.5);
-
         if (rs.next()) {
           //found a match
           msg = "Success!";
@@ -292,7 +290,6 @@ public class UserDataHandlers {
     public SetPreferenceHandler(Connection c) {
       this.conn = c;
     }
-
     @Override
     public Object handle(Request request, Response response) {
       String msg = "";

@@ -1,65 +1,32 @@
-input[type="number"] {
-  width: 3em;
+.board {
+    font-family: Verdana,Helvetica;
+    padding: 0;
+    margin: auto;
+    width: 400px;
+    height: 400px;
+    -webkit-user-select: none;
+}
+.board td {
+    width: 25%;
+    height: 25%;
+    border: 0;
+    margin: 0;
+    padding: 0;
+    font-size: 48px;
+    text-align: center;
+    text-transform: capitalize;
 }
 
-body {
-  width: 100%;
-  background-image: url("stars.jpg");
-  background-size: 100%;
-}
-
-#title {
-  text-align: center;
-  color: white;
-  font-family: Papyrus, fantasy;
-  font-size: 35px;
-}
-
-#stars {
-  text-align: center;
-}
-
-.sub-head {
-  color: white;
-  font-family: Papyrus, fantasy;
-}
-
-textarea {
-  width: 50%;
-  box-sizing: border-box;
-  border: 2px solid #ccc;
-  border-radius: 2px;
-}
-
-#first {
-  background-color: #1ca0a0;
+.m, .w, .z {
   text-decoration: underline;
-  text-decoration-color: #f9f9fb;
 }
 
-#box {
-  background-color: black;
-  width: 400px;
-  padding: 15px;
-  opacity: 0.6;
-  align-content: left;
-  border-style: double;
-  border-color: white
+.board td.right {
+    transform: rotate(-90deg);
 }
-
-.results {
-  color: white;
-  text-align: top;
-  position: absolute;
-  align-content: center;
+.board td.left {
+    transform: rotate(90deg);
 }
-
-.column {
-  float: left;
-  width: 33.33%;
-  text-align: center;
-}
-
-.all_text {
-  text-shadow: 5px 5px #FF0000;
+.board td.up {
+    transform: rotate(180deg);
 }

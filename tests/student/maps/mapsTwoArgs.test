@@ -1,5 +1,0 @@
-INPUT
-map data/maps/smallMaps.sqlite3 file2
-OUTPUT
-ERROR: map expects 1 argument, received 2
-END

@@ -1,7 +1,0 @@
-INPUT
-map data/maps/empty.sqlite3
-route 1 1
-OUTPUT
-map set to data/maps/empty.sqlite3
-ERROR: malformed command - route expects 4 arguments.
-END

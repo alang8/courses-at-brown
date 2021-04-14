@@ -1,5 +1,0 @@
-INPUT
-ways 1 2 3 4 5
-OUTPUT
-ERROR: ways expects 4 arguments, received 5
-END

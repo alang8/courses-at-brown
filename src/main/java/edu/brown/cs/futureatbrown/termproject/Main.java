@@ -24,6 +24,8 @@ import spark.Route;
 import spark.Spark;
 import spark.template.freemarker.FreeMarkerEngine;
 import freemarker.template.Configuration;
+import edu.brown.cs.futureatbrown.termproject.repl.CommandParser;
+import edu.brown.cs.futureatbrown.termproject.repl.REPL;
 
 /**
  * The Main class of our project. This is where execution begins.
@@ -58,6 +60,10 @@ public final class Main {
     if (options.has("gui")) {
       runSparkServer((int) options.valueOf("port"));
     }
+
+    CommandParser commandParser = new CommandParser();
+    REPL repl = new REPL(commandParser);
+    repl.read(System.in, System.out, System.err);
   }
 
   private static FreeMarkerEngine createEngine() {
