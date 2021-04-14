@@ -3,6 +3,7 @@ import { Accordion, Button, Card, Header, Icon, Segment } from "semantic-ui-reac
 import CourseTile from "./CourseTile";
 import { Course, GetCode } from "../classes/Course";
 import CourseSearch from "./CourseSearch";
+import { SemanticCOLORS } from "semantic-ui-react/dist/commonjs/generic";
 
 //The parameters of a course box: the title of the box, the courses to display, and optional functions to add/remove courses.
 interface Params {
@@ -13,6 +14,7 @@ interface Params {
         addCourse?: (toAdd: Course) => Promise<any>;
         removeCourse?: (toRemove: string) => Promise<any>;
     }
+    color?: SemanticCOLORS;
 }
 
 /**
@@ -90,18 +92,18 @@ const ExpandableCourses: React.FC<Params> = (props) => {
 
     //Component for search bars when adding/removing courses.
     const searchers = (): JSX.Element[] =>
-        [<CourseSearch key={1} 
+        [<CourseSearch key={1} color={'red'}
             searcher={
                 async (inp: string) =>
                     displayed.filter((c) => (c.code + c.dept).toLowerCase().indexOf(inp.toLowerCase()) !== -1)}
             resolveButton={{ func: remove, icon: 'x', name: 'Remove course' }} initialResults={displayed}
             setDisplay={setRemoving} shouldDisplay={isRemoving} heading={"Find the course to remove"} />,
-        <CourseSearch key={2} shouldDisableCourse={alreadyIn}
+        <CourseSearch key={2} shouldDisableCourse={alreadyIn} color={'green'}
             searcher={props.modify!.searcher} resolveButton={{ func: add }}
             setDisplay={setAdding} shouldDisplay={isAdding} heading={"Find a course to add"} />]
 
     return (
-        <Segment>
+        <Segment color={props.color}>
             {props.modify ? searchers() : undefined}
             {(props.title) ? <Header as="h1" content={props.title} /> : undefined}
             {(initDisplay.length <= 0) ? <Header as="h3" content={"This selection is empty"} />

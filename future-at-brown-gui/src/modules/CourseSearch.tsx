@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
 import { Button, Card, Form, Grid, Header, Modal, SemanticICONS } from 'semantic-ui-react';
+import { SemanticCOLORS } from "semantic-ui-react/dist/commonjs/generic";
 import { Course } from '../classes/Course'
 import CourseTile from "./CourseTile";
 import FormattedInput from "./FormattedInput";
@@ -20,6 +21,7 @@ interface Params {
     heading?: string;
     initialResults?: Course[];
     shouldDisableCourse?: (testCourse: Course) => boolean;
+    color?: SemanticCOLORS;
 }
 
 /**
@@ -77,7 +79,7 @@ const CourseSearch: React.FC<Params> = (props) => {
             open={props.shouldDisplay}
             onClose={() => {props.setDisplay(false);}}>
             <Modal.Header>
-                <Header content={props.heading ?? "Find a course"} subheading={""} />
+                <Header content={props.heading ?? "Find a course"} color={props.color}/>
                 <Form onSubmit={() => setLoading(true)}>
                     <Form.Group className="search-bar" widths="16">
                         <FormattedInput

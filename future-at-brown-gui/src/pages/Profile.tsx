@@ -81,25 +81,28 @@ const Profile: React.FC<Params> = (props) => {
                 <Grid.Row stretched>
                     <Grid.Column>
                         <ExpandableCourses
-                            courses={props.user.getSaved()}
+                            courses={props.user.getSaved()} color={'teal'}
                             title={curRender ? "Saved courses" : "Saved courses"}
                             modify={{
                                 searcher: FindCourse,
                                 addCourse: e => { return props.user.saveCourse(e); },
                                 removeCourse: c => { return props.user.removeSaved(c); }
-                            }} key={curRender ? 0 : 1}/>
+                            }} key={curRender ? 0 : 1} />
                     </Grid.Column>
                 </Grid.Row>
-                <Accordion className="long-accordion">
-                    <Accordion.Title
-                        onClick={() => setSettings(!showSettings)}
-                        content={"Show search settings"}
-                        active={showSettings} />
-                    <Accordion.Content
-                        active={showSettings}>
+            </Grid>
+
+            <Accordion className="long-accordion">
+                <Accordion.Title
+                    onClick={() => setSettings(!showSettings)}
+                    content={"Show search settings"}
+                    active={showSettings} />
+                <Accordion.Content
+                    active={showSettings}>
+                    <Grid padded centered>
                         <Grid.Row stretched>
                             <GridColumn>
-                                <Segment>
+                                <Segment color='blue'>
                                     <Header as="h2" content={"Preferences"} />
                                     <ParamSlider curUser={props.user} prefChange={setPrefs} />
                                     <div style={{ textAlign: "right" }}>
@@ -114,20 +117,20 @@ const Profile: React.FC<Params> = (props) => {
                         </Grid.Row>
                         <Grid.Row stretched>
                             <Grid.Column>
-                                <ExpandableCourses
+                                <ExpandableCourses color={'green'}
                                     courses={props.user.getTaken()}
                                     title={"Taken courses"}
                                     modify={{
                                         searcher: FindCourse,
                                         addCourse: e => { return props.user.takeCourse(e); },
                                         removeCourse: c => { return props.user.removeTaken(c); }
-                                    }} key={curRender ? 0 : 1}/>
+                                    }} key={curRender ? 0 : 1} />
                             </Grid.Column>
                         </Grid.Row>
-                    </Accordion.Content>
-                </Accordion>
+                    </Grid>
+                </Accordion.Content>
+            </Accordion>
 
-            </Grid>
             <ButtonFooter />
         </Container>
     </div >

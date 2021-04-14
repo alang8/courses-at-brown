@@ -35,7 +35,7 @@ const Search: React.FC<Params> = (props) => {
     //Function to get the path
     const getPath = async (): Promise<void> => {
         const toSend = {
-            prefs: props.user.getPreferences(),
+            prefs: prefs,
             concentration: "csciABML"
         };
         console.log("requesting path")
@@ -73,7 +73,7 @@ const Search: React.FC<Params> = (props) => {
             <Grid padded stretched centered>
                 <Grid.Row stretched>
                     <GridColumn>
-                        <Segment>
+                        <Segment color="blue">
                             <Header as="h2" content={"Preferences"} />
                             <ParamSlider curUser={props.user} prefChange={setPrefsAsync} />
                         </Segment>
@@ -85,7 +85,7 @@ const Search: React.FC<Params> = (props) => {
                             searcher: FindCourse,
                             addCourse: async (course: Course) => setTakenCourses(takenCourses.concat(course)),
                             removeCourse: async (code: string) => setTakenCourses(takenCourses.filter(c => GetCode(c) !== code))
-                        }} />
+                        }} color="green"/>
                     </Grid.Column>
                 </Grid.Row>
                 <Grid.Row stretched>
