@@ -375,7 +375,7 @@ public class GraphAlgorithmTest<Node extends GraphNode, Edge extends GraphEdge>{
     Assert.assertEquals(simpleNodes[0].getID(), "Node0");
     List<List<BasicEdge>> simplePaths = simpleAlgorithms.dijkstraPathTree("Node0", simpleGraph);
 
-    // SHORTEST PATHS QUEUED
+    // SHORTEST PATHS STORED
     // 0 - 1 ==> 4
     // 0 - 7 ==> 8
     // 0 - 7 - 6 ==> 9
@@ -480,6 +480,10 @@ public class GraphAlgorithmTest<Node extends GraphNode, Edge extends GraphEdge>{
     teardown();
   }
 
+  /**
+   * Makes sure that Yen's Algorithm [Multiple paths between nodes] Runs Correctly
+   * @throws InvalidAlgorithmParameterException
+   */
   @Test
   public void YensAlgorithmTest() throws InvalidAlgorithmParameterException {
     setup();
@@ -541,6 +545,129 @@ public class GraphAlgorithmTest<Node extends GraphNode, Edge extends GraphEdge>{
           new BasicEdge("Edge21", simpleNodes[2], simpleNodes[1]),
           new BasicEdge("Edge10", simpleNodes[1], simpleNodes[0])))
     ));
+    teardown();
+  }
+
+  /**
+   * Makes sure that the Pathway Algorithm [Shortest paths from given intro nodes] Runs Correctly
+   * @throws InvalidAlgorithmParameterException
+   */
+  @Test
+  public void PathwayTest() throws InvalidAlgorithmParameterException {
+    setup();
+    List<List<BasicEdge>> simplePaths = simpleAlgorithms.pathway(List.of("Node0", "Node1"), simpleGraph);
+    // SHORTEST PATHS STORED
+    // 0 - 1 ==> 4
+    // 1 - 0 ==> 4
+    // 0 - 7 ==> 8
+    // 1 - 2 ==> 8
+    // 0 - 7 - 6 ==> 9
+    // 1 - 2 - 8 ==> 10
+    // 0 - 7 - 6 - 5 ==> 11
+    // 1 - 7 ==> 11
+    // 0 - 1 - 2 ==> 12
+    // 1 - 7 - 6 ==> 12
+    // 1 - 2 - 5 ==> 12
+    // 0 - 1 - 2 - 8 ==> 14
+    // 1 - 2 - 3 ==> 15
+    // 0 - 1 - 2 - 3 ==> 19
+    // 0 - 7 - 6 - 5 - 4 ==> 21
+    // 1 - 2 - 5 - 4 ==> 22
+
+    //////////////////////////
+    // SIMPLE PATHWAY TESTS //
+    //////////////////////////
+    Assert.assertEquals(simplePaths.get(0),
+      List.of(
+        new BasicEdge("Edge01", simpleNodes[0], simpleNodes[1])
+      )
+    );
+    Assert.assertEquals(simplePaths.get(1),
+      List.of(
+        new BasicEdge("Edge10", simpleNodes[1], simpleNodes[0])
+      )
+    );
+    Assert.assertEquals(simplePaths.get(2),
+      List.of(
+        new BasicEdge("Edge07", simpleNodes[0], simpleNodes[7])
+      )
+    );
+    Assert.assertEquals(simplePaths.get(3),
+      List.of(
+        new BasicEdge("Edge12", simpleNodes[1], simpleNodes[2])
+      )
+    );
+    Assert.assertEquals(simplePaths.get(4),
+      List.of(
+        new BasicEdge("Edge07", simpleNodes[0], simpleNodes[7]),
+        new BasicEdge("Edge76", simpleNodes[7], simpleNodes[6])
+      )
+    );
+    Assert.assertEquals(simplePaths.get(5),
+      List.of(
+        new BasicEdge("Edge12", simpleNodes[1], simpleNodes[2]),
+        new BasicEdge("Edge28", simpleNodes[2], simpleNodes[8])
+      )
+    );
+    Assert.assertEquals(simplePaths.get(6),
+      new ArrayList<>(List.of(
+        new BasicEdge("Edge07", simpleNodes[0], simpleNodes[7]),
+        new BasicEdge("Edge76", simpleNodes[7], simpleNodes[6]),
+        new BasicEdge("Edge65", simpleNodes[6], simpleNodes[5])))
+    );
+    Assert.assertEquals(simplePaths.get(7),
+      List.of(
+        new BasicEdge("Edge17", simpleNodes[1], simpleNodes[7])
+      )
+    );
+    Assert.assertEquals(simplePaths.get(8),
+      new ArrayList<>(List.of(
+        new BasicEdge("Edge01", simpleNodes[0], simpleNodes[1]),
+        new BasicEdge("Edge12", simpleNodes[1], simpleNodes[2])))
+    );
+    Assert.assertEquals(simplePaths.get(9),
+      new ArrayList<>(List.of(
+        new BasicEdge("Edge17", simpleNodes[1], simpleNodes[7]),
+        new BasicEdge("Edge76", simpleNodes[7], simpleNodes[6])))
+    );
+    Assert.assertEquals(simplePaths.get(10),
+      List.of(
+        new BasicEdge("Edge12", simpleNodes[1], simpleNodes[2]),
+        new BasicEdge("Edge25", simpleNodes[2], simpleNodes[5])
+      )
+    );
+    Assert.assertEquals(simplePaths.get(11),
+      new ArrayList<>(List.of(
+        new BasicEdge("Edge01", simpleNodes[0], simpleNodes[1]),
+        new BasicEdge("Edge12", simpleNodes[1], simpleNodes[2]),
+        new BasicEdge("Edge28", simpleNodes[2], simpleNodes[8])))
+    );
+    Assert.assertEquals(simplePaths.get(12),
+      List.of(
+        new BasicEdge("Edge12", simpleNodes[1], simpleNodes[2]),
+        new BasicEdge("Edge23", simpleNodes[2], simpleNodes[3])
+      )
+    );
+    Assert.assertEquals(simplePaths.get(13),
+      new ArrayList<>(List.of(
+        new BasicEdge("Edge01", simpleNodes[0], simpleNodes[1]),
+        new BasicEdge("Edge12", simpleNodes[1], simpleNodes[2]),
+        new BasicEdge("Edge23", simpleNodes[2], simpleNodes[3])))
+    );
+    Assert.assertEquals(simplePaths.get(14),
+      new ArrayList<>(List.of(
+        new BasicEdge("Edge07", simpleNodes[0], simpleNodes[7]),
+        new BasicEdge("Edge76", simpleNodes[7], simpleNodes[6]),
+        new BasicEdge("Edge65", simpleNodes[6], simpleNodes[5]),
+        new BasicEdge("Edge54", simpleNodes[5], simpleNodes[4])))
+    );
+    Assert.assertEquals(simplePaths.get(15),
+      List.of(
+        new BasicEdge("Edge12", simpleNodes[1], simpleNodes[2]),
+        new BasicEdge("Edge25", simpleNodes[2], simpleNodes[5]),
+        new BasicEdge("Edge54", simpleNodes[5], simpleNodes[4])
+      )
+    );
     teardown();
   }
 }

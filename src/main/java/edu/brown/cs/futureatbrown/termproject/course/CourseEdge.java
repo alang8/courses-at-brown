@@ -24,7 +24,9 @@ public class CourseEdge extends GraphEdge<CourseNode> {
   private double weight;
   private boolean overrideWeightCalc;
 
-  // Global Variables
+  //////////////////////
+  // Global Variables //
+  //////////////////////
 
   // SLIDER PREFERENCES
   private Double crsRatingPref; // Number from 1 - 10 [Inclusive]
@@ -48,6 +50,7 @@ public class CourseEdge extends GraphEdge<CourseNode> {
   /**
    * Constructs a CourseEdge with the given id, start id, and end id.
    *
+   * @param id the id of this CourseEdge
    * @param start the id of this CourseEdge's start node
    * @param end the id of this CourseEdge's end node
    */
@@ -77,7 +80,6 @@ public class CourseEdge extends GraphEdge<CourseNode> {
    */
   @Override
   public double getWeight() {
-    // REPLACE THIS WITH CALCULATION LATER WITH PENALTIES AND SLIDERS
     if (this.overrideWeightCalc) {
       return weight;
     } else {
@@ -87,7 +89,25 @@ public class CourseEdge extends GraphEdge<CourseNode> {
 
   /**
    * Sets up all the global parameters of the graph in this edge
+   * RECALL that all of these are relative so Preferences of all 10s are the same as Preferences of all 1s
+   * @param crsRatingPref Course Rating Preference: How Important is the Course Rating (0 - 10)
+   * @param profRatingPref Professor Rating Preference: How Important is the Professor Rating (0 - 10)
+   * @param avgHoursPref Average Hours Preference: How Important is the Avg Hours of the Class (0 - 10)
+   * Penalty applied when the Total Sum of Avg Hours of all courses in the pathway exceed the total Acceptable
+   * Avg Hours. Penalty based on how much it goes over.
+   * @param avgHoursInput Average Hours Input: User Inputted Optimal Avg Hours per class
+   * @param minNumClasses Minimum Number of Courses the pathway must contain
+   * @param maxNumClasses Maximum Number of Courses the pathway must contain
+   * @param balanceFactorPref Balance Factor Preference: How Important is it that each individual course in the
+   * pathway are close to the Average Hours Input (See Above)
+   * @param totalMaxHoursInput Total Acceptable Max Number of Hours, Will shut down any pathways that exceed the
+   * max number of hours. Use Double.POSITIVE_INFINITY if you want to nullify this check.
+   * @param classSizePref Class Size Preference: How Important is the Class Size (0 - 10)
+   * @param classSizeInput User Inputted Optimal Class Size, Penalized for distance from Input.
+   * @param classSizeMax User Inputted Max Class size, Penalty decreases if user can tolerate a larger class size
+   * and increases if the user cannot.
    */
+
   public void setGlobalParams(double crsRatingPref, double profRatingPref, double avgHoursPref,
                               double avgHoursInput, int minNumClasses, int maxNumClasses,
                               double balanceFactorPref, double totalMaxHoursInput,
@@ -110,7 +130,7 @@ public class CourseEdge extends GraphEdge<CourseNode> {
 
   /**
    * Sets up the Global Prerequisites and overall requirements
-   *
+   * @param prereqs Set of Groups of Coures that contain the prereqs to the end Node
    */
   public void setGlobalPrereqs(Set<List<CourseNode>> prereqs) {
     this.prereqs = prereqs;
@@ -118,6 +138,7 @@ public class CourseEdge extends GraphEdge<CourseNode> {
 
   /**
    * Sets up the Global End Node for the specific dijkstra run
+   * @param end the end node of the current dijkstra run
    */
   public void setGlobalEnd(CourseNode end) {
     this.globalEnd = end;
@@ -388,7 +409,8 @@ public class CourseEdge extends GraphEdge<CourseNode> {
   }
 
   /**
-   * Sets the weight of this CourseEdge.
+   * Sets and Overrides the weight of this CourseEdge.
+   * @param weight weight of the edge
    */
   @Override
   public void setWeight(double weight) {

@@ -8,15 +8,15 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.NoSuchElementException;
+import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * The class that instantiates connections to a course data database and makes queries.
  */
 public final class Database {
   private static Connection conn = null;
+  private static CourseGraph graph = new CourseGraph();
 
   private Database() {}
 
@@ -74,6 +74,36 @@ public final class Database {
         "ON courseCR.id = courseData.id");
     return CourseConversions.iterateResults(res, CourseConversions::resultToCourseNode);
   }
+
+  /**
+   * Sets up a k-complete graph connecting all of the courses in the database
+   *
+   */
+   public void setupGraph() throws SQLException {
+     List<CourseNode> courseNodes = new ArrayList<>();
+     for (Iterator<CourseNode> it = iterateAllCourseNodes(); it.hasNext(); ) {
+       CourseNode node = it.next();
+       courseNodes.add(node);
+     }
+
+     // Add Nodes to the Graph
+     for (CourseNode startNode : courseNodes) {
+       this.graph.addNode(startNode,
+         new HashSet<>(courseNodes
+           .stream()
+           .filter(node -> !node.equals(startNode))
+           .map(node -> new CourseEdge(startNode.getID() + " - " + node.getID(), startNode, node))
+           .collect(Collectors.toList())));
+     }
+   }
+
+  /**
+   * Returns the Graph that was set up.
+   * @return the graph from the nodes in the database
+   */
+   public CourseGraph getGraph() {
+    return this.graph;
+   }
 
   /**
    * Queries a HashMap of a Pathway groups based on the user inputted id. Returns null if not found.
