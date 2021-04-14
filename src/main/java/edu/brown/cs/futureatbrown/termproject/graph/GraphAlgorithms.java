@@ -1,10 +1,5 @@
 package edu.brown.cs.futureatbrown.termproject.graph;
 
-import edu.brown.cs.futureatbrown.termproject.course.CourseNode;
-import edu.brown.cs.futureatbrown.termproject.graph.Graph;
-import edu.brown.cs.futureatbrown.termproject.graph.GraphEdge;
-import edu.brown.cs.futureatbrown.termproject.graph.GraphNode;
-
 import java.security.InvalidAlgorithmParameterException;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -13,7 +8,8 @@ import java.util.stream.Collectors;
  * A class which contains all the short-path algorithms and short-path data of the inputted graph
  * for the Future @ Brown (FAB) app
  */
-public class GraphAlgorithms<Node extends GraphNode, Edge extends GraphEdge, G extends Graph<Node, Edge>> {
+public class GraphAlgorithms<Node extends GraphNode, Edge extends GraphEdge,
+    G extends Graph<Node, Edge>> {
 
   private HashMap<String, HashMap<String, List<Edge>>> results;
 
@@ -21,8 +17,10 @@ public class GraphAlgorithms<Node extends GraphNode, Edge extends GraphEdge, G e
   class ShortPathComparator implements Comparator<List<Edge>> {
     @Override
     public int compare(List<Edge> path1, List<Edge> path2) {
-      double path1Cost = path1.stream().map(edge -> edge.getWeight()).reduce(0.0, (a, b) -> a + b);
-      double path2Cost = path2.stream().map(edge -> edge.getWeight()).reduce(0.0, (a, b) -> a + b);
+      double path1Cost = path1.stream().map(edge -> edge.getWeight()).reduce(0.0,
+          (a, b) -> a + b);
+      double path2Cost = path2.stream().map(edge -> edge.getWeight()).reduce(0.0,
+          (a, b) -> a + b);
       // We want an ascending order comparator
       if (path1Cost > path2Cost) {
         return 1;
@@ -34,12 +32,12 @@ public class GraphAlgorithms<Node extends GraphNode, Edge extends GraphEdge, G e
     }
   }
 
-  // ------------------------------------- Constructors -----------------------------------
+  // ------------------------------------- Constructors ------------------------------------
   public GraphAlgorithms() {
     this.results = new HashMap<>();
   }
 
-  // ----------------------------- Graph Short Path Algorithms ----------------------------
+  // ----------------------------- Graph Short Path Algorithms -----------------------------
 
   /**
    * A helper function which initializes/reinitializes the nodes in the current graph to
@@ -66,74 +64,64 @@ public class GraphAlgorithms<Node extends GraphNode, Edge extends GraphEdge, G e
    * @throws InvalidAlgorithmParameterException if either the start node or the end node is not
    *           in the graph.
    */
-   private final List<Edge> dijkstraHelper(String startID, String endID, G graph)
-     throws InvalidAlgorithmParameterException {
-
-     HashMap<String, Node> nodeSet = graph.getNodeSet();
-     HashMap<String, HashMap<String, Edge>> edgeSet = graph.getEdgeSet();
-
-     if (!nodeSet.containsKey(startID)) {
-       throw new InvalidAlgorithmParameterException("Nodes must exist in the graph");
-     }
-
-     // Create priority queue of (Node, distance)
-     dijkstraSetup(startID, graph);
-     graph.setup(startID, endID);
-     PriorityQueue<Node> minHeap = new PriorityQueue<>(
-       Comparator.comparingDouble(Node::getWeight));
-
-     // Add starting node to the Min Heap
-     minHeap.add(nodeSet.get(startID));
-
-     // Iterate over minHeap
-     while (minHeap.peek() != null) {
-       // Pop off the minHeap
-       Node currNode = minHeap.remove();
-       String currID = currNode.getID();
-       System.out.println("--------------------------------------------");
-       System.out.println("CURRENT NODE: " + currNode);
-
-       // Process Node only if it hasn't been visited yet
-       if (!currNode.visited()) {
-         // Iterate through all of the neighbors of the current node
-         for (Edge E : edgeSet.get(currID).values()) {
-           // Get Neighbor and calculate score to neighbor from currrent node
-           Node neighbor = (Node) E.getEnd();
-           System.out.println("CURRENT EDGE: " + E);
-
-           List<Edge> prevPath = new ArrayList<>(nodeSet.get(currID).getPreviousPath());
-           System.out.println("PREVIOUS PATH: " + prevPath);
-           System.out.println("OLD WEIGHT: " + currNode.getWeight());
-           double newWeight = currNode.getWeight() + E.getWeight();
-           System.out.println("NEW WEIGHT: " + newWeight);
-           System.out.println("--------------------------------------------");
-           // Update hashMap and add to minHeap if neighbor can be reached betterly
-           if (nodeSet.get(neighbor.getID()).getWeight() > newWeight) {
-             nodeSet.get(neighbor.getID()).setWeight(newWeight);
-             prevPath.add(E);
-             nodeSet.get(neighbor.getID()).setPreviousPath(prevPath);
-             minHeap.add(nodeSet.get(neighbor.getID()));
-           }
-         }
-       }
-
-       if (currNode.getID().equals(endID)) {
-         // Traceback and return the optimal path
-         List<Edge> prevPath = nodeSet.get(endID).getPreviousPath();
-         if (prevPath.size() > 0) {
-           Edge startingEdge = prevPath.get(0);
-           if (startingEdge.getStart().getID().equals(startID)) {
-             return prevPath;
-           }
-         }
-       }
-
-       // Consider this node visited
-       currNode.setVisited(true);
-     }
-
-     return null;
-   }
+  private final List<Edge> dijkstraHelper(String startID, String endID, G graph)
+      throws InvalidAlgorithmParameterException {
+    HashMap<String, Node> nodeSet = graph.getNodeSet();
+    HashMap<String, HashMap<String, Edge>> edgeSet = graph.getEdgeSet();
+    if (!nodeSet.containsKey(startID)) {
+      throw new InvalidAlgorithmParameterException("Nodes must exist in the graph");
+    }
+    // Create priority queue of (Node, distance)
+    dijkstraSetup(startID, graph);
+    graph.setup(startID, endID);
+    PriorityQueue<Node> minHeap = new PriorityQueue<>(
+        Comparator.comparingDouble(Node::getWeight));
+    // Add starting node to the Min Heap
+    minHeap.add(nodeSet.get(startID));
+    // Iterate over minHeap
+    while (minHeap.peek() != null) {
+      // Pop off the minHeap
+      Node currNode = minHeap.remove();
+      String currID = currNode.getID();
+      System.out.println("--------------------------------------------");
+      System.out.println("CURRENT NODE: " + currNode);
+      // Process Node only if it hasn't been visited yet
+      if (!currNode.visited()) {
+        // Iterate through all of the neighbors of the current node
+        for (Edge E : edgeSet.get(currID).values()) {
+          // Get Neighbor and calculate score to neighbor from currrent node
+          Node neighbor = (Node) E.getEnd();
+          System.out.println("CURRENT EDGE: " + E);
+          List<Edge> prevPath = new ArrayList<>(nodeSet.get(currID).getPreviousPath());
+          System.out.println("PREVIOUS PATH: " + prevPath);
+          System.out.println("OLD WEIGHT: " + currNode.getWeight());
+          double newWeight = currNode.getWeight() + E.getWeight();
+          System.out.println("NEW WEIGHT: " + newWeight);
+          System.out.println("--------------------------------------------");
+          // Update hashMap and add to minHeap if neighbor can be reached betterly
+          if (nodeSet.get(neighbor.getID()).getWeight() > newWeight) {
+            nodeSet.get(neighbor.getID()).setWeight(newWeight);
+            prevPath.add(E);
+            nodeSet.get(neighbor.getID()).setPreviousPath(prevPath);
+            minHeap.add(nodeSet.get(neighbor.getID()));
+          }
+        }
+      }
+      if (currNode.getID().equals(endID)) {
+        // Traceback and return the optimal path
+        List<Edge> prevPath = nodeSet.get(endID).getPreviousPath();
+        if (prevPath.size() > 0) {
+          Edge startingEdge = prevPath.get(0);
+          if (startingEdge.getStart().getID().equals(startID)) {
+            return prevPath;
+          }
+        }
+      }
+      // Consider this node visited
+      currNode.setVisited(true);
+    }
+    return null;
+  }
 
   /**
    * A function which checks the cache for the 'shortest' path, and calculates the shortest path
@@ -148,15 +136,13 @@ public class GraphAlgorithms<Node extends GraphNode, Edge extends GraphEdge, G e
    *           in the graph.
    */
   public final List<Edge> dijkstraPath(String startID, String endID, G graph)
-    throws InvalidAlgorithmParameterException {
+      throws InvalidAlgorithmParameterException {
     if (this.results.isEmpty() || !this.results.containsKey(startID)) {
       this.results.put(startID, new HashMap<>());
     }
-
     if (!this.results.get(startID).containsKey(endID)) {
       this.results.get(startID).put(endID, dijkstraHelper(startID,endID, graph));
     }
-
     return this.results.get(startID).get(endID);
   }
 
@@ -189,7 +175,7 @@ public class GraphAlgorithms<Node extends GraphNode, Edge extends GraphEdge, G e
    *         in the graph.
    */
   public final List<List<Edge>> dijkstraPathTree(String startID, G graph)
-    throws InvalidAlgorithmParameterException {
+      throws InvalidAlgorithmParameterException {
     HashMap<String, Node> nodeSet = graph.getNodeSet();
     this.results.put(startID, new HashMap<>());
     for (Node node: nodeSet.values()) {
@@ -200,32 +186,26 @@ public class GraphAlgorithms<Node extends GraphNode, Edge extends GraphEdge, G e
         }
       }
     }
-
     List<List<Edge>> results = new ArrayList<>(this.results.get(startID).values());
     Collections.sort(results, new ShortPathComparator());
     return results;
   }
 
   public final List<List<Edge>> yenPaths(String startID, String endID, G graph, int k)
-    throws InvalidAlgorithmParameterException {
-
+      throws InvalidAlgorithmParameterException {
     // List to store the k shortest path results
     List<List<Edge>> results = new ArrayList<>();
     G graphCopy = (G) graph.copy();
     GraphAlgorithms uncached = new GraphAlgorithms();
-
     // Determine the shortest path from the start to the end.
     results.add(uncached.dijkstraPath(startID, endID, graphCopy));
-//    System.out.println("----------------------------------");
-//    System.out.println("RESULTS INITIALIZED TO: " + results);
-
+//  System.out.println("----------------------------------");
+//  System.out.println("RESULTS INITIALIZED TO: " + results);
     // List to store potential k shortest paths
     PriorityQueue<List<Edge>> potentialPaths =
-      new PriorityQueue<>(new ShortPathComparator());
-
+        new PriorityQueue<>(new ShortPathComparator());
     // Parallel Set to ensure there are no duplicates
     Set<List<Edge>> potentialPathsSet = new HashSet<>();
-
     for (int kidx = 1; kidx < k; kidx++) {
       // Spur Node selection follows the last shortest path
       for (int i = 0; i < results.get(kidx - 1).size(); i++) {
@@ -236,61 +216,52 @@ public class GraphAlgorithms<Node extends GraphNode, Edge extends GraphEdge, G e
         } else {
           spurNode = (Node) results.get(kidx - 1).get(i - 1).getEnd();
         }
-
         // Create a temporary copy of the graph to modify and traverse through
         G currGraph = (G) graph.copy();
         GraphAlgorithms currAlgos = new GraphAlgorithms();
-
         // Get the Root Path up to but excluding the spur node to create deviations from
         List<Edge> rootPath = results.get(kidx - 1).stream().limit(i).collect(Collectors.toList());
-
-//        System.out.println("ROOT PATH: " + rootPath);
-
+//      System.out.println("ROOT PATH: " + rootPath);
         for (List<Edge> path : results) {
-//          System.out.println("PATH: " + path);
+//        System.out.println("PATH: " + path);
           // If they have the same root path, nullify the edge that was explored before
           List<Edge> rootOfPath = path.stream().limit(i).collect(Collectors.toList());
           if (rootPath.equals(rootOfPath)) {
             String fromNodeID = path.get(i).getStart().getID();
             String toNodeID = path.get(i).getEnd().getID();
-//            System.out.println("NULLIFYING EDGE " + currGraph.getEdgeSet().get(fromNodeID).get(toNodeID));
-            currGraph.getEdgeSet().get(fromNodeID).get(toNodeID).setWeight(Double.POSITIVE_INFINITY);
+//          System.out.println("NULLIFYING EDGE " + currGraph.getEdgeSet().get(fromNodeID).get(toNodeID));
+            currGraph.getEdgeSet().get(fromNodeID).get(toNodeID)
+                .setWeight(Double.POSITIVE_INFINITY);
           }
         }
-
         // Make it so that the Root Path has all been visited before
         if (rootPath.size() > 0) {
-//          System.out.println("ROOT PATH VISITED");
+//        System.out.println("ROOT PATH VISITED");
           currGraph.getNodeSet().get(rootPath.get(0).getStart().getID()).setVisited(true);
           for (Edge e : rootPath) {
             currGraph.getNodeSet().get(e.getEnd().getID()).setVisited(true);
           }
         }
-
         // Calculate path from Spur Node to end with Dijkstras
         List<Edge> spurPath = currAlgos.dijkstraPath(spurNode.getID(), endID, currGraph);
         if (spurPath == null) {
           continue;
         }
-//        System.out.println("SPUR PATH: " + spurPath);
-
+//      System.out.println("SPUR PATH: " + spurPath);
         // Concatenate to get potential alternate path
         List<Edge> totalPath = new ArrayList<>();
         totalPath.addAll(rootPath);
         totalPath.addAll(spurPath);
-
         // Add to potential paths if not already in there
         if (!potentialPathsSet.contains(totalPath)) {
           potentialPathsSet.add(totalPath);
           potentialPaths.add(totalPath);
         }
       }
-
-      // Break if no spur path, spur paths are exhuasted, or reached dead end
+      // Break if no spur path, spur paths are exhausted, or reached dead end
       if (null == potentialPaths.peek()) {
         break;
       }
-
       // Otherwise pop off a potential path and add it to the result before continuing!
       List<Edge> newPath = potentialPaths.remove();
       results.add(newPath);

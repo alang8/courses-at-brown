@@ -3,7 +3,7 @@ package edu.brown.cs.futureatbrown.termproject.course;
 import java.util.Set;
 
 /**
- * Contains information about how a Course satisfies a Pathway
+ * Contains information about how a Course satisfies a Pathway.
  */
 public class CourseWay {
   private final String id;

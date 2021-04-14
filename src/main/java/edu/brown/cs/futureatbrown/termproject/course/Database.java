@@ -49,8 +49,8 @@ public final class Database {
    * @return the found CourseNode
    */
   public static CourseNode getCourseNode(String id) {
-    try (PreparedStatement statement = conn
-        .prepareStatement("SELECT * FROM courseCR JOIN courseData ON courseCR.id = ? AND courseCR.id = courseData.id")) {
+    try (PreparedStatement statement = conn.prepareStatement("SELECT * FROM courseCR JOIN " +
+        "courseData ON courseCR.id = ? AND courseCR.id = courseData.id")) {
       statement.setString(1, id);
       try (ResultSet results = statement.executeQuery()) {
         if (results.isClosed() || null == results) {
@@ -70,7 +70,8 @@ public final class Database {
    */
   private static Iterator<CourseNode> iterateAllCourseNodes() throws SQLException {
     Statement query = conn.createStatement();
-    ResultSet res = query.executeQuery("SELECT * FROM courseCR JOIN courseData ON courseCR.id = courseData.id");
+    ResultSet res = query.executeQuery("SELECT * FROM courseCR JOIN courseData " +
+        "ON courseCR.id = courseData.id");
     return CourseConversions.iterateResults(res, CourseConversions::resultToCourseNode);
   }
 
@@ -100,7 +101,7 @@ public final class Database {
    * @param id the id of the Pathway
    * @return the found HashMap of CourseWays
    */
-  public static HashMap<String, CourseWay> get(String id) {
+  public static HashMap<String, CourseWay> getCourseWays(String id) {
     try (PreparedStatement statement = conn.prepareStatement("SELECT * FROM ?")) {
       statement.setString(1, id);
       try (ResultSet results = statement.executeQuery()) {

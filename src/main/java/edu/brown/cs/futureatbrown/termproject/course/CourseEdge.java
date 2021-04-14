@@ -90,8 +90,8 @@ public class CourseEdge extends GraphEdge<CourseNode> {
    */
   public void setGlobalParams(double crsRatingPref, double profRatingPref, double avgHoursPref,
                               double avgHoursInput, int minNumClasses, int maxNumClasses,
-                              double balanceFactorPref, double totalMaxHoursInput, double classSizePref,
-                              int classSizeInput, int classSizeMax) {
+                              double balanceFactorPref, double totalMaxHoursInput,
+                              double classSizePref, int classSizeInput, int classSizeMax) {
     // SLIDER PREFERENCES
     this.crsRatingPref = crsRatingPref;
     this.profRatingPref = profRatingPref;
@@ -112,32 +112,32 @@ public class CourseEdge extends GraphEdge<CourseNode> {
    * Sets up the Global Prerequisites and overall requirements
    *
    */
-   public void setGlobalPrereqs(Set<List<CourseNode>> prereqs) {
-     this.prereqs = prereqs;
-   }
+  public void setGlobalPrereqs(Set<List<CourseNode>> prereqs) {
+    this.prereqs = prereqs;
+  }
 
   /**
    * Sets up the Global End Node for the specific dijkstra run
    */
-   public void setGlobalEnd(CourseNode end) {
+  public void setGlobalEnd(CourseNode end) {
     this.globalEnd = end;
-   }
+  }
 
   /**
    * Converts a path of edges into a path of nodes
    * @param path - Path of edges up to the node
    * @return Path of nodeIDs up to the node
    */
-   private List<String> convertPath(List<CourseEdge> path) {
-     List<String> nodes = new ArrayList<>();
-     if (path.size() > 0) {
-       nodes.add(path.get(0).getStart().getID());
-     }
-     for (CourseEdge edge : path) {
-       nodes.add(edge.getEnd().getID());
-     }
-     return nodes;
-   }
+  private List<String> convertPath(List<CourseEdge> path) {
+    List<String> nodes = new ArrayList<>();
+    if (path.size() > 0) {
+      nodes.add(path.get(0).getStart().getID());
+    }
+    for (CourseEdge edge : path) {
+      nodes.add(edge.getEnd().getID());
+    }
+    return nodes;
+  }
 
   /**
    * Calculates the weight of the edge based on Penalties and Sliders
@@ -146,250 +146,246 @@ public class CourseEdge extends GraphEdge<CourseNode> {
    * The Avg Hours, Max Hours, Number of Classes scores are dependent on distance from global input
    * @return weight - Calculated weight
    */
-   private double calculateWeight() {
-     double AVG_RATING_PREF = (MIN_RATING_PREF + MAX_RATING_PREF) / 2;
-     double AVG_RATING = (MIN_RATING + MAX_RATING) / 2;
+  private double calculateWeight() {
+    double AVG_RATING_PREF = (MIN_RATING_PREF + MAX_RATING_PREF) / 2;
+    double AVG_RATING = (MIN_RATING + MAX_RATING) / 2;
 
-     //////////////////////////////////////
-     // OVERRIDE: MANUAL WEIGHT INPUTTED //
-     //////////////////////////////////////
-     if (this.overrideWeightCalc) {
-       return this.weight;
-     }
+    //////////////////////////////////////
+    // OVERRIDE: MANUAL WEIGHT INPUTTED //
+    //////////////////////////////////////
+    if (this.overrideWeightCalc) {
+      return this.weight;
+    }
 
-     // Otherwise Initialize weight to 0
-     this.weight = 0;
+    // Otherwise Initialize weight to 0
+    this.weight = 0;
 
-     //////////////////////////////////////////////
-     // PENALTY: PREREQUISITES MUST BE SATISFIED //
-     //////////////////////////////////////////////
+    //////////////////////////////////////////////
+    // PENALTY: PREREQUISITES MUST BE SATISFIED //
+    //////////////////////////////////////////////
 
-     // Grab the prereqs and compare to previous path
-     Set<List<String>> preReqs = this.end.getPrereqSet();
-     List<String> previousPath = convertPath(this.start.getPreviousPath());
-     previousPath.add(this.start.getID()); // Make sure to add the from node to the path
+    // Grab the prereqs and compare to previous path
+    Set<List<String>> preReqs = this.end.getPrereqSet();
+    List<String> previousPath = convertPath(this.start.getPreviousPath());
+    previousPath.add(this.start.getID()); // Make sure to add the from node to the path
 
-     // Check to make sure that all prerequisites are satisfied
-     boolean satisfiedAllPrereqs = true;
+    // Check to make sure that all prerequisites are satisfied
+    boolean satisfiedAllPrereqs = true;
 
-     for (List<String> group : preReqs) {
-       boolean satisfiedPrereq = !Collections.disjoint(group, previousPath);
-       if (!satisfiedPrereq) {
-         satisfiedAllPrereqs = false;
-         break;
-       }
-     }
+    for (List<String> group : preReqs) {
+      boolean satisfiedPrereq = !Collections.disjoint(group, previousPath);
+      if (!satisfiedPrereq) {
+        satisfiedAllPrereqs = false;
+        break;
+      }
+    }
 
-     // If they aren't satisfied then nullify the path
-     if (!satisfiedAllPrereqs) {
-       System.out.println("FAILED PREREQS");
-       return Double.POSITIVE_INFINITY;
-     }
+    // If they aren't satisfied then nullify the path
+    if (!satisfiedAllPrereqs) {
+      System.out.println("FAILED PREREQS");
+      return Double.POSITIVE_INFINITY;
+    }
 
-     ///////////////////////////////////////////////
-     // PENALTY: MUST REACH MIN NUMBER OF CLASSES //
-     ///////////////////////////////////////////////
-     if (null != this.minNumClasses &&
-         previousPath.size() < this.minNumClasses &&
-         this.end.equals(this.globalEnd)) {
-       return Double.POSITIVE_INFINITY;
-     }
+    ///////////////////////////////////////////////
+    // PENALTY: MUST REACH MIN NUMBER OF CLASSES //
+    ///////////////////////////////////////////////
+    if (null != this.minNumClasses &&
+        previousPath.size() < this.minNumClasses &&
+        this.end.equals(this.globalEnd)) {
+      return Double.POSITIVE_INFINITY;
+    }
 
-     ////////////////////////////////////////
-     // PENALTY: REQUIREMENTS FOR PATHWAYS //
-     ////////////////////////////////////////
-     // TODO: AFTER REDOING CACHING
+    ////////////////////////////////////////
+    // PENALTY: REQUIREMENTS FOR PATHWAYS //
+    ////////////////////////////////////////
+    // TODO: AFTER REDOING CACHING
 
-     //////////////////////////////////////////////////
-     // PENALTY: CANNOT EXCEED MAX NUMBER OF CLASSES //
-     //////////////////////////////////////////////////
-     if (null != this.maxNumClasses) {
-       if (previousPath.size() >= this.maxNumClasses) {
-         System.out.println("EXCEEDED MAX NUM CLASSES");
-         return Double.POSITIVE_INFINITY;
-       }
-     }
+    //////////////////////////////////////////////////
+    // PENALTY: CANNOT EXCEED MAX NUMBER OF CLASSES //
+    //////////////////////////////////////////////////
+    if (null != this.maxNumClasses) {
+      if (previousPath.size() >= this.maxNumClasses) {
+        System.out.println("EXCEEDED MAX NUM CLASSES");
+        return Double.POSITIVE_INFINITY;
+      }
+    }
 
-     /////////////////////////////////////
-     // SLIDER COMPONENT: COURSE RATING //
-     /////////////////////////////////////
-     double courseRating;
+    /////////////////////////////////////
+    // SLIDER COMPONENT: COURSE RATING //
+    /////////////////////////////////////
+    double courseRating;
 
-     // Default Course Rating Preference to 5 if null (Halfway between 0 - 10)
-     if (null == this.crsRatingPref) {
-       this.crsRatingPref = AVG_RATING_PREF;
-     }
+    // Default Course Rating Preference to 5 if null (Halfway between 0 - 10)
+    if (null == this.crsRatingPref) {
+      this.crsRatingPref = AVG_RATING_PREF;
+    }
 
-     // Default Course Rating to 2.5 if null (Halfway between 0 - 5)
-     if (null == this.end.getCourse_rating()) {
-       courseRating = AVG_RATING;
-     } else {
-       courseRating = this.end.getCourse_rating();
-     }
+    // Default Course Rating to 2.5 if null (Halfway between 0 - 5)
+    if (null == this.end.getCourse_rating()) {
+      courseRating = AVG_RATING;
+    } else {
+      courseRating = this.end.getCourse_rating();
+    }
 
-     // Calculate the Slider Weight
-     this.weight +=  Math.pow(2, this.crsRatingPref) / courseRating;
+    // Calculate the Slider Weight
+    this.weight +=  Math.pow(2, this.crsRatingPref) / courseRating;
 
+    ////////////////////////////////////////
+    // SLIDER COMPONENT: PROFESSOR RATING //
+    ////////////////////////////////////////
+    double professorRating;
 
-     ////////////////////////////////////////
-     // SLIDER COMPONENT: PROFESSOR RATING //
-     ////////////////////////////////////////
-     double professorRating;
+    // Default Professor Rating Preference to 5 if null (Halfway between 0 - 10)
+    if (null == this.profRatingPref) {
+      this.profRatingPref = AVG_RATING_PREF;
+    }
 
-     // Default Professor Rating Preference to 5 if null (Halfway between 0 - 10)
-     if (null == this.profRatingPref) {
-       this.profRatingPref = AVG_RATING_PREF;
-     }
+    // Default Professor Rating to 2.5 if null (Halfway between 0 - 5)
+    if (null == this.end.getProf_rating()) {
+      professorRating = AVG_RATING;
+    } else {
+      professorRating = this.end.getProf_rating();
+    }
 
-     // Default Professor Rating to 2.5 if null (Halfway between 0 - 5)
-     if (null == this.end.getProf_rating()) {
-       professorRating = AVG_RATING;
-     } else {
-       professorRating = this.end.getProf_rating();
-     }
+    // Calculate the Slider Weight
+    this.weight += Math.pow(2, this.profRatingPref) / professorRating;
 
-     // Calculate the Slider Weight
-     this.weight += Math.pow(2, this.profRatingPref) / professorRating;
+    /////////////////////////////////
+    // SLIDER COMPONENT: AVG HOURS //
+    /////////////////////////////////
+    double prevTotalAvgHours;
+    double avgNumClasses;
+    double classAvgHours;
 
-     /////////////////////////////////
-     // SLIDER COMPONENT: AVG HOURS //
-     /////////////////////////////////
+    // Default Average Hours Preference to 5 if null (Halfway between 0 - 10)
+    if (null == this.avgHoursPref) {
+      this.avgHoursPref = AVG_RATING_PREF;
+    }
 
-     double prevTotalAvgHours;
-     double avgNumClasses;
-     double classAvgHours;
+    if (null == this.balanceFactorPref) {
+      this.balanceFactorPref = AVG_RATING_PREF;
+    }
 
-     // Default Average Hours Preference to 5 if null (Halfway between 0 - 10)
-     if (null == this.avgHoursPref) {
-       this.avgHoursPref = AVG_RATING_PREF;
-     }
+    // Initialize the total avg hours to 0 if null
+    if (null == this.start.getPrevTotalAvgHours()) {
+      prevTotalAvgHours = 0;
+    } else {
+      prevTotalAvgHours = this.start.getPrevTotalAvgHours();
+    }
 
-     if (null == this.balanceFactorPref) {
-       this.balanceFactorPref = AVG_RATING_PREF;
-     }
+    if (null == this.minNumClasses) {
+      this.minNumClasses = DEFAULT_MIN_CLASSES;
+    }
 
-     // Initialize the total avg hours to 0 if null
-     if (null == this.start.getPrevTotalAvgHours()) {
-       prevTotalAvgHours = 0;
-     } else {
-       prevTotalAvgHours = this.start.getPrevTotalAvgHours();
-     }
+    if (null == this.maxNumClasses) {
+      this.maxNumClasses = DEFAULT_MAX_CLASSES;
+    }
 
-     if (null == this.minNumClasses) {
-       this.minNumClasses = DEFAULT_MIN_CLASSES;
-     }
+    avgNumClasses = (this.minNumClasses + this.maxNumClasses) / 2;
 
-     if (null == this.maxNumClasses) {
-       this.maxNumClasses = DEFAULT_MAX_CLASSES;
-     }
+    // According to the credit hour guidance average hours per class should
+    // be 12 hours (4 hours class + 8 hours out of class)
+    if (null == this.end.getAvg_hours()) {
+      classAvgHours = 12;
+    } else  {
+      classAvgHours =  this.end.getAvg_hours();
+    }
 
-     avgNumClasses = (this.minNumClasses + this.maxNumClasses) / 2;
+    if (null == this.avgHoursInput) {
+      this.avgHoursInput = 12.0;
+    }
 
-     // According to the credit hour guidance average hours per class should
-     // be 12 hours (4 hours class + 8 hours out of class)
+    // Get the Total Avg Hours up to this point
+    Double totalAvgHours = prevTotalAvgHours;
+    totalAvgHours += classAvgHours;
+    this.end.setPrevTotalAvgHours(totalAvgHours);
 
-     if (null == this.end.getAvg_hours()) {
-       classAvgHours = 12;
-     } else  {
-       classAvgHours =  this.end.getAvg_hours();
-     }
+    // Calculate Desired total avg hours
+    double desiredTotalAvgHours = avgNumClasses * this.avgHoursInput;
 
-     if (null == this.avgHoursInput) {
-       this.avgHoursInput = 12.0;
-     }
+    // Penalize by distance if it goes over, Penalize by balance if it is under
+    if (totalAvgHours > desiredTotalAvgHours) {
+      this.weight += Math.pow(2, this.avgHoursPref) * 0.2 * (totalAvgHours - desiredTotalAvgHours)
+          / desiredTotalAvgHours;
+    } else {
+      this.weight += Math.pow(2, this.balanceFactorPref) * 0.2
+          * Math.abs(classAvgHours - this.avgHoursInput) / this.avgHoursInput;
+    }
 
-     // Get the Total Avg Hours up to this point
-     Double totalAvgHours = prevTotalAvgHours;
-     totalAvgHours += classAvgHours;
-     this.end.setPrevTotalAvgHours(totalAvgHours);
+    /////////////////////////////////
+    // SLIDER COMPONENT: MAX HOURS //
+    /////////////////////////////////
+    double prevMaxHours;
+    double classMaxHours;
 
-     // Calculate Desired total avg hours
-     double desiredTotalAvgHours = avgNumClasses * this.avgHoursInput;
+    if (null == this.start.getPrevTotalMaxHours()) {
+      prevMaxHours = 0;
+    } else {
+      prevMaxHours = this.start.getPrevTotalMaxHours();
+    }
 
-     // Penalize by distance if it goes over, Penalize by balance if it is under
-     if (totalAvgHours > desiredTotalAvgHours) {
-       this.weight += Math.pow(2, this.avgHoursPref) * 0.2 * (totalAvgHours - desiredTotalAvgHours) / desiredTotalAvgHours;
-     } else {
-       this.weight += Math.pow(2, this.balanceFactorPref) * 0.2 * Math.abs(classAvgHours - this.avgHoursInput) / this.avgHoursInput;
-     }
+    if (null == this.end.getMax_hours()) {
+      classMaxHours = 0;
+    } else {
+      classMaxHours = this.end.getMax_hours();
+    }
 
+    if (null != this.totalMaxHoursInput) {
+      // Get the Total Max Hours up to this point
+      double totalMaxHours = prevMaxHours;
+      totalMaxHours += classMaxHours;
+      this.end.setPrevTotalMaxHours(totalMaxHours);
 
-     /////////////////////////////////
-     // SLIDER COMPONENT: MAX HOURS //
-     /////////////////////////////////
-     double prevMaxHours;
-     double classMaxHours;
+      if (totalMaxHours > this.totalMaxHoursInput) {
+        return Double.POSITIVE_INFINITY;
+      }
+    }
 
+    //////////////////////////////////
+    // SLIDER COMPONENT: CLASS SIZE //
+    //////////////////////////////////
+    int courseClassSize;
 
+    if (null == this.classSizePref) {
+      this.classSizePref = AVG_RATING_PREF;
+    }
 
-     if (null == this.start.getPrevTotalMaxHours()) {
-       prevMaxHours = 0;
-     } else {
-       prevMaxHours = this.start.getPrevTotalMaxHours();
-     }
+    if (null == this.end.getClass_size()) {
+      courseClassSize = 0;
+    } else {
+      courseClassSize = this.end.getClass_size();
+    }
 
-     if (null == this.end.getMax_hours()) {
-       classMaxHours = 0;
-     } else {
-       classMaxHours = this.end.getMax_hours();
-     }
+    if (null == this.classSizeInput) {
+      this.classSizeInput = 0;
+    }
 
-     if (null != this.totalMaxHoursInput) {
-         // Get the Total Max Hours up to this point
-         double totalMaxHours = prevMaxHours;
-         totalMaxHours += classMaxHours;
-         this.end.setPrevTotalMaxHours(totalMaxHours);
+    if (null == this.classSizeMax) {
+      this.classSizeMax = 500;
+    }
 
-         if (totalMaxHours > this.totalMaxHoursInput) {
-           return Double.POSITIVE_INFINITY;
-         }
-       }
+    this.weight += Math.pow(2, this.classSizePref) * 0.2
+        * Math.abs(courseClassSize - this.classSizeInput) / this.classSizeMax;
 
-       //////////////////////////////////
-       // SLIDER COMPONENT: CLASS SIZE //
-       //////////////////////////////////
-       int courseClassSize;
-
-       if (null == this.classSizePref) {
-         this.classSizePref = AVG_RATING_PREF;
-       }
-
-       if (null == this.end.getClass_size()) {
-         courseClassSize = 0;
-       } else {
-         courseClassSize = this.end.getClass_size();
-       }
-
-       if (null == this.classSizeInput) {
-         this.classSizeInput = 0;
-       }
-
-       if (null == this.classSizeMax) {
-         this.classSizeMax = 500;
-       }
-
-       this.weight += Math.pow(2, this.classSizePref) * 0.2 * Math.abs(courseClassSize - this.classSizeInput) / this.classSizeMax;
-
-      ////////////////////////////////////////////////////////
-      //  PENALTY: +2000 PER PREREQUISITE GROUP UNSATISFIED //
-      ////////////////////////////////////////////////////////
-      if (null != this.prereqs) {
-        for (List<CourseNode> group : this.prereqs) {
-          List<String> groupIDs = group.stream()
+    ////////////////////////////////////////////////////////
+    //  PENALTY: +2000 PER PREREQUISITE GROUP UNSATISFIED //
+    ////////////////////////////////////////////////////////
+    if (null != this.prereqs) {
+      for (List<CourseNode> group : this.prereqs) {
+        List<String> groupIDs = group.stream()
             .filter(elem -> elem != null)
             .map(elem -> elem.getID())
             .collect(Collectors.toList());
-          if (!Collections.disjoint(groupIDs, previousPath)) {
-            continue;
-          }
-          if (group.contains(this.end)) {
-            this.weight -= 2000;
-          }
+        if (!Collections.disjoint(groupIDs, previousPath)) {
+          continue;
+        }
+        if (group.contains(this.end)) {
+          this.weight -= 2000;
         }
       }
-
-       return this.weight;
-   }
+    }
+    return this.weight;
+  }
 
   /**
    * Sets the weight of this CourseEdge.

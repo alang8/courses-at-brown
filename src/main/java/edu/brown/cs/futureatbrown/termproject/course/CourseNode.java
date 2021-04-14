@@ -32,12 +32,11 @@ public class CourseNode extends GraphNode<CourseEdge> implements Locatable {
   private List<CourseEdge> prevPath;
   private Double prevTotalAvgHours;
   private Double prevTotalMaxHours;
-
   private final double[] coordinates;
 
   /**
    * Constructs a new CourseNode with the given parameters.
-   *  @param id  the unique id
+   * @param id  the unique id
    * @param name the name
    * @param instr the instructor name
    * @param sem the semester number
@@ -69,7 +68,8 @@ public class CourseNode extends GraphNode<CourseEdge> implements Locatable {
     this.visited = false;
     this.prevPath = new ArrayList<>();
     if (null != course_rating && null != prof_rating) {
-      this.coordinates = new double[] {course_rating, prof_rating}; // Change this after creating scoring
+      this.coordinates = new double[] {course_rating, prof_rating};
+      // Change this after creating scoring
     } else {
       this.coordinates = new double[0];
     }
@@ -77,14 +77,13 @@ public class CourseNode extends GraphNode<CourseEdge> implements Locatable {
     this.prevTotalMaxHours = 0.0;
   }
 
-
   /**
    * Resets the Hours back to 0.0 at the beginning of every dijkstra call
    */
-   public void resetHours() {
+  public void resetHours() {
     this.prevTotalAvgHours = 0.0;
     this.prevTotalMaxHours = 0.0;
-   }
+  }
 
   /**
    * Returns the ID of this CourseNode.
@@ -153,8 +152,8 @@ public class CourseNode extends GraphNode<CourseEdge> implements Locatable {
       return new HashSet<>();
     }
     return Arrays.stream(prereq.split("&"))
-      .map(group -> List.of(group.replaceAll("[()]", "").split("[|]")))
-      .collect(Collectors.toSet());
+        .map(group -> List.of(group.replaceAll("[()]", "").split("[|]")))
+        .collect(Collectors.toSet());
   }
 
   /**
@@ -365,20 +364,21 @@ public class CourseNode extends GraphNode<CourseEdge> implements Locatable {
 //    if (!Arrays.equals(coordinates, that.coordinates)) {
 //      System.out.println("COORDINATES: Expected " + Arrays.toString(coordinates) + ", GOT " + Arrays.toString(that.coordinates));
 //    }
+
     return Objects.equals(sem, that.sem) &&
-           Objects.equals(course_rating, that.course_rating) &&
-           Objects.equals(prof_rating, that.prof_rating) &&
-           Objects.equals(avg_hours, that.avg_hours) &&
-           Objects.equals(max_hours, that.max_hours) &&
-           Objects.equals(class_size, that.class_size) &&
-           Objects.equals(id, that.id) &&
-           Objects.equals(name, that.name) &&
-           Objects.equals(instr, that.instr) &&
-           Objects.equals(prereq, that.prereq) &&
-           Objects.equals(prevPath, that.prevPath) &&
-           Double.compare(that.weight, weight) == 0 &&
-           visited == that.visited &&
-           Arrays.equals(coordinates, that.coordinates);
+        Objects.equals(course_rating, that.course_rating) &&
+        Objects.equals(prof_rating, that.prof_rating) &&
+        Objects.equals(avg_hours, that.avg_hours) &&
+        Objects.equals(max_hours, that.max_hours) &&
+        Objects.equals(class_size, that.class_size) &&
+        Objects.equals(id, that.id) &&
+        Objects.equals(name, that.name) &&
+        Objects.equals(instr, that.instr) &&
+        Objects.equals(prereq, that.prereq) &&
+        Objects.equals(prevPath, that.prevPath) &&
+        Double.compare(that.weight, weight) == 0 &&
+        visited == that.visited &&
+        Arrays.equals(coordinates, that.coordinates);
   }
 
   @Override
@@ -403,7 +403,7 @@ public class CourseNode extends GraphNode<CourseEdge> implements Locatable {
   @Override
   public CourseNode copy() {
     return new CourseNode(this.id, this.name, this.instr, this.sem, this.rawprereq, this.prereq,
-                          this.description, this.course_rating, this.prof_rating, this.avg_hours,
-                          this.max_hours, this.class_size);
+        this.description, this.course_rating, this.prof_rating, this.avg_hours, this.max_hours,
+        this.class_size);
   }
 }

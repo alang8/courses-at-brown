@@ -13,6 +13,7 @@ import java.util.Set;
 
 import static edu.brown.cs.futureatbrown.termproject.exception.SQLRuntimeException.unwrap;
 import static edu.brown.cs.futureatbrown.termproject.exception.SQLRuntimeException.wrap;
+
 /**
  * Converts CourseNode and CourseEdge data from results.
  */
@@ -36,33 +37,27 @@ public final class CourseConversions {
     if (results.wasNull()) {
       id = null;
     }
-
     String name = results.getString("name");
     if (results.wasNull()) {
       name = null;
     }
-
     String instr = results.getString("instr");
     if (results.wasNull()) {
       instr = null;
     }
-
     Integer sem;
     String rawprereq = results.getString("rawprereq");
     if (results.wasNull()) {
       rawprereq = null;
     }
-
     String prereq = results.getString("prereq");
     if (results.wasNull()) {
       prereq = null;
     }
-
     String description = results.getString("description");
     if (results.wasNull()) {
       description = null;
     }
-
     Double course_rating;
     Double prof_rating;
     Double avg_hours;
@@ -73,32 +68,26 @@ public final class CourseConversions {
       if (results.wasNull()) {
         sem = null;
       }
-
       course_rating = results.getDouble("course_rating");
       if (results.wasNull()) {
         course_rating = null;
       }
-
       prof_rating = results.getDouble("prof_rating");
       if (results.wasNull()) {
         prof_rating = null;
       }
-
       avg_hours = results.getDouble("avg_hours");
       if (results.wasNull()) {
         avg_hours = null;
       }
-
       max_hours = results.getDouble("max_hours");
       if (results.wasNull()) {
         max_hours = null;
       }
-
       class_size = results.getInt("class_size");
       if (results.wasNull()) {
         class_size = null;
       }
-
     } catch (NumberFormatException e) {
       throw new SQLException("Invalid number format");
     }
@@ -142,7 +131,8 @@ public final class CourseConversions {
    * @return the converted ResultSet
    * @throws SQLException if the ResultSet's data cannot be queried
    */
-  public static HashMap<String, Integer> resultToGroupMap(ResultSet results) throws SQLException {
+  public static HashMap<String, Integer> resultToGroupMap(ResultSet results)
+      throws SQLException {
     if (results.isClosed()) {
       throw new SQLException("Closed results");
     }
@@ -165,7 +155,8 @@ public final class CourseConversions {
    * @return the converted ResultSet
    * @throws SQLException if the ResultSet's data cannot be queried
    */
-  public static HashMap<String, CourseWay> resultToCourseWayMap(ResultSet results) throws SQLException {
+  public static HashMap<String, CourseWay> resultToCourseWayMap(ResultSet results)
+      throws SQLException {
     if (results.isClosed()) {
       throw new SQLException("Closed results");
     }

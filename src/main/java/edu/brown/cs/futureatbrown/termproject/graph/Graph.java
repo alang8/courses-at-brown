@@ -1,7 +1,6 @@
 package edu.brown.cs.futureatbrown.termproject.graph;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Set;
 
 /**
@@ -18,11 +17,10 @@ public interface Graph<Node extends GraphNode, Edge extends GraphEdge> {
   HashMap<String, Node> getNodeSet();
 
   /**
-   * Map that contains all the Edges from the Node with the NodeID
-   * The first String is the ID of the From Node
-   * The second String is the ID of the To Node
-   * The reason for the second hashmap is just for easy editing of the edge weights
-   * for Yen's Algorithm
+   * Map that contains all the Edges from the Node with the NodeID. The first String is the ID of
+   * the From Node. The second String is the ID of the To Node. The reason for the second hashmap is
+   * just for easy editing of the edge weights for Yen's Algorithm.
+   *
    * @return the HashMap of Egde sets
    */
   HashMap<String, HashMap<String, Edge>> getEdgeSet();
@@ -42,5 +40,5 @@ public interface Graph<Node extends GraphNode, Edge extends GraphEdge> {
   /**
    * Sets up the global parameters of the graph if needed
    */
-   void setup(String startID, String endID);
+  void setup(String startID, String endID);
 }

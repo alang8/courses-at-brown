@@ -36,6 +36,7 @@ public class CourseGraph implements Graph<CourseNode, CourseEdge> {
   private Integer maxNumClasses; // Maximum Number of Classes
 
   private Set<List<CourseNode>> prereqs; //Global Prerequisites of the target end node
+
   /**
    * Constructs a new CourseGraph with the given parameters.
    */
@@ -69,8 +70,8 @@ public class CourseGraph implements Graph<CourseNode, CourseEdge> {
    */
   public void setGlobalParams(double crsRatingPref, double profRatingPref, double avgHoursPref,
                               double avgHoursInput, int minNumClasses, int maxNumClasses,
-                              double balanceFactorPref, double totalMaxHoursInput, double classSizePref,
-                              int classSizeInput, int classSizeMax) {
+                              double balanceFactorPref, double totalMaxHoursInput,
+                              double classSizePref, int classSizeInput, int classSizeMax) {
     // SLIDER PREFERENCES
     this.crsRatingPref = crsRatingPref;
     this.profRatingPref = profRatingPref;
@@ -172,7 +173,6 @@ public class CourseGraph implements Graph<CourseNode, CourseEdge> {
     }
   }
 
-
   /**
    * Adds a CourseNode to the node map and edges with the node as their start to the edge map.
    * @param node CourseNode to add to the map
@@ -194,7 +194,8 @@ public class CourseGraph implements Graph<CourseNode, CourseEdge> {
         if (edgeMap.containsKey(edge.getStart().getID())) {
           edgeMap.get(edge.getStart().getID()).put(edge.getEnd().getID(), edge);
         } else {
-          edgeMap.put(edge.getStart().getID(), new HashMap<>() {{ put(edge.getEnd().getID(), edge); }});
+          edgeMap.put(edge.getStart().getID(),
+              new HashMap<>() {{ put(edge.getEnd().getID(), edge); }});
         }
       }
     }
