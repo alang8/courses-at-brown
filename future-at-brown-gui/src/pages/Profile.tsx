@@ -8,8 +8,16 @@ import { ButtonFooter, SearchButton } from "../modules/BottomButton";
 import ExpandableCourses from "../modules/ExpandableCourses";
 import ParamSlider from "../modules/ParamSliders";
 import SignOutHeader from "../modules/SignOutHeader";
+import User from "../classes/User";
 
-const Profile: React.FC<AuthenticatedPageProps> = (props) => {
+//The parameters for our search page: the current user, a method to set the user, and a method to set the path.
+interface Params {
+    user: User;
+    setUser: (user: User | undefined) => void;
+    deleteAccount: (isDeleted: boolean) => void;
+}
+
+const Profile: React.FC<Params> = (props) => {
 
     const [prefs, setPrefs] = useState<SearchParams>(props.user.getPreferences());
     const [loadingPrefs, setLoading] = useState<boolean>(false);
@@ -21,6 +29,11 @@ const Profile: React.FC<AuthenticatedPageProps> = (props) => {
                 .then(() => setLoading(false));
         }
     }, [loadingPrefs]);
+
+    // const deleteUserHandle = async () => {
+    //     await props.user.deleteUser();
+    //     props.deleteAccount(true);
+    // }
 
     return <div className="total">
         <SearchButton />
@@ -44,18 +57,18 @@ const Profile: React.FC<AuthenticatedPageProps> = (props) => {
                             <Dropdown.Menu>
                                 <Dropdown.Item text='Clear saved courses' icon='x'
                                     onClick={() =>
-                                        props.user.clearSaved()
+                                        props.user.clearSaved(props.user)
                                             .then(() => setPrefs({ ...prefs }))
                                     } />
                                 <Dropdown.Item text='Clear taken courses' icon='x'
                                     onClick={() =>
-                                        props.user.clearTaken()
+                                        props.user.clearTaken(props.user)
                                             .then(() => setPrefs({ ...prefs }))
                                     } />
                                 <Dropdown.Divider />
                                 <Dropdown.Item text='Reset data' icon='refresh'
                                     onClick={() =>
-                                        props.user.resetData()
+                                        props.user.resetData(props.user)
                                             .then(() => setPrefs({ ...prefs }))
                                     } />
                                 {(props.user.isGuest) ?
