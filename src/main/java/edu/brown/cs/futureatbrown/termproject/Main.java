@@ -102,6 +102,13 @@ public final class Main {
       Connection courseDataConn = DriverManager.getConnection(courseDBUrl);
       Spark.before((request, response) -> response.header("Access-Control-Allow-Origin", "*"));
 
+      /*
+      Database d = new Database();
+      d.setupGraph();
+      CourseGraph g = d.getGraph();
+      GraphAlgorithms graphAlg = new GraphAlgorithms();
+       */
+
       //Setting up spark routes.
       Spark.post("/login", new UserDataHandlers.LoginHandler(userDataConn));
       Spark.post("/signup", new UserDataHandlers.SignUpHandler(userDataConn));
@@ -112,7 +119,7 @@ public final class Main {
       Spark.post("/removecourse", new UserDataHandlers.RemoveCourseHandler(userDataConn));
       Spark.post("/setpreference", new UserDataHandlers.SetPreferenceHandler(userDataConn));
       Spark.post("/loaduser", new UserDataHandlers.LoadUserHandler(userDataConn, courseDataConn));
-      Spark.post("/path", new GetPathHandler());
+      Spark.post("/path", new GetPathHandler(courseDataConn));
     } catch (ClassNotFoundException | SQLException e) {
       System.out.println("Couldnt connect to SQL user data!");
     }
@@ -123,9 +130,10 @@ public final class Main {
    */
   private static class GetPathHandler implements Route {
     private static final Gson GSON = new Gson();
+    private Connection cConn;
 
-    GetPathHandler() {
-      return;
+    GetPathHandler(Connection c) {
+      this.cConn = c;
     }
 
     @Override
@@ -137,12 +145,72 @@ public final class Main {
         System.out.println("in getpath handler");
         System.out.println(prefJSON);
         System.out.println(prefJSON.getDouble("avgHoursPref"));
+        double aHP = prefJSON.getDouble("avgHoursPref");
+        double mHP = prefJSON.getDouble("maxHoursPref");
+        double cRP = prefJSON.getDouble("crsRatingPref");
+        double pRP = prefJSON.getDouble("profRatingPref");
+        double cSP = prefJSON.getDouble("crsSizePref");
+        double aHI = aHP / 5.0 * 7.5;
+        double mHI = mHP / 5.0 * 13.8;
+        double cSI = cSP / 5.0 * 72.4;
+        int minNumCourses = 0;
+        int maxNumCourses = 26;
+
+        String conc = data.getString("concentration");
+        String query = "SELECT SUM(num_courses) FROM " + conc + "Groups;";
+        PreparedStatement prep = cConn.prepareStatement(query);
+        ResultSet rs = prep.executeQuery();
+
+        double bFP = 5;
+        int cSM = 400;
+
+        if (rs.next()) {
+          minNumCourses = rs.getInt(1);
+          maxNumCourses = Math.min(2 * minNumCourses, 32);
+        } else {
+          System.out.println("ERROR: GetPathHandler, couldn't find table for " + conc);
+        }
+
+        /*
+          averages
+          avg hours : 7.53125
+          max hours : 13.755
+          class size: 72.3703703703704
+           */
+        /*
+
+          Map<String, Integer> thePath = new HashMap<>();
+          g.setupGlobalParams(cRP, pRP, aHI, minNumCourses, maxNumCourses, bFP, mHP, mHI, cSP, cSI, cSM, conc);
+          List<List<CourseEdge>> paths = graphAlg.pathway(introCourses, g)
+          List<CourseEdge> bestPath = paths.get(0);
+          int currentOverallSem = 0;
+          int prevCourseSem = 0;
+          CourseEdge curEdge = bestPath.get(0);
+
+          //TODO will the list of edges be in "order"? if so...
+          CourseNode curNode;
+          for(CourseEdge c : bestPath) {
+            CourseNode curNode = c.getStart();
+            if(curNode.getSem() != prevCourseSem && curNode.getSem() != 0) {
+              currentOverallSem += 1;
+            }
+            thePath.put(curNode.getID(), currentOverallSem);
+            //TODO assumes that consecutive edges share start / end
+          }
+
+          //once at end, need to include final node. TODO if thats how its formatted
+          curNode = c.getEnd();
+          if(curNode.getSem() != prevCourseSem && curNode.getSem() != 0) {
+              currentOverallSem += 1;
+          }
+          thePath.put(curNode.getID(), currentOverallSem);
+         */
         thePath.put("CSCI 0170", 0);
         thePath.put("CSCI 0180", 1);
         thePath.put("MATH 0540", 1);
         thePath.put("CSCI 0220", 2);
         thePath.put("APMA 0350", 2);
-      } catch (JSONException e) {
+      } catch (JSONException | SQLException e) {
         e.printStackTrace();
       }
       Map<String, Object> variables = ImmutableMap.of("path", thePath);

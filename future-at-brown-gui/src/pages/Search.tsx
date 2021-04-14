@@ -29,7 +29,8 @@ const Search: React.FC<Params> = (props) => {
 
     const getPath = async (): Promise<void> => {
         const toSend = {
-            prefs: props.user.getPreferences()
+            prefs: props.user.getPreferences(),
+            concentration: "csciABML"
         };
         console.log("requesting path")
         await axios.post(
