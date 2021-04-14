@@ -7,8 +7,16 @@ import { ButtonFooter, SearchButton } from "../modules/BottomButton";
 import ExpandableCourses from "../modules/ExpandableCourses";
 import ParamSlider from "../modules/ParamSliders";
 import SignOutHeader from "../modules/SignOutHeader";
+import User from "../classes/User";
 
-const Profile: React.FC<AuthenticatedPageProps> = (props) => {
+//The parameters for our search page: the current user, a method to set the user, and a method to set the path.
+interface Params {
+    user: User;
+    setUser: (user: User | undefined) => void;
+    deleteAccount: (isDeleted: boolean) => void;
+}
+
+const Profile: React.FC<Params> = (props) => {
 
     const [prefs, setPrefs] = useState<SearchParams>(props.user.getPreferences());
     const [loadingPrefs, setLoading] = useState<boolean>(false);
@@ -20,6 +28,11 @@ const Profile: React.FC<AuthenticatedPageProps> = (props) => {
                 .then(() => setLoading(false));
         }
     }, [loadingPrefs]);
+
+    const deleteUserHandle = async () => {
+        await props.user.deleteUser();
+        props.deleteAccount(true);
+    }
 
     return <div className="total">
         <SearchButton />
@@ -41,14 +54,14 @@ const Profile: React.FC<AuthenticatedPageProps> = (props) => {
 
                         <Dropdown floating text="Data settings " icon="setting">
                             <Dropdown.Menu>
-                                <Dropdown.Item text='Clear saved courses' icon='x' onClick={(x,y) => props.user.clearSaved(props.user)} />
-                                <Dropdown.Item text='Clear taken courses' icon='x' onClick={(x,y) => props.user.clearTaken(props.user)} />
+                                <Dropdown.Item text='Clear saved courses' icon='x' onClick={(_,_1) => props.user.clearSaved(props.user)} />
+                                <Dropdown.Item text='Clear taken courses' icon='x' onClick={(_,_1) => props.user.clearTaken(props.user)} />
                                 <Dropdown.Divider />
-                                <Dropdown.Item text='Reset data' icon='refresh' onClick={(x,y) => props.user.resetData(props.user)} />
+                                <Dropdown.Item text='Reset data' icon='refresh' onClick={(_,_1) => props.user.resetData(props.user)} />
                                 {(props.user.isGuest) ?
                                     undefined :
                                     <Dropdown.Item text='Delete account' icon='remove user'
-                                        onClick={props.user.deleteUser} />}
+                                        onClick={deleteUserHandle} />}
                             </Dropdown.Menu>
                         </Dropdown>
                     </Grid.Column>

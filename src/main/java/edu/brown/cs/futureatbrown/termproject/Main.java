@@ -119,6 +119,7 @@ public final class Main {
       Spark.post("/removecourse", new UserDataHandlers.RemoveCourseHandler(userDataConn));
       Spark.post("/setpreference", new UserDataHandlers.SetPreferenceHandler(userDataConn));
       Spark.post("/loaduser", new UserDataHandlers.LoadUserHandler(userDataConn, courseDataConn));
+      Spark.post("/deleteuser", new UserDataHandlers.DeleteUserHandler(userDataConn));
       Spark.post("/path", new GetPathHandler(courseDataConn));
     } catch (ClassNotFoundException | SQLException e) {
       System.out.println("Couldnt connect to SQL user data!");

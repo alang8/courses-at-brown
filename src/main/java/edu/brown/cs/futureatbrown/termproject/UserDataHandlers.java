@@ -441,4 +441,37 @@ public class UserDataHandlers {
       return courseInfo.values().toArray(Map[]::new);
     }
   }
+
+  /**
+   * Class which handles deleting user data.
+   */
+  public static class DeleteUserHandler implements Route {
+    private static final Gson GSON = new Gson();
+    private Connection userConn;
+
+    public DeleteUserHandler(Connection uDB) {
+      this.userConn = uDB;
+    }
+
+    @Override
+    public Object handle(Request request, Response response) {
+      JSONObject data = null;
+      try {
+        data = new JSONObject(request.body());
+        String curUser = data.getString("username");
+        Base64.Encoder coder = Base64.getEncoder();
+        String hashedUsername = coder.encodeToString(curUser.getBytes());
+
+        String query = "DELETE FROM user_data WHERE username = ?";
+        PreparedStatement prep = userConn.prepareStatement(query);
+        prep.setString(1, hashedUsername);
+        prep.executeUpdate();
+        Map<String, Object> variables = ImmutableMap.of("msg", "user deleted");
+        return GSON.toJson(variables);
+      } catch (JSONException | SQLException e) {
+        e.printStackTrace();
+        return null;
+      }
+    }
+  }
 }

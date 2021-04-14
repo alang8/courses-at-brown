@@ -230,8 +230,29 @@ class User {
         await user.clearTaken(user)
     }
 
-    deleteUser() {
+    async deleteUser() {
         // do some sql stuff
+        const toSend = {
+            username: this.username
+        };
+
+        console.log("in delete user");
+        console.log(toSend)
+
+        if (!this.isGuest) {
+            await axios.post(
+                'http://localhost:4567/deleteuser',
+                toSend,
+                config
+            )
+                .then((response) => {
+                    console.log("deleted user")
+                    console.log(response.data['msg'])
+                })
+                .catch((error) => {
+                    return Promise.reject(error);
+                });
+        }
 
         localStorage.removeItem(USER_LOCATION);
     }

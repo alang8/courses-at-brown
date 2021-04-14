@@ -22,12 +22,8 @@ const App: React.FC<{}> = () => {
   const [user, setUser] = useState<User | undefined>(GetStoredUser());
   const [path, setPath] = useState<Path | undefined>(GetStoredPath());
   const [redirectGraph, setRedirect] = useState<boolean>(false);
-  // let path = {}
-  // const setPath = (p:{[id:string]:number}) => {
-  //     path = p;
-  // }
-  // console.log("in app.tsx");
-  // console.log(user);
+  const [redirectSplash, setRedirectSplash] = useState<boolean>(false);
+  const [deleteAccount, setDeleted] = useState<boolean>(false);
 
   // routes to be used if the user is not logged in (profile page otherwise)
   const InauthenticatedRoute = (route: string, loginProcess: JSX.Element): JSX.Element => {
@@ -48,6 +44,13 @@ const App: React.FC<{}> = () => {
     if (path) setRedirect(true);
     }, [path]);
 
+  //TODO: use this prop to redirect to splash page when deleting account...
+  useEffect(() => {
+    if (deleteAccount) setRedirectSplash(true);
+    }, [deleteAccount]);
+
+
+
   return (
     <Router>
       <Switch>
@@ -56,7 +59,7 @@ const App: React.FC<{}> = () => {
         {redirectGraph ? <Route path="/search"><Redirect to="/graph"/></Route> : undefined}
         {InauthenticatedRoute("/", <Redirect to="/splash" />)}
         {AuthenticatedRoute("/search", <Search user={user!} setUser={setUser} setPath={StorePath(setPath)}/>)}
-        {AuthenticatedRoute("/profile", <Profile user={user!} setUser={setUser}/>)}
+        {AuthenticatedRoute("/profile", <Profile user={user!} setUser={setUser} deleteAccount={setDeleted}/>)}
         {InauthenticatedRoute("/splash", <SplashPage setLogin={setUser} />)}
         {AuthenticatedRoute("/graph", <GraphDisplay user={user!} setUser={setUser} path={path} onRender={() => setRedirect(false)}/>)}
         {InauthenticatedRoute("/login", <Login setLogin={setUser} />)}
