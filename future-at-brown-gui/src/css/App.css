@@ -11,6 +11,10 @@ ul {
 
 /* Splash page */
 
+.long-accordion {
+    width: 100%;
+}
+
 .header-title {
     width: 100%;
     display: flex;
