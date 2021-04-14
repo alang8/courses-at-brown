@@ -31,7 +31,6 @@ const Signup: React.FC<InAuthenticaedPageProps> = (props) => {
                 .then((userErr: string[]) => {
                     setUserError(userErr);
                     if (userErr.length === 0) {
-                        //want to axios write username data in here
                         newUser(username.current, password.current)
                             .then(props.setLogin)
                             .catch(console.log);

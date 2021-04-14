@@ -420,6 +420,9 @@ public class UserDataHandlers {
           curCourseInfo.put("dept", rs.getString(1).substring(0, 4));
           curCourseInfo.put("code", rs.getString(1).substring(5));
           String prereqString = rs.getString(6);
+          if (prereqString == null) {
+            prereqString = "";
+          }
           String[] prereqInfo = prereqString.replaceAll("[&|()]+", ",").split(",");
           prereqInfo = Arrays.stream(prereqInfo).filter(s -> !s.isEmpty()).toArray(String[]::new);
           curCourseInfo.put("prereqs", prereqInfo);
@@ -438,5 +441,4 @@ public class UserDataHandlers {
       return courseInfo.values().toArray(Map[]::new);
     }
   }
-
 }

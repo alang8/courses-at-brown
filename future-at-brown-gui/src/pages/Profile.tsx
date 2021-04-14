@@ -35,10 +35,10 @@ const Profile: React.FC<AuthenticatedPageProps> = (props) => {
 
                         <Dropdown floating text="Settings " icon="setting">
                             <Dropdown.Menu>
-                                <Dropdown.Item text='Clear saved courses' icon='x' onClick={props.user.clearSaved} />
-                                <Dropdown.Item text='Clear taken courses' icon='x' onClick={props.user.clearTaken} />
+                                <Dropdown.Item text='Clear saved courses' icon='x' onClick={(x,y) => props.user.clearSaved(props.user)} />
+                                <Dropdown.Item text='Clear taken courses' icon='x' onClick={(x,y) => props.user.clearTaken(props.user)} />
                                 <Dropdown.Divider />
-                                <Dropdown.Item text='Reset data' icon='refresh' onClick={props.user.resetData} />
+                                <Dropdown.Item text='Reset data' icon='refresh' onClick={(x,y) => props.user.resetData(props.user)} />
                                 {(props.user.isGuest) ?
                                     undefined :
                                     <Dropdown.Item text='Delete account' icon='remove user' onClick={props.user.deleteUser} />}

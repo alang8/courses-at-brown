@@ -76,10 +76,11 @@ class User {
         return this.getSaved();
     }
 
-    async clearSaved(): Promise<void> {
-        this.saved = [...[]];
-        if (!this.isGuest) {
-            await new Promise(resolve => setTimeout(resolve, 2000));
+    async clearSaved(user : User): Promise<void> {
+        let savedArr = user.getSaved();
+        for (let c in savedArr) {
+            let courseCode = savedArr[c].dept + " " + savedArr[c].code
+            await user.removeSaved(courseCode);
         }
         localStorage.setItem(USER_LOCATION, this.stringify());
     }
@@ -163,6 +164,8 @@ class User {
             column: "taken_courses",
             course: codeToRemove
         };
+        console.log("in remove taken")
+        console.log(toSend);
 
         if (!this.isGuest) {
             await axios.post(
@@ -182,16 +185,13 @@ class User {
         return this.getTaken()
     }
 
-    async clearTaken(): Promise<void> {
-        console.log("in clear taken")
-        console.log(this.getTaken())
-        if (this.taken !== undefined) {
-            this.taken = this.taken.filter((c) => false);
+    async clearTaken(user : User): Promise<void> {
+        let takenArr = user.getTaken();
+        for (let c in takenArr) {
+            let courseCode = takenArr[c].dept + " " + takenArr[c].code
+            await user.removeTaken(courseCode);
         }
-        if (!this.isGuest) {
-            await new Promise(resolve => setTimeout(resolve, 2000));
-        }
-        // localStorage.setItem(MEMORY_LOCATION, this.stringify());
+        localStorage.setItem(USER_LOCATION, this.stringify());
     }
 
     // preferences
@@ -200,7 +200,7 @@ class User {
         return { ...this.preferences }
     }
 
-    async setPreferences(prefs: SearchParams): Promise<SearchParams> {
+    async setPreferences(prefs: SearchParams, username?:string): Promise<SearchParams> {
         const toSend = {
             username: this.username,
             pref: prefs,
@@ -224,15 +224,15 @@ class User {
         return this.getPreferences();
     }
 
-    resetData() {
-        this.clearTaken();
-        this.clearSaved();
-        this.preferences = defaultParams;
-        localStorage.setItem(USER_LOCATION, this.stringify());
+    async resetData(user:User) {
+        await user.setPreferences(defaultParams);
+        await user.clearSaved(user)
+        await user.clearTaken(user)
     }
 
     deleteUser() {
         // do some sql stuff
+
         localStorage.removeItem(USER_LOCATION);
     }
 
