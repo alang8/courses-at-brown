@@ -54,19 +54,16 @@ const Profile: React.FC<Params> = (props) => {
                             <Dropdown.Menu>
                                 <Dropdown.Item text='Clear saved courses' icon='x'
                                     onClick={() =>
-                                        props.user.clearSaved(props.user)
-                                            .then(forceRerender)
+                                        props.user.clearSaved().then(forceRerender)
                                     } />
                                 <Dropdown.Item text='Clear taken courses' icon='x'
                                     onClick={() =>
-                                        props.user.clearTaken(props.user)
-                                            .then(forceRerender)
+                                        props.user.clearTaken().then(forceRerender)
                                     } />
                                 <Dropdown.Divider />
                                 <Dropdown.Item text='Reset data' icon='refresh'
                                     onClick={() =>
-                                        props.user.resetData(props.user)
-                                            .then(forceRerender)
+                                        props.user.resetData().then(forceRerender)
                                     } />
                                 {(props.user.isGuest) ?
                                     undefined :

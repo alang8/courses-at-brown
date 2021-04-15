@@ -1,18 +1,15 @@
-<<<<<<< HEAD
 # Remove package lock
 future-at-brown-gui/package-lock.json
 
 # packages that change depending on the computer
 target
 .idea
-.mvn-classpath
-=======
 target/
 .mvn-classpath
 .classpath
 .idea/
+
 **.DS_Store**
 maps.sqlite3
 checkin.sqlite3
->>>>>>> graph-impl-draft
 future-at-brown-gui/package-lock.json

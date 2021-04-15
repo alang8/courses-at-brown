@@ -77,11 +77,11 @@ class User {
         return this.getSaved();
     }
 
-    async clearSaved(user : User): Promise<void> {
-        let savedArr = user.getSaved();
+    async clearSaved(): Promise<void> {
+        let savedArr = this.getSaved();
         for (let c in savedArr) {
             let courseCode = savedArr[c].dept + " " + savedArr[c].code
-            await user.removeSaved(courseCode);
+            await this.removeSaved(courseCode);
         }
         localStorage.setItem(USER_LOCATION, this.stringify());
     }
@@ -186,11 +186,11 @@ class User {
         return this.getTaken()
     }
 
-    async clearTaken(user : User): Promise<void> {
-        let takenArr = user.getTaken();
+    async clearTaken(): Promise<void> {
+        let takenArr = this.getTaken();
         for (let c in takenArr) {
             let courseCode = takenArr[c].dept + " " + takenArr[c].code
-            await user.removeTaken(courseCode);
+            await this.removeTaken(courseCode);
         }
         localStorage.setItem(USER_LOCATION, this.stringify());
     }
@@ -201,7 +201,9 @@ class User {
         return { ...this.preferences }
     }
 
-    async setPreferences(prefs: SearchParams, username?:string): Promise<SearchParams> {
+    async setPreferences(prefs: SearchParams): Promise<SearchParams> {
+        this.preferences = prefs;
+
         const toSend = {
             username: this.username,
             pref: prefs,
@@ -225,10 +227,10 @@ class User {
         return this.getPreferences();
     }
 
-    async resetData(user:User) {
-        await user.setPreferences(defaultParams);
-        await user.clearSaved(user)
-        await user.clearTaken(user)
+    async resetData() {
+        await this.setPreferences(defaultParams);
+        await this.clearSaved()
+        await this.clearTaken()
     }
 
     async deleteUser(): Promise<void> {

@@ -2,8 +2,8 @@
     float: left;
 }
 
-html, body
-{
+html,
+body {
     height: 100%;
 }
 
@@ -16,5 +16,6 @@ html, body
 }
 
 #graphWrapper {
-    margin-left:150px;
+    height: 100%;
+    width: 100%;
 }
