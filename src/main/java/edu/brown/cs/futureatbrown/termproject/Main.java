@@ -2,22 +2,17 @@ package edu.brown.cs.futureatbrown.termproject;
 
 import java.io.File;
 import java.io.IOException;
+import java.security.InvalidAlgorithmParameterException;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 import com.google.common.collect.ImmutableMap;
 import com.google.gson.Gson;
-import edu.brown.cs.futureatbrown.termproject.course.CourseEdge;
-import edu.brown.cs.futureatbrown.termproject.course.CourseGraph;
-import edu.brown.cs.futureatbrown.termproject.course.CourseNode;
-import edu.brown.cs.futureatbrown.termproject.course.Database;
+import edu.brown.cs.futureatbrown.termproject.course.*;
 import edu.brown.cs.futureatbrown.termproject.graph.GraphAlgorithms;
 import joptsimple.OptionParser;
 import joptsimple.OptionSet;
@@ -131,7 +126,7 @@ public final class Main {
       Spark.post("/setpreference", new UserDataHandlers.SetPreferenceHandler(userDataConn));
       Spark.post("/loaduser", new UserDataHandlers.LoadUserHandler(userDataConn, courseDataConn));
       Spark.post("/deleteuser", new UserDataHandlers.DeleteUserHandler(userDataConn));
-      Spark.post("/path", new GetPathHandler(courseDataConn));
+      Spark.post("/path", new GetPathHandler(courseDataConn, g, graphAlg));
     } catch (ClassNotFoundException | SQLException e) {
       System.out.println("Couldn't connect to SQL user data!");
     }
@@ -142,10 +137,14 @@ public final class Main {
    */
   private static class GetPathHandler implements Route {
     private static final Gson GSON = new Gson();
-    private Connection cConn;
+    private final Connection cConn;
+    private final GraphAlgorithms<CourseNode, CourseEdge, CourseGraph> graphAlg;
+    private final CourseGraph theGraph;
 
-    GetPathHandler(Connection c) {
+    GetPathHandler(Connection c, CourseGraph g, GraphAlgorithms<CourseNode, CourseEdge, CourseGraph> ga) {
       this.cConn = c;
+      this.graphAlg = ga;
+      this.theGraph = g;
     }
 
     @Override
@@ -164,7 +163,7 @@ public final class Main {
         double cSP = prefJSON.getDouble("crsSizePref");
         double aHI = aHP / 5.0 * 7.5;
         double mHI = mHP / 5.0 * 13.8;
-        double cSI = cSP / 5.0 * 72.4;
+        int cSI = (int) cSP / 5 * 72;
         int minNumCourses = 0;
         int maxNumCourses = 26;
 
@@ -183,40 +182,63 @@ public final class Main {
           System.out.println("ERROR: GetPathHandler, couldn't find table for " + conc);
         }
 
+        query = "SELECT id FROM " + conc + "Courses WHERE group_id = 1;";
+        prep = cConn.prepareStatement(query);
+        rs = prep.executeQuery();
+        List<String> introCourses = new ArrayList<>();
+        while (rs.next()) {
+          introCourses.add(rs.getString(1));
+        }
+
         /*
           averages
           avg hours : 7.53125
           max hours : 13.755
           class size: 72.3703703703704
            */
-        /*
+//        setGlobalParams(double crsRatingPref, double profRatingPref, double avgHoursPref,
+//        double avgHoursInput, int minNumClasses, int maxNumClasses,
+//        double balanceFactorPref, double totalMaxHoursInput,
+//        double classSizePref, int classSizeInput, int classSizeMax,
+//        HashMap<String, Integer> groupData, HashMap<String, CourseWay > courseWayData)
 
-          Map<String, Integer> thePath = new HashMap<>();
-          g.setupGlobalParams(cRP, pRP, aHI, minNumCourses, maxNumCourses, bFP, mHP, mHI, cSP, cSI, cSM, conc);
-          List<List<CourseEdge>> paths = graphAlg.pathway(introCourses, g)
+        Map<String, CourseWay> cWays = Database.getCourseWays(conc + "Courses");
+        Map<String, Integer> gData = Database.getGroups(conc + "Groups");
+
+
+        System.out.println("setting params and getting path: ");
+          theGraph.setGlobalParams(cRP, pRP, aHP, aHI, minNumCourses, maxNumCourses, bFP, mHI, cSP, cSI, cSM, gData, cWays);
+          List<List<CourseEdge>> paths = graphAlg.pathway(introCourses, theGraph);
+
           List<CourseEdge> bestPath = paths.get(0);
-          int currentOverallSem = 0;
-          int prevCourseSem = 0;
-          CourseEdge curEdge = bestPath.get(0);
 
-          //TODO will the list of edges be in "order"? if so...
-          CourseNode curNode;
-          for(CourseEdge c : bestPath) {
-            CourseNode curNode = c.getStart();
-            if(curNode.getSem() != prevCourseSem && curNode.getSem() != 0) {
-              currentOverallSem += 1;
-            }
-            thePath.put(curNode.getID(), currentOverallSem);
-            //TODO assumes that consecutive edges share start / end
+          System.out.println("best path: ");
+          for (CourseEdge e : bestPath) {
+            System.out.println(e);
           }
 
-          //once at end, need to include final node. TODO if thats how its formatted
-          curNode = c.getEnd();
-          if(curNode.getSem() != prevCourseSem && curNode.getSem() != 0) {
-              currentOverallSem += 1;
-          }
-          thePath.put(curNode.getID(), currentOverallSem);
-         */
+//          int currentOverallSem = 0;
+//          int prevCourseSem = 0;
+//          CourseEdge curEdge = bestPath.get(0);
+//
+//          //TODO will the list of edges be in "order"? if so...
+//          CourseNode curNode;
+//          for(CourseEdge c : bestPath) {
+//            CourseNode curNode = c.getStart();
+//            if(curNode.getSem() != prevCourseSem && curNode.getSem() != 0) {
+//              currentOverallSem += 1;
+//            }
+//            thePath.put(curNode.getID(), currentOverallSem);
+//            //TODO assumes that consecutive edges share start / end
+//          }
+//
+//          //once at end, need to include final node. TODO if thats how its formatted
+//          curNode = c.getEnd();
+//          if(curNode.getSem() != prevCourseSem && curNode.getSem() != 0) {
+//              currentOverallSem += 1;
+//          }
+//          thePath.put(curNode.getID(), currentOverallSem);
+
         thePath.put("CSCI 0170", 0);
         thePath.put("CSCI 0180", 1);
         thePath.put("MATH 0540", 1);
@@ -224,6 +246,9 @@ public final class Main {
         thePath.put("APMA 0350", 2);
       } catch (JSONException | SQLException e) {
         e.printStackTrace();
+      } catch (InvalidAlgorithmParameterException e) {
+        e.printStackTrace();
+        System.out.println("Pathway failure in main.java");
       }
       Map<String, Object> variables = ImmutableMap.of("path", thePath);
       return GSON.toJson(variables);

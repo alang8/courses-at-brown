@@ -2,11 +2,8 @@ package edu.brown.cs.futureatbrown.termproject.course;
 
 import edu.brown.cs.futureatbrown.termproject.graph.Graph;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 
-import java.util.Set;
 import java.util.stream.Collectors;
 
 /**
@@ -14,8 +11,8 @@ import java.util.stream.Collectors;
  */
 public class CourseGraph implements Graph<CourseNode, CourseEdge> {
   // Graph Specific Variables
-  private HashMap<String, CourseNode> nodeMap;
-  private HashMap<String, HashMap<String, CourseEdge>> edgeMap;
+  private Map<String, CourseNode> nodeMap;
+  private Map<String, Map<String, CourseEdge>> edgeMap;
 
   // Global Variables
 
@@ -34,8 +31,8 @@ public class CourseGraph implements Graph<CourseNode, CourseEdge> {
   private Integer classSizeMax; // Max Class Size
   private Integer minNumClasses; // Minimum Number of Classes
   private Integer maxNumClasses; // Maximum Number of Classes
-  private HashMap<String, Integer> groupData;
-  private HashMap<String, CourseWay> courseWayData;
+  private Map<String, Integer> groupData;
+  private Map<String, CourseWay> courseWayData;
 
   private Set<List<CourseNode>> prereqs; //Global Prerequisites of the target end node
 
@@ -53,7 +50,7 @@ public class CourseGraph implements Graph<CourseNode, CourseEdge> {
    * @return the HashMap
    */
   @Override
-  public HashMap<String, CourseNode> getNodeSet() {
+  public Map<String, CourseNode> getNodeSet() {
     return nodeMap;
   }
 
@@ -63,7 +60,7 @@ public class CourseGraph implements Graph<CourseNode, CourseEdge> {
    * @return the HashMap
    */
   @Override
-  public HashMap<String, HashMap<String, CourseEdge>> getEdgeSet() {
+  public Map<String, Map<String, CourseEdge>> getEdgeSet() {
     return edgeMap;
   }
 
@@ -93,7 +90,7 @@ public class CourseGraph implements Graph<CourseNode, CourseEdge> {
                               double avgHoursInput, int minNumClasses, int maxNumClasses,
                               double balanceFactorPref, double totalMaxHoursInput,
                               double classSizePref, int classSizeInput, int classSizeMax,
-                              HashMap<String, Integer> groupData, HashMap<String, CourseWay> courseWayData) {
+                              Map<String, Integer> groupData, Map<String, CourseWay> courseWayData) {
     // SLIDER PREFERENCES
     this.crsRatingPref = crsRatingPref;
     this.profRatingPref = profRatingPref;
@@ -112,7 +109,7 @@ public class CourseGraph implements Graph<CourseNode, CourseEdge> {
     this.courseWayData = courseWayData;
 
     // SET ALL THE EDGES TO THE SAME PARAMETER
-    for (HashMap<String, CourseEdge> edgesFrom: this.edgeMap.values()) {
+    for (Map<String, CourseEdge> edgesFrom: this.edgeMap.values()) {
       for (CourseEdge edge : edgesFrom.values()) {
         edge.setGlobalParams(this.crsRatingPref, this.profRatingPref,
           this.avgHoursPref, this.avgHoursInput, this.minNumClasses,
@@ -134,8 +131,8 @@ public class CourseGraph implements Graph<CourseNode, CourseEdge> {
   /**
    * Helper function which returns a copy of a HashMap of Nodes
    */
-  private HashMap<String, CourseNode> nodeSetCopy(HashMap<String, CourseNode> nodeMap) {
-    HashMap<String, CourseNode> newNodeMap = new HashMap<>();
+  private Map<String, CourseNode> nodeSetCopy(Map<String, CourseNode> nodeMap) {
+    Map<String, CourseNode> newNodeMap = new HashMap<>();
     for (String nodeID : nodeMap.keySet()) {
       newNodeMap.put(nodeID, nodeMap.get(nodeID).copy());
     }
@@ -145,8 +142,8 @@ public class CourseGraph implements Graph<CourseNode, CourseEdge> {
   /**
    * Helper function which returns a copy of a HashMap of Edges
    */
-  private HashMap<String, CourseEdge> edgeSetCopy(HashMap<String, CourseEdge> edgeMap) {
-    HashMap<String, CourseEdge> newEdgeMap = new HashMap<>();
+  private Map<String, CourseEdge> edgeSetCopy(Map<String, CourseEdge> edgeMap) {
+    Map<String, CourseEdge> newEdgeMap = new HashMap<>();
     for (String nodeID : edgeMap.keySet()) {
       newEdgeMap.put(nodeID, (CourseEdge) edgeMap.get(nodeID).copy());
     }
@@ -159,8 +156,8 @@ public class CourseGraph implements Graph<CourseNode, CourseEdge> {
   @Override
   public CourseGraph copy() {
     CourseGraph graphCopy = new CourseGraph();
-    HashMap<String, CourseNode> newNodeMap = nodeSetCopy(this.nodeMap);
-    HashMap<String, HashMap<String, CourseEdge>> newEdgeMap = new HashMap<>();
+    Map<String, CourseNode> newNodeMap = nodeSetCopy(this.nodeMap);
+    Map<String, Map<String, CourseEdge>> newEdgeMap = new HashMap<>();
 
     for (String nodeID : this.edgeMap.keySet()) {
       newEdgeMap.put(nodeID, edgeSetCopy(this.edgeMap.get(nodeID)));
@@ -186,7 +183,7 @@ public class CourseGraph implements Graph<CourseNode, CourseEdge> {
       .map(group -> group.stream().map(id -> this.nodeMap.get(id)).collect(Collectors.toList()))
       .collect(Collectors.toSet());
     setGlobalPrereqs(prereqs);
-    for (HashMap<String, CourseEdge> edgesFrom: this.edgeMap.values()) {
+    for (Map<String, CourseEdge> edgesFrom: this.edgeMap.values()) {
       for (CourseEdge edge : edgesFrom.values()) {
         edge.setGlobalPrereqs(this.prereqs);
         edge.setGlobalEnd(this.nodeMap.get(endID));
@@ -230,7 +227,7 @@ public class CourseGraph implements Graph<CourseNode, CourseEdge> {
    *
    * @param nodeMap the NodeMap
    */
-  public void setNodeMap(HashMap<String, CourseNode> nodeMap) {
+  public void setNodeMap(Map<String, CourseNode> nodeMap) {
     this.nodeMap = nodeMap;
   }
 
@@ -239,7 +236,7 @@ public class CourseGraph implements Graph<CourseNode, CourseEdge> {
    *
    * @param em the EdgeMap
    */
-  public void setEdgeMap(HashMap<String, HashMap<String, CourseEdge>> em) {
+  public void setEdgeMap(Map<String, Map<String, CourseEdge>> em) {
     this.edgeMap = em;
   }
 

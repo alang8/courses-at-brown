@@ -318,20 +318,22 @@ public class CourseAlgorithmTest {
     finalGraph.setGlobalParams(1, 1, 1,
       10, 0, 18, 1,
       Double.POSITIVE_INFINITY, 1, 50, 500,
-      Database.getGroups("csciABGroups"), Database.getCourseWays("csciABMLCourses"));
+      Database.getGroups("csciABMLGroups"), Database.getCourseWays("csciABMLCourses"));
 
     List<CourseEdge> pathWithRequirements = courseAlgorithms.dijkstraPath("CSCI 0150", "CSCI 0170", finalGraph);
+    System.out.println("/////////////////////////////////");
+    System.out.println(pathWithRequirements);
     Assert.assertEquals(pathWithRequirements, List.of(
-      finalGraph.getEdgeSet().get("CSCI 0150").get("MATH 0190"),
-      finalGraph.getEdgeSet().get("MATH 0190").get("CSCI 0160"),
-      finalGraph.getEdgeSet().get("CSCI 0160").get("CSCI 1430"),
-      finalGraph.getEdgeSet().get("CSCI 1430").get("CSCI 1951A"),
-      finalGraph.getEdgeSet().get("CSCI 1951A").get("CSCI 1951K"),
+      finalGraph.getEdgeSet().get("CSCI 0150").get("CSCI 0190"),
+      finalGraph.getEdgeSet().get("CSCI 0190").get("MATH 0190"),
+      finalGraph.getEdgeSet().get("MATH 0190").get("CSCI 1430"),
+      finalGraph.getEdgeSet().get("CSCI 1430").get("CSCI 1850"),
+      finalGraph.getEdgeSet().get("CSCI 1850").get("CSCI 1951K"),
       finalGraph.getEdgeSet().get("CSCI 1951K").get("CSCI 0530"),
       finalGraph.getEdgeSet().get("CSCI 0530").get("CSCI 0320"),
       finalGraph.getEdgeSet().get("CSCI 0320").get("CSCI 1310"),
-      finalGraph.getEdgeSet().get("CSCI 1310").get("CSCI 1690"),
-      finalGraph.getEdgeSet().get("CSCI 1690").get("CSCI 0170")
+      finalGraph.getEdgeSet().get("CSCI 1310").get("CSCI 1250"),
+      finalGraph.getEdgeSet().get("CSCI 1250").get("CSCI 0170")
     ));
     teardown();
   }

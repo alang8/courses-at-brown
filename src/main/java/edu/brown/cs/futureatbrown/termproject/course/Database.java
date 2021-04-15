@@ -18,7 +18,7 @@ public final class Database {
   private static Connection conn = null;
   private static final CourseGraph graph = new CourseGraph();
   private static final List<String> ALLOWED_GROUPS =
-    List.of("apmaABGroups", "csciABGroups", "mathABGroups", "mathSCBGroups");
+    List.of("apmaABGroups", "csciABMLGroups", "mathABGroups", "mathSCBGroups");
   private static final List<String> ALLOWED_COURSES =
     List.of("apmaABCourses", "csciABMLCourses", "mathABCourses", "mathSCBCourses");
 

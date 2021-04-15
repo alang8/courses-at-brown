@@ -1,18 +1,6 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0
                              http://maven.apache.org/maven-v4_0_0.xsd">
 
-<<<<<<< HEAD
-    <!--Make sure modelVersion is 4.0.0 -->
-    <modelVersion>4.0.0</modelVersion>
-    <!-- groupId is used to identify the organization -->
-    <groupId>edu.brown.cs</groupId>
-    <!-- artifactId is used to name the specific project -->
-    <artifactId>futureatbrown.termproject</artifactId>
-    <!-- type of file you want to output -->
-    <packaging>jar</packaging>
-    <!-- Version of your project -->
-    <version>1.0</version>
-=======
   <!--Make sure modelVersion is 4.0.0 -->
   <modelVersion>4.0.0</modelVersion>
   <!-- groupId is used to identify the organization -->
@@ -25,7 +13,6 @@
   <packaging>jar</packaging>
   <!-- Version of your project -->
   <version>1.0</version>
->>>>>>> graph-impl-draft
 
     <!-- Defines UTF-8 encoding -->
     <properties>

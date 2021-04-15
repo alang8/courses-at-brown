@@ -1,6 +1,10 @@
-edu/brown/cs/futureatbrown/termproject/UserDataHandlers$WriteCourseHandler.class
-edu/brown/cs/futureatbrown/termproject/Main$GetPathHandler.class
-edu/brown/cs/futureatbrown/termproject/UserDataHandlers$DeleteUserHandler.class
-edu/brown/cs/futureatbrown/termproject/UserDataHandlers$SetPreferenceHandler.class
+edu/brown/cs/futureatbrown/termproject/CourseDataHandlers.class
+edu/brown/cs/futureatbrown/termproject/CourseDataHandlers$GetConcentrationHandler.class
 edu/brown/cs/futureatbrown/termproject/UserDataHandlers$LoadUserHandler.class
+edu/brown/cs/futureatbrown/termproject/Main$GetPathHandler.class
+edu/brown/cs/futureatbrown/termproject/CourseDataHandlers$ClassDataHandler.class
+edu/brown/cs/futureatbrown/termproject/CourseDataHandlers$GetCourseHandler.class
 edu/brown/cs/futureatbrown/termproject/UserDataHandlers$RemoveCourseHandler.class
+edu/brown/cs/futureatbrown/termproject/UserDataHandlers$DeleteUserHandler.class
+edu/brown/cs/futureatbrown/termproject/UserDataHandlers$WriteCourseHandler.class
+edu/brown/cs/futureatbrown/termproject/UserDataHandlers$SetPreferenceHandler.class

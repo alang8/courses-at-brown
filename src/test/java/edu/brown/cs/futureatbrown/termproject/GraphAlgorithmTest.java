@@ -174,8 +174,8 @@ class BasicEdge extends GraphEdge<GraphNode> {
 }
 
 class BasicGraph implements Graph<BasicNode, BasicEdge> {
-  HashMap<String, BasicNode> nodeSet;
-  HashMap<String, HashMap<String, BasicEdge>> edgeSet;
+  Map<String, BasicNode> nodeSet;
+  Map<String, Map<String, BasicEdge>> edgeSet;
 
   public BasicGraph() {
     this.nodeSet = new HashMap<>();
@@ -183,20 +183,20 @@ class BasicGraph implements Graph<BasicNode, BasicEdge> {
   }
 
   @Override
-  public HashMap<String, BasicNode> getNodeSet() {
+  public Map<String, BasicNode> getNodeSet() {
     return this.nodeSet;
   }
 
   @Override
-  public HashMap<String, HashMap<String, BasicEdge>> getEdgeSet() {
+  public Map<String, Map<String, BasicEdge>> getEdgeSet() {
     return this.edgeSet;
   }
 
-  public void setNodeSet(HashMap<String, BasicNode> nodeSet) {
+  public void setNodeSet(Map<String, BasicNode> nodeSet) {
     this.nodeSet = nodeSet;
   }
 
-  public void setEdgeSet(HashMap<String, HashMap<String, BasicEdge>> edgeSet) {
+  public void setEdgeSet(Map<String, Map<String, BasicEdge>> edgeSet) {
     this.edgeSet = edgeSet;
   }
 
@@ -214,8 +214,8 @@ class BasicGraph implements Graph<BasicNode, BasicEdge> {
   /**
    * Helper function which returns a copy of a HashMap of Nodes
    */
-  private HashMap<String, BasicNode> nodeSetCopy(HashMap<String, BasicNode> nodeMap) {
-    HashMap<String, BasicNode> newNodeMap = new HashMap<>();
+  private Map<String, BasicNode> nodeSetCopy(Map<String, BasicNode> nodeMap) {
+    Map<String, BasicNode> newNodeMap = new HashMap<>();
     for (String nodeID : nodeMap.keySet()) {
       newNodeMap.put(nodeID, (BasicNode) nodeMap.get(nodeID).copy());
     }
@@ -225,8 +225,8 @@ class BasicGraph implements Graph<BasicNode, BasicEdge> {
   /**
    * Helper function which returns a copy of a HashMap of Edges
    */
-  private HashMap<String, BasicEdge> edgeSetCopy(HashMap<String, BasicEdge> edgeMap) {
-    HashMap<String, BasicEdge> newEdgeMap = new HashMap<>();
+  private Map<String, BasicEdge> edgeSetCopy(Map<String, BasicEdge> edgeMap) {
+    Map<String, BasicEdge> newEdgeMap = new HashMap<>();
     for (String nodeID : edgeMap.keySet()) {
       newEdgeMap.put(nodeID, (BasicEdge) edgeMap.get(nodeID).copy());
     }
@@ -236,8 +236,8 @@ class BasicGraph implements Graph<BasicNode, BasicEdge> {
   @Override
   public BasicGraph copy() {
     BasicGraph graphCopy = new BasicGraph();
-    HashMap<String, BasicNode> newNodeMap = nodeSetCopy(this.nodeSet);
-    HashMap<String, HashMap<String, BasicEdge>> newEdgeMap = new HashMap<>();
+    Map<String, BasicNode> newNodeMap = nodeSetCopy(this.nodeSet);
+    Map<String, Map<String, BasicEdge>> newEdgeMap = new HashMap<>();
 
     for (String nodeID : this.edgeSet.keySet()) {
       newEdgeMap.put(nodeID, edgeSetCopy(this.edgeSet.get(nodeID)));
