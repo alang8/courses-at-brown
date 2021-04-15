@@ -27,7 +27,7 @@ const ExpandableCourses: React.FC<Params> = (props) => {
     const [showMore, setShowMore] = useState<boolean>(false);
     const [isRemoving, setRemoving] = useState<boolean>(false);
     const [isAdding, setAdding] = useState<boolean>(false);
-    
+
     const alreadyIn = (test: Course): boolean =>
         displayed.find(c => GetCode(c) === GetCode(test)) !== undefined
 
@@ -51,10 +51,12 @@ const ExpandableCourses: React.FC<Params> = (props) => {
 
     //Function to add a course to the box.
     const add = async (added: Course): Promise<void> => {
-        if (props.modify?.addCourse) {
-            await props.modify!.addCourse(added);
+        if (!alreadyIn(added)) {
+            if (props.modify?.addCourse) {
+                await props.modify!.addCourse(added);
+            }
+            setDisplayed(displayed.concat(added));
         }
-        setDisplayed(displayed.concat(added));
     }
 
     //Buttons for adding/removing courses.
@@ -88,7 +90,7 @@ const ExpandableCourses: React.FC<Params> = (props) => {
 
     //Components for all courses, used when show more is clicked
     const overflowCards: JSX.Element[] = allCourses.map(
-        (elt, index) => <CourseTile course={elt} key={String(index + initDisplay.length)} shouldDisable={alreadyIn}/>);
+        (elt, index) => <CourseTile course={elt} key={String(index + initDisplay.length)} shouldDisable={alreadyIn} />);
 
     //Component for search bars when adding/removing courses.
     const searchers = (): JSX.Element[] =>

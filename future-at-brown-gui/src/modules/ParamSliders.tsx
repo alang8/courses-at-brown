@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Header} from "semantic-ui-react";
 import { defaultParams, SearchParamNames, SearchParams } from "../classes/SearchParams";
 import { useState } from "react";
@@ -7,6 +7,7 @@ import 'rc-slider/assets/index.css';
 import User from "../classes/User";
 
 interface Params {
+    params?: SearchParams;
     curUser?: User;
     prefChange?: (newPref: SearchParams) => void;
     setLoading?: (set: boolean) => void;
@@ -14,8 +15,10 @@ interface Params {
 
 const ParamSlider: React.FC<Params> = (props) => {
 
-    const [pref, setPrefs] = useState<SearchParams>(props.curUser?.getPreferences() ?? defaultParams);
+    const [pref, setPrefs] = useState<SearchParams>(
+        props.params ?? props.curUser?.getPreferences() ?? defaultParams);
 
+    useEffect(() => console.log("pref rerender", pref));
     const makeSlider = (
         color: string,
         name: string,
@@ -35,7 +38,7 @@ const ParamSlider: React.FC<Params> = (props) => {
                     <Slider
                         min={0}
                         max={10}
-                        defaultValue={props.curUser?.getPreferences()[id]}
+                        defaultValue={pref[id]}
                         step={0.1}
                         trackStyle={{ backgroundColor: color }}
                         handleStyle={{ borderColor: color }}
@@ -46,7 +49,9 @@ const ParamSlider: React.FC<Params> = (props) => {
                         }}
                         onAfterChange={(newVal: number) => {
                             if (props.prefChange) {
+                                console.log("b4", pref);
                                 pref[id] = newVal;
+                                console.log(pref);
                                 props.prefChange({...pref})
                             }
                         }}

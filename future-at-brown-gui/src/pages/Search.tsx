@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react"
+import { useEffect, useRef, useState } from "react"
 import axios from "axios";
 import { Button, Container, Dimmer, Dropdown, DropdownProps, Grid, GridColumn, Header, Loader, Message, Segment, Sticky } from "semantic-ui-react"
 import { Course, FindCourse, GetCode } from "../classes/Course";
@@ -30,7 +30,9 @@ interface Params {
  */
 const Search: React.FC<Params> = (props) => {
 
-    const [prefs, setPrefs] = useState<SearchParams>(props.user.getPreferences());
+    const prefs = useRef(props.user.getPreferences());
+    // const takenCourses = useRef(props.user.getTaken());
+    // const [prefs, setPrefs] = useState<SearchParams>(props.user.getPreferences());
     const [takenCourses, setTakenCourses] = useState<Course[]>(props.user.getTaken());
     const [concentration, setConcentration] = useState<string | undefined>(undefined);
 
@@ -65,6 +67,7 @@ const Search: React.FC<Params> = (props) => {
             });
     }
 
+    useEffect(() => console.log("rerender", prefs));
     useEffect(() => {
         axios.post<{ [concentrations: string]: { [key: string]: string } }>(
             'http://localhost:4567/getconcs',
@@ -78,8 +81,6 @@ const Search: React.FC<Params> = (props) => {
         });
     }, []);
 
-    const setPrefsAsync = async (pref: SearchParams) => setPrefs(pref)
-
     return <Dimmer.Dimmable active={loadingPath} as={WrapDiv}>
         <ProfileButton />
         <SignOutHeader setUser={props.setUser} user={props.user}
@@ -87,7 +88,7 @@ const Search: React.FC<Params> = (props) => {
                 title: "Search", information: "This page allows you to put in preferences "
                     + "about the path you want to take though Brown (things such as class size, rating, "
                     + "etc) so that the algorithm can find your optimal path through a concentration"
-            }} />
+            }} />)
         <Dimmer active={loadingPath} blurring>
             <Loader />
         </Dimmer>
@@ -103,7 +104,10 @@ const Search: React.FC<Params> = (props) => {
                     <Grid.Column>
                         <Segment color="blue">
                             <Header as="h2" content={"Preferences"} />
-                            <ParamSlider curUser={props.user} prefChange={setPrefsAsync} />
+                            <ParamSlider
+                                params={prefs.current}
+                                curUser={props.user}
+                                prefChange={(p) => prefs.current = p} />
                         </Segment>
                     </Grid.Column>
                 </Grid.Row>
@@ -141,7 +145,7 @@ const Search: React.FC<Params> = (props) => {
                                 content={"Submit"}
                                 className={"gradient"}
                             />
-                            : <Message header={"Error"} icon="warning" color="red" 
+                            : <Message header={"Error"} icon="warning" color="red"
                                 content={"Please select a concentration before continuing"} />
                         }
                     </Grid.Column>

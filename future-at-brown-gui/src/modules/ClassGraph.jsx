@@ -219,7 +219,7 @@ const ClassGraph = (props) => {
     }
 
     return <div>
-        <div id="graphWrapper">
+        <div id="graphWrapper" ref={props.setRef}>
             <ForceGraph2D
                 graphData={gData}
                 onNodeClick={(n, e) => displayedCourseInfo(n) }

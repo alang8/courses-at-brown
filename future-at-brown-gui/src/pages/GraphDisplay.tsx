@@ -1,4 +1,4 @@
-import React, { createRef } from "react"
+import React, { createRef, useEffect } from "react"
 import ClassGraph from "../modules/ClassGraph.jsx";
 import "../css/Graph.css"
 import SignOutHeader from "../modules/SignOutHeader";
@@ -24,7 +24,7 @@ const GraphDisplay: React.FC<Params> = (props) => {
 
     const ref = createRef<HTMLElement>();
 
-    props.onRender?.();
+    useEffect(props.onRender ?? (() => {}), []);
 
     const getContent = (): JSX.Element => {
         if (props.path) {
@@ -32,7 +32,7 @@ const GraphDisplay: React.FC<Params> = (props) => {
             return <ClassGraph
                 path={props.path}
                 saveFunction={(c: Course) => props.user.saveCourse(c)}
-                ref={ref}
+                setRef={ref}
                 user={props.user} />
         }
         return <Container textAlign={"center"}>
