@@ -161,8 +161,8 @@ public final class Main {
         double cRP = prefJSON.getDouble("crsRatingPref");
         double pRP = prefJSON.getDouble("profRatingPref");
         double cSP = prefJSON.getDouble("crsSizePref");
-        double aHI = aHP / 5.0 * 75;
-        double mHI = mHP / 5.0 * 400;
+        double aHI = (aHP / 5.0 * 75) + 15;
+        double mHI = Math.max(mHP / 5.0 * 400, 300);
         int cSI = (int) cSP / 5 * 72;
         int minNumCourses = 0;
         int maxNumCourses = 26;
@@ -197,64 +197,42 @@ public final class Main {
           max hours : 13.755
           class size: 72.3703703703704
            */
-//        setGlobalParams(double crsRatingPref, double profRatingPref, double avgHoursPref,
-//        double avgHoursInput, int minNumClasses, int maxNumClasses,
-//        double balanceFactorPref, double totalMaxHoursInput,
-//        double classSizePref, int classSizeInput, int classSizeMax,
-//        HashMap<String, Integer> groupData, HashMap<String, CourseWay > courseWayData)
 
         Map<String, CourseWay> cWays = Database.getCourseWays(conc + "Courses");
         Map<String, Integer> gData = Database.getGroups(conc + "Groups");
 
 
         System.out.println("setting params and getting path: ");
-//          theGraph.setGlobalParams(cRP, pRP, aHP, aHI, minNumCourses, maxNumCourses, bFP, mHI, cSP, cSI, cSM, gData, cWays);
-          theGraph.setGlobalParams(cRP, pRP, aHP, aHI, minNumCourses, maxNumCourses, bFP, mHI, cSP, cSI, cSM, gData, cWays);
-//        theGraph.setGlobalParams(1, 1, 1,
-//          10, 1, 5, 1,
-//          100, 1, 50, 500,
-//          null, null);
-          List<List<CourseEdge>> paths = graphAlg.pathway(introCourses, theGraph);
+        theGraph.setGlobalParams(cRP, pRP, aHP, aHI, minNumCourses, maxNumCourses, bFP, mHI, cSP, cSI, cSM, gData, cWays);
+        List<List<CourseEdge>> paths = graphAlg.pathway(introCourses, theGraph);
 
         System.out.println("best paths: ");
         System.out.println(paths.get(0));
-        paths.sort(Comparator.comparingDouble((s) -> -s.size()));
-          System.out.println(paths.get(0));
 
-          System.out.println(introCourses);
+        List<CourseEdge> bestPath = paths.get(0);
 
-//          System.out.println("best path: ");
-//          for (CourseEdge e : bestPath) {
-//            System.out.println(e);
-//          }
+        int currentOverallSem = 0;
+        int prevCourseSem = 1;
 
-//          int currentOverallSem = 0;
-//          int prevCourseSem = 0;
-//          CourseEdge curEdge = bestPath.get(0);
-//
-//          //TODO will the list of edges be in "order"? if so...
-//          CourseNode curNode;
-//          for(CourseEdge c : bestPath) {
-//            CourseNode curNode = c.getStart();
-//            if(curNode.getSem() != prevCourseSem && curNode.getSem() != 0) {
-//              currentOverallSem += 1;
-//            }
-//            thePath.put(curNode.getID(), currentOverallSem);
-//            //TODO assumes that consecutive edges share start / end
-//          }
-//
-//          //once at end, need to include final node. TODO if thats how its formatted
-//          curNode = c.getEnd();
-//          if(curNode.getSem() != prevCourseSem && curNode.getSem() != 0) {
-//              currentOverallSem += 1;
-//          }
-//          thePath.put(curNode.getID(), currentOverallSem);
+        for (int i =0; i< bestPath.size(); i++) {
+          CourseEdge curEdge = bestPath.get(i);
+          CourseNode curNode = curEdge.getStart();
+          if(curNode.getSem() != prevCourseSem && curNode.getSem() != 0) {
+            currentOverallSem = Math.min(currentOverallSem + 1, 9);
+            prevCourseSem = (prevCourseSem == 1) ? 2:1;
+          }
+          thePath.put(curNode.getID(), currentOverallSem);
 
-        thePath.put("CSCI 0170", 0);
-        thePath.put("CSCI 0180", 1);
-        thePath.put("MATH 0540", 1);
-        thePath.put("CSCI 0220", 2);
-        thePath.put("APMA 0350", 2);
+          if(i == bestPath.size() - 1) {
+            curNode = curEdge.getEnd();
+            if(curNode.getSem() != prevCourseSem && curNode.getSem() != 0) {
+              currentOverallSem = Math.min(currentOverallSem + 1, 9);
+              prevCourseSem = (prevCourseSem == 1) ? 2:1;
+            }
+            thePath.put(curNode.getID(), currentOverallSem);
+          }
+        }
+
       } catch (JSONException | SQLException e) {
         e.printStackTrace();
       } catch (InvalidAlgorithmParameterException e) {
