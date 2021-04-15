@@ -44,10 +44,10 @@ const Search: React.FC<Params> = (props) => {
     //Function to get the path
     const getPath = async (): Promise<void> => {
         setLoading(true);
-        console.log("concentration", concentration)
+        console.log("Requesting path for concentration", concentration)
         const toSend = {
             prefs: prefs,
-            concentration: "csciABML"
+            concentration: concentration
         };
         console.log("requesting path")
         await axios.post(

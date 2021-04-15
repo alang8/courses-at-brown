@@ -32,7 +32,6 @@ const ClassGraph = (props) => {
      */
     function getCourseData() {
         const toSend = {};
-
         let courseData = [];
 
         axios.post(
@@ -61,7 +60,6 @@ const ClassGraph = (props) => {
         let tempCourseInfo = {};
         const thePath = [];
 
-        console.log(theCourses);
         for (i = 0; i < theCourses.length; i++) {
             let curID = theCourses[i]['id']
             let prereqInfo = theCourses[i]['prereqs']
@@ -73,14 +71,11 @@ const ClassGraph = (props) => {
                     linkArray.push({ "source": prereqIDs[z], "target": curID });
                 }
             }
-            // let val = 8;
-            // if (curID in props.path) {
-            //     val = 100;
-            // }
             nodeArray.push({ 'id': curID, 'name': curID });
             tempCourseInfo[curID] = theCourses[i];
         }
 
+        //create edges for our pathway.
         for (i = 0; i < 9; i++) {
             const dests = [];
             const origs = [];
@@ -90,12 +85,12 @@ const ClassGraph = (props) => {
                 else if (props.path[code] === i + 1) {
                     dests.push(code);
                 }
-
             }
             origs.forEach((o) =>
                 dests.forEach((d) =>
                     thePath.push({ "source": o, "target": d })));
         }
+
         setAllCourseinfo(tempCourseInfo);
         setGData({ "nodes": nodeArray, "links": linkArray.concat(thePath) });
     }
@@ -178,20 +173,7 @@ const ClassGraph = (props) => {
             ctx.arc(x, y, 13, 0, 2 * Math.PI, false);
             ctx.fill();
         }
-        //
-        //     if (id) {
-        //         console.log("undefined node")
-        //     } else {
-        //         console.log("oop")
-        //     }
-        //     // ctx.strokeStyle = GetColorRaw(id.substring(0, 4));
-        //     ctx.beginPath();
-        //     ctx.arc(x, y, 20, 0, 2 * Math.PI, false);
-        //     ctx.fill();
-        // }
     }
-
-    // function edgePaint()
 
     //Changing the force values to display our graph in a reasonable way.
     useEffect(() => {
@@ -199,19 +181,23 @@ const ClassGraph = (props) => {
         fgRef.current.d3Force("link").strength(0.10);
     });
 
+    //Function which returns a function which returns a given value if the node is in the path, and another one otherwise.
     function nodeInPath(inPath, notInPath) {
         return (node) => (node.id in props.path) ? inPath : notInPath
     }
 
+    //Function which returns a function which returns a given value if the edge is in the path, and another one otherwise.
     function edgeInPath(inPath, notInPath) {
         return (edge) => (edge.source.id in props.path && edge.target.id in props.path) ? inPath : notInPath
     }
 
+    //Function which returns an edges corresponding color.
     function edgeColor(edge) {
         return (edge.source.id in props.path && edge.target.id in props.path) ?
             "black" : GetColorRaw(edge.source.id?.substring(0, 4) ?? "CSCI");
     }
 
+    //Function which returns an edge's label
     function edgeLabel(edge) {
         return (edge.source.id in props.path && edge.target.id in props.path) ?
             theSemester[props.path[edge.source.id]] + " > " + theSemester[props.path[edge.target.id]]
