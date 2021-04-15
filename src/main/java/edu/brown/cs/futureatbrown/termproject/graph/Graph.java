@@ -1,6 +1,7 @@
 package edu.brown.cs.futureatbrown.termproject.graph;
 
 import java.util.HashMap;
+import java.util.Map;
 import java.util.Set;
 
 /**
@@ -14,7 +15,7 @@ public interface Graph<Node extends GraphNode, Edge extends GraphEdge> {
    *
    * @return the HashMap of Node sets
    */
-  HashMap<String, Node> getNodeSet();
+  Map<String, Node> getNodeSet();
 
   /**
    * Map that contains all the Edges from the Node with the NodeID. The first String is the ID of
@@ -23,7 +24,7 @@ public interface Graph<Node extends GraphNode, Edge extends GraphEdge> {
    *
    * @return the HashMap of Egde sets
    */
-  HashMap<String, HashMap<String, Edge>> getEdgeSet();
+  Map<String, Map<String, Edge>> getEdgeSet();
 
   /**
    * Adds a Node to the Node set and Edges to the Edge Set

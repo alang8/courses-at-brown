@@ -66,8 +66,8 @@ public class GraphAlgorithms<Node extends GraphNode, Edge extends GraphEdge,
    */
   private final List<Edge> dijkstraHelper(String startID, String endID, G graph)
       throws InvalidAlgorithmParameterException {
-    HashMap<String, Node> nodeSet = graph.getNodeSet();
-    HashMap<String, HashMap<String, Edge>> edgeSet = graph.getEdgeSet();
+    Map<String, Node> nodeSet = graph.getNodeSet();
+    Map<String, Map<String, Edge>> edgeSet = graph.getEdgeSet();
     if (!nodeSet.containsKey(startID)) {
       throw new InvalidAlgorithmParameterException("Nodes must exist in the graph");
     }
@@ -161,7 +161,7 @@ public class GraphAlgorithms<Node extends GraphNode, Edge extends GraphEdge,
    */
   public final List<List<Edge>> dijkstraPathTree(String startID, G graph)
       throws InvalidAlgorithmParameterException {
-    HashMap<String, Node> nodeSet = graph.getNodeSet();
+    Map<String, Node> nodeSet = graph.getNodeSet();
     this.results.put(startID, new HashMap<>());
     for (Node node: nodeSet.values()) {
       if (!startID.equals(node.getID())) {
