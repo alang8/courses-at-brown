@@ -72,8 +72,6 @@ public class CourseAlgorithmTest {
     }
   }
 
-
-
   @After
   public void teardown() {
     try{
@@ -90,84 +88,81 @@ public class CourseAlgorithmTest {
     setup();
     courseGraph.setGlobalParams(1, 1, 1,
     10, 1, 5, 1,
-    100, 1, 50, 500);
+    100, 1, 50, 500,
+    null, null);
     List<List<CourseEdge>> prereqPaths = courseAlgorithms.dijkstraPathTree("CSCI 0150" ,courseGraph);
-    List<List<CourseEdge>> prereqPathSol = List.of(
-      List.of(
-        courseGraph.getEdgeSet().get("CSCI 0150").get("MATH 0190"),
-        courseGraph.getEdgeSet().get("MATH 0190").get("APMA 1655")
-      ),
-      List.of(
-        courseGraph.getEdgeSet().get("CSCI 0150").get("MATH 0090")
-      ),
-      List.of(
-        courseGraph.getEdgeSet().get("CSCI 0150").get("MATH 0050")
-      ),
-      List.of(
-        courseGraph.getEdgeSet().get("CSCI 0150").get("MATH 0050"),
-        courseGraph.getEdgeSet().get("MATH 0050").get("MATH 0060")
-      ),
-      List.of(
-        courseGraph.getEdgeSet().get("CSCI 0150").get("CSCI 0160")
-      ),
-      List.of(
-        courseGraph.getEdgeSet().get("CSCI 0150").get("MATH 0070")
-      ),
-      List.of(
-        courseGraph.getEdgeSet().get("CSCI 0150").get("CSCI 0170")
-      ),
-      List.of(
-        courseGraph.getEdgeSet().get("CSCI 0150").get("MATH 0190")
-      ),
-      List.of(
-        courseGraph.getEdgeSet().get("CSCI 0150").get("CSCI 0190"),
-        courseGraph.getEdgeSet().get("CSCI 0190").get("CSCI 0180")
-      ),
-      List.of(
-        courseGraph.getEdgeSet().get("CSCI 0150").get("CSCI 0190")
-      ),
-      List.of(
-        courseGraph.getEdgeSet().get("CSCI 0150").get("MATH 0350")
-      ),
-      List.of(
-        courseGraph.getEdgeSet().get("CSCI 0150").get("MATH 0090"),
-        courseGraph.getEdgeSet().get("MATH 0090").get("MATH 0100")
-      ),
-      List.of(
-        courseGraph.getEdgeSet().get("CSCI 0150").get("CSCI 0190"),
-        courseGraph.getEdgeSet().get("CSCI 0190").get("CSCI 0220"),
-        courseGraph.getEdgeSet().get("CSCI 0220").get("CSCI 1410")
-      ),
-      List.of(
-        courseGraph.getEdgeSet().get("CSCI 0150").get("CSCI 0220")
-      ),
-      List.of(
-        courseGraph.getEdgeSet().get("CSCI 0150").get("MATH 0190"),
-        courseGraph.getEdgeSet().get("MATH 0190").get("APMA 1650")
-      ),
-      List.of(
-        courseGraph.getEdgeSet().get("CSCI 0150").get("MATH 0190"),
-        courseGraph.getEdgeSet().get("MATH 0190").get("MATH 0070"),
-        courseGraph.getEdgeSet().get("MATH 0070").get("CSCI 1450")
-      )
-    );
 
-    Assert.assertEquals(prereqPaths.get(0), prereqPathSol.get(0));
-    Assert.assertEquals(prereqPaths.get(1), prereqPathSol.get(1));
-    Assert.assertEquals(prereqPaths.get(2), prereqPathSol.get(2));
-    Assert.assertEquals(prereqPaths.get(3), prereqPathSol.get(3));
-    Assert.assertEquals(prereqPaths.get(4), prereqPathSol.get(4));
-    Assert.assertEquals(prereqPaths.get(5), prereqPathSol.get(5));
-    Assert.assertEquals(prereqPaths.get(6), prereqPathSol.get(6));
-    Assert.assertEquals(prereqPaths.get(7), prereqPathSol.get(7));
-    Assert.assertEquals(prereqPaths.get(8), prereqPathSol.get(8));
-    Assert.assertEquals(prereqPaths.get(9), prereqPathSol.get(9));
-    Assert.assertEquals(prereqPaths.get(10), prereqPathSol.get(10));
-    Assert.assertEquals(prereqPaths.get(11), prereqPathSol.get(11));
-    Assert.assertEquals(prereqPaths.get(12), prereqPathSol.get(12));
-    Assert.assertEquals(prereqPaths.get(13), prereqPathSol.get(13));
-    Assert.assertEquals(prereqPaths.get(14), prereqPathSol.get(14));
-    Assert.assertEquals(prereqPaths.get(15), prereqPathSol.get(15));
+    Assert.assertEquals(prereqPaths.get(0), List.of(
+      courseGraph.getEdgeSet().get("CSCI 0150").get("MATH 0190"),
+      courseGraph.getEdgeSet().get("MATH 0190").get("APMA 1655")
+    ));
+
+    Assert.assertEquals(prereqPaths.get(1), List.of(
+      courseGraph.getEdgeSet().get("CSCI 0150").get("MATH 0090")
+    ));
+
+    Assert.assertEquals(prereqPaths.get(2), List.of(
+      courseGraph.getEdgeSet().get("CSCI 0150").get("MATH 0050")
+    ));
+
+    Assert.assertEquals(prereqPaths.get(3), List.of(
+      courseGraph.getEdgeSet().get("CSCI 0150").get("MATH 0050"),
+      courseGraph.getEdgeSet().get("MATH 0050").get("MATH 0060")
+    ));
+
+    Assert.assertEquals(prereqPaths.get(4), List.of(
+      courseGraph.getEdgeSet().get("CSCI 0150").get("CSCI 0160")
+    ));
+
+    Assert.assertEquals(prereqPaths.get(5), List.of(
+      courseGraph.getEdgeSet().get("CSCI 0150").get("MATH 0070")
+    ));
+
+    Assert.assertEquals(prereqPaths.get(6), List.of(
+      courseGraph.getEdgeSet().get("CSCI 0150").get("CSCI 0170")
+    ));
+
+    Assert.assertEquals(prereqPaths.get(7), List.of(
+      courseGraph.getEdgeSet().get("CSCI 0150").get("MATH 0190")
+    ));
+
+    Assert.assertEquals(prereqPaths.get(8), List.of(
+      courseGraph.getEdgeSet().get("CSCI 0150").get("CSCI 0190"),
+      courseGraph.getEdgeSet().get("CSCI 0190").get("CSCI 0180")
+    ));
+
+    Assert.assertEquals(prereqPaths.get(9), List.of(
+      courseGraph.getEdgeSet().get("CSCI 0150").get("CSCI 0190")
+    ));
+
+    Assert.assertEquals(prereqPaths.get(10), List.of(
+      courseGraph.getEdgeSet().get("CSCI 0150").get("MATH 0350")
+    ));
+
+    Assert.assertEquals(prereqPaths.get(11), List.of(
+      courseGraph.getEdgeSet().get("CSCI 0150").get("MATH 0090"),
+      courseGraph.getEdgeSet().get("MATH 0090").get("MATH 0100")
+    ));
+
+    Assert.assertEquals(prereqPaths.get(12),  List.of(
+      courseGraph.getEdgeSet().get("CSCI 0150").get("CSCI 0190"),
+      courseGraph.getEdgeSet().get("CSCI 0190").get("CSCI 0220"),
+      courseGraph.getEdgeSet().get("CSCI 0220").get("CSCI 1410")
+    ));
+
+    Assert.assertEquals(prereqPaths.get(13), List.of(
+      courseGraph.getEdgeSet().get("CSCI 0150").get("CSCI 0220")
+    ));
+
+    Assert.assertEquals(prereqPaths.get(14),  List.of(
+      courseGraph.getEdgeSet().get("CSCI 0150").get("MATH 0190"),
+      courseGraph.getEdgeSet().get("MATH 0190").get("APMA 1650")
+    ));
+    Assert.assertEquals(prereqPaths.get(15), List.of(
+      courseGraph.getEdgeSet().get("CSCI 0150").get("MATH 0190"),
+      courseGraph.getEdgeSet().get("MATH 0190").get("MATH 0070"),
+      courseGraph.getEdgeSet().get("MATH 0070").get("CSCI 1450")
+    ));
 
     List<CourseEdge> pathToProbComp = courseAlgorithms.dijkstraPath("CSCI 0150", "CSCI 1450", courseGraph);
     Assert.assertEquals(pathToProbComp, List.of(
@@ -195,7 +190,8 @@ public class CourseAlgorithmTest {
     setup();
     courseGraph.setGlobalParams(10, 0, 0,
       10, 1, 5, 0,
-      100, 0, 50, 500);
+      100, 0, 50, 500,
+      null, null);
 
     // Went from CS190 to CS160 because CS160 has a slightly higher course rating and the preference for course
     // rating is MAXED OUT.
@@ -213,7 +209,8 @@ public class CourseAlgorithmTest {
     setup();
     courseGraph.setGlobalParams(0, 10, 0,
       10, 1, 5, 0,
-      100, 0, 50, 500);
+      100, 0, 50, 500,
+      null, null);
 
     // Went from MATH0070 to MATH0090 because MATH0090 has a slightly higher course Professor rating
     // and the preference for Professor rating is MAXED OUT.
@@ -232,7 +229,8 @@ public class CourseAlgorithmTest {
     setup();
     courseGraph.setGlobalParams(0, 0, 10,
       10, 1, 5, 0,
-      100, 0, 50, 500);
+      100, 0, 50, 500,
+      null, null);
 
     // CS0190's AVG Hours are slightly closer to 10 than CS0160's
     List<CourseEdge> closeAVGHourProbClass = courseAlgorithms.dijkstraPath("CSCI 0150", "CSCI 1410", courseGraph);
@@ -249,7 +247,8 @@ public class CourseAlgorithmTest {
     setup();
     courseGraph.setGlobalParams(0, 0, 0,
       10, 1, 5, 0,
-      100, 10, 50, 500);
+      100, 10, 50, 500,
+      null, null);
 
     // CS0190 > CS0160 because it is much much closer to a class size of 50.
     List<CourseEdge> closeClassSizeAI = courseAlgorithms.dijkstraPath("CSCI 0150", "CSCI 1410", courseGraph);
@@ -269,7 +268,8 @@ public class CourseAlgorithmTest {
     setup();
     courseGraph.setGlobalParams(1, 1, 1,
       10, 1, 3, 1,
-      100, 1, 50, 500);
+      100, 1, 50, 500,
+      null, null);
 
     // Notice that the Max number of classes is 3 classes but we need at least 4 to include the starting node and
     // satisfy the prerequisites of AI. Thus this path will return null.
@@ -283,7 +283,8 @@ public class CourseAlgorithmTest {
     setup();
     courseGraph.setGlobalParams(1, 1, 1,
       10, 3, 5, 1,
-      100, 1, 50, 500);
+      100, 1, 50, 500,
+      null, null);
 
     // Resultant path has at least 3 nodes now, more than before.
     List<CourseEdge> longerPath = courseAlgorithms.dijkstraPath("CSCI 0150", "CSCI 0170", courseGraph);
@@ -299,7 +300,8 @@ public class CourseAlgorithmTest {
     setup();
     courseGraph.setGlobalParams(1, 1, 1,
       10, 1, 5, 1,
-      1, 1, 50, 500);
+      1, 1, 50, 500,
+      null, null);
 
     // Since we're only allowing 1 Max Hour there is no possible way of taking the
     // 4 classes needed for AI, or even 1 class at all. Thus the path is blocked off.
@@ -307,4 +309,31 @@ public class CourseAlgorithmTest {
     Assert.assertNull(notEnoughTimeAI);
     teardown();
   }
+
+  @Test
+  public void PathwayRequirementTests() throws InvalidAlgorithmParameterException, SQLException {
+    setup();
+    Database.setupGraph();
+    CourseGraph finalGraph = Database.getGraph();
+    finalGraph.setGlobalParams(1, 1, 1,
+      10, 0, 18, 1,
+      Double.POSITIVE_INFINITY, 1, 50, 500,
+      Database.getGroups("csciABGroups"), Database.getCourseWays("csciABMLCourses"));
+
+    List<CourseEdge> pathWithRequirements = courseAlgorithms.dijkstraPath("CSCI 0150", "CSCI 0170", finalGraph);
+    Assert.assertEquals(pathWithRequirements, List.of(
+      finalGraph.getEdgeSet().get("CSCI 0150").get("MATH 0190"),
+      finalGraph.getEdgeSet().get("MATH 0190").get("CSCI 0160"),
+      finalGraph.getEdgeSet().get("CSCI 0160").get("CSCI 1430"),
+      finalGraph.getEdgeSet().get("CSCI 1430").get("CSCI 1951A"),
+      finalGraph.getEdgeSet().get("CSCI 1951A").get("CSCI 1951K"),
+      finalGraph.getEdgeSet().get("CSCI 1951K").get("CSCI 0530"),
+      finalGraph.getEdgeSet().get("CSCI 0530").get("CSCI 0320"),
+      finalGraph.getEdgeSet().get("CSCI 0320").get("CSCI 1310"),
+      finalGraph.getEdgeSet().get("CSCI 1310").get("CSCI 1690"),
+      finalGraph.getEdgeSet().get("CSCI 1690").get("CSCI 0170")
+    ));
+    teardown();
+  }
+
 }

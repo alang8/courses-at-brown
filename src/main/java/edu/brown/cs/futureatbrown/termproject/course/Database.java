@@ -16,7 +16,11 @@ import java.util.stream.Collectors;
  */
 public final class Database {
   private static Connection conn = null;
-  private static CourseGraph graph = new CourseGraph();
+  private static final CourseGraph graph = new CourseGraph();
+  private static final List<String> ALLOWED_GROUPS =
+    List.of("apmaABGroups", "csciABGroups", "mathABGroups", "mathSCBGroups");
+  private static final List<String> ALLOWED_COURSES =
+    List.of("apmaABCourses", "csciABMLCourses", "mathABCourses", "mathSCBCourses");
 
   private Database() {}
 
@@ -53,7 +57,7 @@ public final class Database {
         "courseData ON courseCR.id = ? AND courseCR.id = courseData.id")) {
       statement.setString(1, id);
       try (ResultSet results = statement.executeQuery()) {
-        if (results.isClosed() || null == results) {
+        if (null == results || results.isClosed()) {
           return null;
         }
         return CourseConversions.resultToCourseNode(results);
@@ -79,7 +83,7 @@ public final class Database {
    * Sets up a k-complete graph connecting all of the courses in the database
    *
    */
-   public void setupGraph() throws SQLException {
+   public static void setupGraph() throws SQLException {
      List<CourseNode> courseNodes = new ArrayList<>();
      for (Iterator<CourseNode> it = iterateAllCourseNodes(); it.hasNext(); ) {
        CourseNode node = it.next();
@@ -88,7 +92,7 @@ public final class Database {
 
      // Add Nodes to the Graph
      for (CourseNode startNode : courseNodes) {
-       this.graph.addNode(startNode,
+       graph.addNode(startNode,
          new HashSet<>(courseNodes
            .stream()
            .filter(node -> !node.equals(startNode))
@@ -101,8 +105,8 @@ public final class Database {
    * Returns the Graph that was set up.
    * @return the graph from the nodes in the database
    */
-   public CourseGraph getGraph() {
-    return this.graph;
+   public static CourseGraph getGraph() {
+    return graph;
    }
 
   /**
@@ -112,16 +116,19 @@ public final class Database {
    * @return the found HashMap of groups
    */
   public static HashMap<String, Integer> getGroups(String id) {
-    try (PreparedStatement statement = conn.prepareStatement("SELECT * FROM ?")) {
-      statement.setString(1, id);
-      try (ResultSet results = statement.executeQuery()) {
-        if (results.isClosed()) {
-          return null;
+    if (ALLOWED_GROUPS.contains(id))  {
+      try (PreparedStatement statement = conn.prepareStatement("SELECT * FROM " + id)) {
+        try (ResultSet results = statement.executeQuery()) {
+          if (results.isClosed()) {
+            return null;
+          }
+          return CourseConversions.resultToGroupMap(results);
         }
-        return CourseConversions.resultToGroupMap(results);
+      } catch (SQLException e) {
+        throw new SQLRuntimeException(e);
       }
-    } catch (SQLException e) {
-      throw new SQLRuntimeException(e);
+    } else {
+      throw new IllegalArgumentException("Invalid Groups Table! Must be one of " + ALLOWED_GROUPS);
     }
   }
 
@@ -132,17 +139,21 @@ public final class Database {
    * @return the found HashMap of CourseWays
    */
   public static HashMap<String, CourseWay> getCourseWays(String id) {
-    try (PreparedStatement statement = conn.prepareStatement("SELECT * FROM ?")) {
-      statement.setString(1, id);
-      try (ResultSet results = statement.executeQuery()) {
-        if (results.isClosed()) {
-          return null;
+    if (ALLOWED_COURSES.contains(id)) {
+      try (PreparedStatement statement = conn.prepareStatement("SELECT * FROM " + id)) {
+        try (ResultSet results = statement.executeQuery()) {
+          if (results.isClosed()) {
+            return null;
+          }
+          return CourseConversions.resultToCourseWayMap(results);
         }
-        return CourseConversions.resultToCourseWayMap(results);
+      } catch (SQLException e) {
+        throw new SQLRuntimeException(e);
       }
-    } catch (SQLException e) {
-      throw new SQLRuntimeException(e);
+    } else {
+      throw new IllegalArgumentException("Invalid Courses Table! Must be one of " + ALLOWED_COURSES);
     }
+
   }
 
   /**

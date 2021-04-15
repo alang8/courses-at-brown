@@ -83,21 +83,21 @@ public class GraphAlgorithms<Node extends GraphNode, Edge extends GraphEdge,
       // Pop off the minHeap
       Node currNode = minHeap.remove();
       String currID = currNode.getID();
-      System.out.println("--------------------------------------------");
-      System.out.println("CURRENT NODE: " + currNode);
+//      System.out.println("--------------------------------------------");
+//      System.out.println("CURRENT NODE: " + currNode);
       // Process Node only if it hasn't been visited yet
       if (!currNode.visited()) {
         // Iterate through all of the neighbors of the current node
         for (Edge E : edgeSet.get(currID).values()) {
           // Get Neighbor and calculate score to neighbor from currrent node
           Node neighbor = (Node) E.getEnd();
-          System.out.println("CURRENT EDGE: " + E);
+//          System.out.println("CURRENT EDGE: " + E);
           List<Edge> prevPath = new ArrayList<>(nodeSet.get(currID).getPreviousPath());
-          System.out.println("PREVIOUS PATH: " + prevPath);
-          System.out.println("OLD WEIGHT: " + currNode.getWeight());
+//          System.out.println("PREVIOUS PATH: " + prevPath);
+//          System.out.println("OLD WEIGHT: " + currNode.getWeight());
           double newWeight = currNode.getWeight() + E.getWeight();
-          System.out.println("NEW WEIGHT: " + newWeight);
-          System.out.println("--------------------------------------------");
+//          System.out.println("NEW WEIGHT: " + newWeight);
+//          System.out.println("--------------------------------------------");
           // Update hashMap and add to minHeap if neighbor can be reached betterly
           if (nodeSet.get(neighbor.getID()).getWeight() > newWeight) {
             nodeSet.get(neighbor.getID()).setWeight(newWeight);

@@ -164,8 +164,14 @@ public final class CourseConversions {
     try {
       while (results.next()) {
         String id = results.getString("id");
-        Set<String> sequence =
-            new HashSet<String>(Arrays.asList(results.getString("id").split(",")));
+        String sequenceString = results.getString("sequence");
+        Set<String> sequence;
+        if (null == sequenceString) {
+          sequence = new HashSet<>();
+        } else {
+          sequence = new HashSet<>(Arrays.asList(sequenceString.split(",")));
+        }
+
         int group_id = Integer.parseInt(results.getString("group_id"));
         courseWays.put(id, new CourseWay(id, sequence, group_id));
       }

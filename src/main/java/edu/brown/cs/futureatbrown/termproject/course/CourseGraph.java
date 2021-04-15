@@ -34,6 +34,8 @@ public class CourseGraph implements Graph<CourseNode, CourseEdge> {
   private Integer classSizeMax; // Max Class Size
   private Integer minNumClasses; // Minimum Number of Classes
   private Integer maxNumClasses; // Maximum Number of Classes
+  private HashMap<String, Integer> groupData;
+  private HashMap<String, CourseWay> courseWayData;
 
   private Set<List<CourseNode>> prereqs; //Global Prerequisites of the target end node
 
@@ -67,11 +69,31 @@ public class CourseGraph implements Graph<CourseNode, CourseEdge> {
 
   /**
    * Sets up all the global parameters of the graph in this edge
+   * RECALL that all of these are relative so Preferences of all 10s are the same as Preferences of all 1s
+   * @param crsRatingPref Course Rating Preference: How Important is the Course Rating (0 - 10)
+   * @param profRatingPref Professor Rating Preference: How Important is the Professor Rating (0 - 10)
+   * @param avgHoursPref Average Hours Preference: How Important is the Avg Hours of the Class (0 - 10)
+   * Penalty applied when the Total Sum of Avg Hours of all courses in the pathway exceed the total Acceptable
+   * Avg Hours. Penalty based on how much it goes over.
+   * @param avgHoursInput Average Hours Input: User Inputted Optimal Avg Hours per class
+   * @param minNumClasses Minimum Number of Courses the pathway must contain
+   * @param maxNumClasses Maximum Number of Courses the pathway must contain
+   * @param balanceFactorPref Balance Factor Preference: How Important is it that each individual course in the
+   * pathway are close to the Average Hours Input (See Above)
+   * @param totalMaxHoursInput Total Acceptable Max Number of Hours, Will shut down any pathways that exceed the
+   * max number of hours. Use Double.POSITIVE_INFINITY if you want to nullify this check.
+   * @param classSizePref Class Size Preference: How Important is the Class Size (0 - 10)
+   * @param classSizeInput User Inputted Optimal Class Size, Penalized for distance from Input.
+   * @param classSizeMax User Inputted Max Class size, Penalty decreases if user can tolerate a larger class size
+   * and increases if the user cannot.
+   * @param groupData Map of Group ID to number of courses required to satisify in that group for the particular pathway
+   * @param courseWayData Map of Course ID to the courseWay (CourseID, Sequence, GroupID)
    */
   public void setGlobalParams(double crsRatingPref, double profRatingPref, double avgHoursPref,
                               double avgHoursInput, int minNumClasses, int maxNumClasses,
                               double balanceFactorPref, double totalMaxHoursInput,
-                              double classSizePref, int classSizeInput, int classSizeMax) {
+                              double classSizePref, int classSizeInput, int classSizeMax,
+                              HashMap<String, Integer> groupData, HashMap<String, CourseWay> courseWayData) {
     // SLIDER PREFERENCES
     this.crsRatingPref = crsRatingPref;
     this.profRatingPref = profRatingPref;
@@ -86,6 +108,8 @@ public class CourseGraph implements Graph<CourseNode, CourseEdge> {
     this.maxNumClasses = maxNumClasses;
     this.classSizeInput = classSizeInput;
     this.classSizeMax = classSizeMax;
+    this.groupData = groupData;
+    this.courseWayData = courseWayData;
 
     // SET ALL THE EDGES TO THE SAME PARAMETER
     for (HashMap<String, CourseEdge> edgesFrom: this.edgeMap.values()) {
@@ -93,7 +117,8 @@ public class CourseGraph implements Graph<CourseNode, CourseEdge> {
         edge.setGlobalParams(this.crsRatingPref, this.profRatingPref,
           this.avgHoursPref, this.avgHoursInput, this.minNumClasses,
           this.maxNumClasses, this.balanceFactorPref, this.totalMaxHoursInput,
-          this.classSizePref, this.classSizeInput, this.classSizeMax);
+          this.classSizePref, this.classSizeInput, this.classSizeMax,
+          this.groupData, this.courseWayData);
       }
     }
   }
@@ -169,7 +194,7 @@ public class CourseGraph implements Graph<CourseNode, CourseEdge> {
     }
     System.out.println("PREREQS: " + this.prereqs);
     for (CourseNode node: this.nodeMap.values()) {
-      node.resetHours();
+      node.resetHoursAndGroups();
     }
   }
 
@@ -186,10 +211,9 @@ public class CourseGraph implements Graph<CourseNode, CourseEdge> {
         edge.setGlobalParams(this.crsRatingPref, this.profRatingPref,
           this.avgHoursPref, this.avgHoursInput, this.minNumClasses,
           this.maxNumClasses, this.balanceFactorPref, this.totalMaxHoursInput,
-          this.classSizePref, this.classSizeInput, this.classSizeMax);
-      } catch (NullPointerException e) {
-        System.out.println("WARNING: Remember to Initialize the Global Parameters");
-      }
+          this.classSizePref, this.classSizeInput, this.classSizeMax,
+          this.groupData, this.courseWayData);
+      } catch (NullPointerException e) { }
       if (edge.getStart().getID().equals(node.getID())) {
         if (edgeMap.containsKey(edge.getStart().getID())) {
           edgeMap.get(edge.getStart().getID()).put(edge.getEnd().getID(), edge);
