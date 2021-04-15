@@ -161,8 +161,8 @@ public final class Main {
         double cRP = prefJSON.getDouble("crsRatingPref");
         double pRP = prefJSON.getDouble("profRatingPref");
         double cSP = prefJSON.getDouble("crsSizePref");
-        double aHI = aHP / 5.0 * 7.5;
-        double mHI = mHP / 5.0 * 13.8;
+        double aHI = aHP / 5.0 * 75;
+        double mHI = mHP / 5.0 * 400;
         int cSI = (int) cSP / 5 * 72;
         int minNumCourses = 0;
         int maxNumCourses = 26;
@@ -172,12 +172,12 @@ public final class Main {
         PreparedStatement prep = cConn.prepareStatement(query);
         ResultSet rs = prep.executeQuery();
 
-        double bFP = 5;
-        int cSM = 400;
+        double bFP = 1;
+        int cSM = 500;
 
         if (rs.next()) {
           minNumCourses = rs.getInt(1);
-          maxNumCourses = Math.min(2 * minNumCourses, 32);
+          maxNumCourses = Math.min((int) (1.5 * minNumCourses), 32);
         } else {
           System.out.println("ERROR: GetPathHandler, couldn't find table for " + conc);
         }
@@ -189,6 +189,7 @@ public final class Main {
         while (rs.next()) {
           introCourses.add(rs.getString(1));
         }
+
 
         /*
           averages
@@ -207,15 +208,25 @@ public final class Main {
 
 
         System.out.println("setting params and getting path: ");
+//          theGraph.setGlobalParams(cRP, pRP, aHP, aHI, minNumCourses, maxNumCourses, bFP, mHI, cSP, cSI, cSM, gData, cWays);
           theGraph.setGlobalParams(cRP, pRP, aHP, aHI, minNumCourses, maxNumCourses, bFP, mHI, cSP, cSI, cSM, gData, cWays);
+//        theGraph.setGlobalParams(1, 1, 1,
+//          10, 1, 5, 1,
+//          100, 1, 50, 500,
+//          null, null);
           List<List<CourseEdge>> paths = graphAlg.pathway(introCourses, theGraph);
 
-          List<CourseEdge> bestPath = paths.get(0);
+        System.out.println("best paths: ");
+        System.out.println(paths.get(0));
+        paths.sort(Comparator.comparingDouble((s) -> -s.size()));
+          System.out.println(paths.get(0));
 
-          System.out.println("best path: ");
-          for (CourseEdge e : bestPath) {
-            System.out.println(e);
-          }
+          System.out.println(introCourses);
+
+//          System.out.println("best path: ");
+//          for (CourseEdge e : bestPath) {
+//            System.out.println(e);
+//          }
 
 //          int currentOverallSem = 0;
 //          int prevCourseSem = 0;
