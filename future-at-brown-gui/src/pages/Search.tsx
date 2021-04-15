@@ -1,6 +1,6 @@
 import React, { createRef, useEffect, useState } from "react"
 import axios from "axios";
-import { Button, Container, Dimmer, Grid, GridColumn, Header, Loader, Segment, Sticky } from "semantic-ui-react"
+import { Button, Container, Dimmer, Dropdown, DropdownProps, Grid, GridColumn, Header, Loader, Message, Segment, Sticky } from "semantic-ui-react"
 import { Course, FindCourse, GetCode } from "../classes/Course";
 import { SearchParams } from "../classes/SearchParams";
 import User from "../classes/User";
@@ -32,7 +32,10 @@ const Search: React.FC<Params> = (props) => {
 
     const [prefs, setPrefs] = useState<SearchParams>(props.user.getPreferences());
     const [takenCourses, setTakenCourses] = useState<Course[]>(props.user.getTaken());
+    const [concentration, setConcentration] = useState<string | undefined>(undefined);
+
     const [loadingPath, setLoading] = useState<boolean>(false);
+    const [dropDown, setDropdown] = useState<{ text: string, value: string }[]>([]);
 
     const WrapDiv: React.FC<{}> = (props) =>
         <div className="total" style={{ overflow: loadingPath ? "hidden" : "auto" }}
@@ -40,6 +43,8 @@ const Search: React.FC<Params> = (props) => {
 
     //Function to get the path
     const getPath = async (): Promise<void> => {
+        setLoading(true);
+        console.log("concentration", concentration)
         const toSend = {
             prefs: prefs,
             concentration: "mathAB"
@@ -61,28 +66,37 @@ const Search: React.FC<Params> = (props) => {
     }
 
     useEffect(() => {
-        if (loadingPath) {
-            getPath();
-        }
-    }, [loadingPath]);
+        axios.post<{ [concentrations: string]: { [key: string]: string } }>(
+            'http://localhost:4567/getconcs',
+            {}, config
+        ).then((resp) => {
+            const vals = resp.data["concentrations"];
+            const newDrop: { text: string, value: string }[] = [];
+            for (let text in vals)
+                newDrop.push({ text: text, value: vals[text] });
+            setDropdown(newDrop);
+        });
+    }, []);
 
     const setPrefsAsync = async (pref: SearchParams) => setPrefs(pref)
 
     return <Dimmer.Dimmable active={loadingPath} as={WrapDiv}>
         <ProfileButton />
         <SignOutHeader setUser={props.setUser} user={props.user}
-            heading={{ title: "Search", information: "This page allows you to put in preferences "
-            + "about the path you want to take though Brown (things such as class size, rating, "
-            + "etc) so that the algorithm can find your optimal path through a concentration" }} />
+            heading={{
+                title: "Search", information: "This page allows you to put in preferences "
+                    + "about the path you want to take though Brown (things such as class size, rating, "
+                    + "etc) so that the algorithm can find your optimal path through a concentration"
+            }} />
         <Dimmer active={loadingPath} blurring>
             <Loader />
         </Dimmer>
         <Container>
-            
+
             <Grid padded stretched centered>
                 <Grid.Row>
                     <Grid.Column>
-                    <Header as="h1" content={"New search"} />
+                        <Header as="h1" content={"New search"} />
                     </Grid.Column>
                 </Grid.Row>
                 <Grid.Row stretched>
@@ -102,14 +116,34 @@ const Search: React.FC<Params> = (props) => {
                         }} color="green" />
                     </Grid.Column>
                 </Grid.Row>
+                <Grid.Row>
+                    <Grid.Column>
+                        <Segment color="pink">
+                            <Header as="h2" content={"Concentration"} />
+                            <Dropdown
+                                fluid
+                                search
+                                selection
+                                options={dropDown}
+                                placeholder='Select Concentration'
+                                value={concentration}
+                                onChange={(e, d: DropdownProps) => setConcentration(d.value as string | undefined)}
+                            />
+                        </Segment>
+                    </Grid.Column>
+                </Grid.Row>
                 <Grid.Row stretched>
                     <Grid.Column>
-                        <Button
-                            onClick={() => setLoading(true)}
-                            loading={loadingPath}
-                            content={"Submit"}
-                            className={"gradient"}
-                        />
+                        {(concentration) ?
+                            <Button
+                                onClick={getPath}
+                                loading={loadingPath}
+                                content={"Submit"}
+                                className={"gradient"}
+                            />
+                            : <Message header={"Error"} icon="warning" color="red" 
+                                content={"Please select a concentration before continuing"} />
+                        }
                     </Grid.Column>
                 </Grid.Row>
             </Grid>

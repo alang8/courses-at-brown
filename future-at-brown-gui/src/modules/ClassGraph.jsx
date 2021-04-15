@@ -209,7 +209,7 @@ const ClassGraph = (props) => {
 
     function edgeColor(edge) {
         return (edge.source.id in props.path && edge.target.id in props.path) ?
-            "black" : GetColorRaw(edge.source.id?.substring(0, 4) ?? 'ECON');
+            "black" : GetColorRaw(edge.source.id?.substring(0, 4) ?? "CSCI");
     }
 
     function edgeLabel(edge) {
@@ -227,11 +227,11 @@ const ClassGraph = (props) => {
                 showNavInfo={true}
                 dagMode={"radialout"}
                 nodeVal={nodeInPath(600, 20)}
-                nodeColor={node => GetColorRaw(node.id?.substring(0, 4) ?? 'ECON')}
+                nodeColor={node => GetColorRaw(node.id?.substring(0, 4) ?? "CSCI")}
                 linkColor={edgeColor}
                 linkWidth={edgeInPath(2, 1)}
                 linkCurvature={edgeInPath(0.3, 0)}
-                linkDirectionalParticles={edgeInPath(3, 1)}
+                linkDirectionalParticles={edgeInPath(5, 1)}
                 linkDirectionalParticleWidth={edgeInPath(8, 4)}
                 linkDirectionalArrowLength={30}
                 linkDirectionalArrowRelPos={1}
