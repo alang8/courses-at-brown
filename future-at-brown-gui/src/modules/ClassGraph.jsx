@@ -1,9 +1,10 @@
-import {useEffect, useRef, useState} from "react"
+import { useEffect, useRef, useState } from "react"
 import CourseInfo from "../modules/CourseInfo";
 import { ForceGraph2D } from 'react-force-graph';
 import axios from "axios";
 import "../css/Graph.css"
-import {GetColorRaw} from '../classes/Colors'
+import { GetColorRaw } from '../classes/Colors'
+import { GetCode } from '../classes/Course'
 
 /**
  * React component which deals with the actual graph display itself.
@@ -14,9 +15,9 @@ const ClassGraph = (props) => {
     const fgRef = useRef();
     const [theCourses, setCourses] = useState([]);
     const [allCourseInfo, setAllCourseinfo] = useState({});
-    const [gData, setGData] = useState({"nodes":[{}], "links":[{}]});
+    const [gData, setGData] = useState({ "nodes": [{}], "links": [{}] });
 
-    let theSemester = {0:"Fall 2021", 1:"Spring 2022", 2:"Fall 2022", 3:"Spring 2023", 4:"Fall 2023", 5:"Spring 2024", 6:"Fall 2024", 7:"Spring 2025", 8:"Fall 2025", 9:"Spring 2026"}
+    let theSemester = { 0: "Fall 2021", 1: "Spring 2022", 2: "Fall 2022", 3: "Spring 2023", 4: "Fall 2023", 5: "Spring 2024", 6: "Fall 2024", 7: "Spring 2025", 8: "Fall 2025", 9: "Spring 2026" }
 
     //Config for axios.
     let config = {
@@ -54,13 +55,13 @@ const ClassGraph = (props) => {
     function setupNodes() {
         console.log("in classGraph")
         console.log(props.path)
-        let nodeArray= [];
+        let nodeArray = [];
         let linkArray = [];
         let i;
         let tempCourseInfo = {};
 
         console.log(theCourses);
-        for(i = 0; i < theCourses.length; i++) {
+        for (i = 0; i < theCourses.length; i++) {
             let curID = theCourses[i]['id']
             let prereqInfo = theCourses[i]['prereqs']
             const courseCodeReg = /[A-Z]{4}\s[0-9]{4}[A-Z]?/g;
@@ -68,19 +69,19 @@ const ClassGraph = (props) => {
             if (prereqIDs !== null) {
                 let z;
                 for (z = 0; z < prereqIDs.length; z++) {
-                    linkArray.push({"source":prereqIDs[z], "target": curID});
+                    linkArray.push({ "source": prereqIDs[z], "target": curID });
                 }
             }
             let val = 8;
             if (curID in props.path) {
                 val = 100;
             }
-            nodeArray.push({'id':curID, 'name':curID, 'val':val});
+            nodeArray.push({ 'id': curID, 'name': curID, 'val': val });
             tempCourseInfo[curID] = theCourses[i];
         }
 
         setAllCourseinfo(tempCourseInfo);
-        setGData({"nodes": nodeArray, "links":linkArray});
+        setGData({ "nodes": nodeArray, "links": linkArray });
     }
 
     //Want to get all course data upon load
@@ -97,7 +98,7 @@ const ClassGraph = (props) => {
 
     //State vars for the popup window when clicking on a specific node.
     const [open, setOpen] = useState(true);
-    const [curCourse, setCurCourse] = useState({name:"DEFAULT", dept:"DEFAULT", code:"DEFAULT"});
+    const [curCourse, setCurCourse] = useState({ name: "DEFAULT", dept: "DEFAULT", code: "DEFAULT" });
     const closeModal = () => setOpen(false);
 
     useEffect(() => setOpen(!open), [curCourse])
@@ -107,6 +108,7 @@ const ClassGraph = (props) => {
      * @param nodeInfo - the information of the clicked node (basically just the dept + code as a string).
      */
     function displayedCourseInfo(nodeInfo) {
+        console.log("user", props.user.getSaved())
         let classID = nodeInfo['id'];
         console.log(classID)
         console.log(allCourseInfo[classID]);
@@ -117,16 +119,17 @@ const ClassGraph = (props) => {
         let prereqText = encodedPrereq.replaceAll("&", " and ")
         prereqText = prereqText.replaceAll("|", " or ")
         let clickedCourse = {
-            name:rawCourse['name'],
-            dept:classID.substring(0,4),
-            code:classID.substring(4),
-            description:rawCourse['desc'],
+            name: rawCourse['name'],
+            dept: classID.substring(0, 4),
+            code: classID.substring(4),
+            description: rawCourse['desc'],
             rating: rawCourse['crsrat'],
             latestProf: rawCourse['instr'],
             latestProfRating: rawCourse['profrat'],
             maxHours: rawCourse['maxhr'],
             avgHours: rawCourse['avghr'],
-            prereqs: (prereqText === "" ? "None Listed": prereqText)}
+            prereqs: (prereqText === "" ? "None Listed" : prereqText),
+        }
         setCurCourse(clickedCourse)
 
     }
@@ -140,8 +143,8 @@ const ClassGraph = (props) => {
      * @param ctx - the context in which we will draw the node.
      */
     function nodePaint({ id, x, y }, color, ctx) {
-        if(id in props.path) {
-            ctx.fillStyle = GetColorRaw(id.substring(0,4));
+        if (id in props.path) {
+            ctx.fillStyle = GetColorRaw(id.substring(0, 4));
             ctx.beginPath();
             ctx.arc(x, y, 100, 0, 2 * Math.PI, false);
             ctx.fill();
@@ -149,7 +152,7 @@ const ClassGraph = (props) => {
             ctx.font = 'bold 24px Sans-Serif';
             ctx.textAlign = 'center';
             ctx.textBaseline = 'middle';
-            ctx.fillText(id, x, y-15);
+            ctx.fillText(id, x, y - 15);
             ctx.fillText(theSemester[props.path[id]], x, y + 9);
             ctx.stroke();
         } else {
@@ -170,9 +173,9 @@ const ClassGraph = (props) => {
         <div id="graphWrapper">
             <ForceGraph2D
                 graphData={gData}
-                onNodeClick={(n, e) => {displayedCourseInfo(n);}}
+                onNodeClick={(n, e) => { displayedCourseInfo(n); }}
                 ref={fgRef}
-                showNavInfo = {true}
+                showNavInfo={true}
                 dagMode={"radialin"}
                 dagLevelDistance={100}
                 // height={600}
@@ -180,7 +183,12 @@ const ClassGraph = (props) => {
                 nodeCanvasObject={(node, ctx) => nodePaint(node, "black", ctx)}
             />
         </div>
-        <CourseInfo course={curCourse} setDisplay={closeModal} shouldDisplay={open} button={{func: props.saveFunction}}/>
+        <CourseInfo
+            course={curCourse}
+            setDisplay={closeModal}
+            shouldDisplay={open}
+            button={{ func: props.saveFunction }}
+            shouldDisable={(test) => props.user.getSaved().find(c => GetCode(c) === GetCode(test)) !== undefined} />
     </div>
 }
 

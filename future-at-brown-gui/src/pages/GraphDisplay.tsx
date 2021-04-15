@@ -29,18 +29,22 @@ const GraphDisplay: React.FC<Params> = (props) => {
     const getContent = (): JSX.Element => {
         if (props.path) {
             ref.current?.scrollIntoView(true);
-            return <ClassGraph path={props.path} saveFunction={(c: Course) => props.user.saveCourse(c)} ref={ref}/>
+            return <ClassGraph
+                path={props.path}
+                saveFunction={(c: Course) => props.user.saveCourse(c)}
+                ref={ref}
+                user={props.user} />
         }
         return <Container textAlign={"center"}>
-                    <Header as="h1">
-                        Uh oh, you haven't started a search yet. Head on over to
+            <Header as="h1">
+                Uh oh, you haven't started a search yet. Head on over to
                     <Link to="/search" ><code> /search </code></Link> or click
                     the serach button to start a new search!
                     </Header>
-                </Container>;
+        </Container>;
     }
 
-    return <div className="total" style={{overflow: "hidden"}}>
+    return <div className="total" style={{ overflow: "hidden" }}>
         <ProfileButton />
         <SearchButton />
         <SignOutHeader setUser={props.setUser} user={props.user} dontDisplace
