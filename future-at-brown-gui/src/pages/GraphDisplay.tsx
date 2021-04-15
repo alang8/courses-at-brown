@@ -1,4 +1,3 @@
-import React from "react"
 import ClassGraph from "../modules/ClassGraph.jsx";
 import "../css/Graph.css"
 import SignOutHeader from "../modules/SignOutHeader";
