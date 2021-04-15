@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react"
+import React, { createRef, useEffect, useState } from "react"
 import axios from "axios";
 import { Button, Container, Dimmer, Grid, GridColumn, Header, Loader, Segment, Sticky } from "semantic-ui-react"
 import { Course, FindCourse, GetCode } from "../classes/Course";
@@ -8,6 +8,7 @@ import { ButtonFooter, ProfileButton } from "../modules/BottomButton";
 import ExpandableCourses from "../modules/ExpandableCourses";
 import ParamSlider from "../modules/ParamSliders";
 import SignOutHeader from "../modules/SignOutHeader";
+import { groupEnd } from "node:console";
 
 const config = {
     headers: {
@@ -28,9 +29,14 @@ interface Params {
  * @param props - the useful parameters of the search page, specified above.
  */
 const Search: React.FC<Params> = (props) => {
+
     const [prefs, setPrefs] = useState<SearchParams>(props.user.getPreferences());
     const [takenCourses, setTakenCourses] = useState<Course[]>(props.user.getTaken());
     const [loadingPath, setLoading] = useState<boolean>(false);
+
+    const WrapDiv: React.FC<{}> = (props) =>
+        <div className="total" style={{ overflow: loadingPath ? "hidden" : "auto" }}
+            children={props.children} />
 
     //Function to get the path
     const getPath = async (): Promise<void> => {
@@ -62,22 +68,30 @@ const Search: React.FC<Params> = (props) => {
 
     const setPrefsAsync = async (pref: SearchParams) => setPrefs(pref)
 
-    return <div className="total">
+    return <Dimmer.Dimmable active={loadingPath} as={WrapDiv}>
         <ProfileButton />
-        <Container >
-            <Dimmer active={loadingPath} >
-                <Loader />
-            </Dimmer>
-            <SignOutHeader setUser={props.setUser} user={props.user} />
-            <Header as="h1" content={"New search"} />
+        <SignOutHeader setUser={props.setUser} user={props.user}
+            heading={{ title: "Search", information: "This page allows you to put in preferences "
+            + "about the path you want to take though Brown (things such as class size, rating, "
+            + "etc) so that the algorithm can find your optimal path through a concentration" }} />
+        <Dimmer active={loadingPath} blurring>
+            <Loader />
+        </Dimmer>
+        <Container>
+            
             <Grid padded stretched centered>
+                <Grid.Row>
+                    <Grid.Column>
+                    <Header as="h1" content={"New search"} />
+                    </Grid.Column>
+                </Grid.Row>
                 <Grid.Row stretched>
-                    <GridColumn>
+                    <Grid.Column>
                         <Segment color="blue">
                             <Header as="h2" content={"Preferences"} />
                             <ParamSlider curUser={props.user} prefChange={setPrefsAsync} />
                         </Segment>
-                    </GridColumn>
+                    </Grid.Column>
                 </Grid.Row>
                 <Grid.Row stretched>
                     <Grid.Column>
@@ -85,7 +99,7 @@ const Search: React.FC<Params> = (props) => {
                             searcher: FindCourse,
                             addCourse: async (course: Course) => setTakenCourses(takenCourses.concat(course)),
                             removeCourse: async (code: string) => setTakenCourses(takenCourses.filter(c => GetCode(c) !== code))
-                        }} color="green"/>
+                        }} color="green" />
                     </Grid.Column>
                 </Grid.Row>
                 <Grid.Row stretched>
@@ -99,9 +113,9 @@ const Search: React.FC<Params> = (props) => {
                     </Grid.Column>
                 </Grid.Row>
             </Grid>
-            <ButtonFooter />
         </Container>
-    </div>
+        <ButtonFooter />
+    </Dimmer.Dimmable>
 }
 
 export default Search;

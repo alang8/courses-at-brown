@@ -146,7 +146,7 @@ const ClassGraph = (props) => {
             ctx.arc(x, y, 100, 0, 2 * Math.PI, false);
             ctx.fill();
             ctx.fillStyle = "white"
-            ctx.font = '24px Sans-Serif';
+            ctx.font = 'bold 24px Sans-Serif';
             ctx.textAlign = 'center';
             ctx.textBaseline = 'middle';
             ctx.fillText(id, x, y-15);
@@ -175,8 +175,8 @@ const ClassGraph = (props) => {
                 showNavInfo = {true}
                 dagMode={"radialin"}
                 dagLevelDistance={100}
-                height={600}
-                width={1125}
+                // height={600}
+                // width={1125}
                 nodeCanvasObject={(node, ctx) => nodePaint(node, "black", ctx)}
             />
         </div>
