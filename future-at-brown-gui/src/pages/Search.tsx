@@ -1,4 +1,4 @@
-import React, { createRef, useEffect, useState } from "react"
+import { useEffect, useState } from "react"
 import axios from "axios";
 import { Button, Container, Dimmer, Dropdown, DropdownProps, Grid, GridColumn, Header, Loader, Message, Segment, Sticky } from "semantic-ui-react"
 import { Course, FindCourse, GetCode } from "../classes/Course";
@@ -47,7 +47,7 @@ const Search: React.FC<Params> = (props) => {
         console.log("concentration", concentration)
         const toSend = {
             prefs: prefs,
-            concentration: "mathAB"
+            concentration: "csciABML"
         };
         console.log("requesting path")
         await axios.post(

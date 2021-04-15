@@ -301,8 +301,14 @@ public class GraphAlgorithms<Node extends GraphNode, Edge extends GraphEdge,
   public List<List<Edge>> pathway(List<String> introCourses, G courseGraph) throws InvalidAlgorithmParameterException {
     List<List<List<Edge>>> toMerge = new ArrayList<>();
     for (String introClassID : introCourses) {
-      toMerge.add(dijkstraPathTree(introClassID, courseGraph));
+      System.out.println("in pathway");
+      List<List<Edge>> l = dijkstraPathTree(introClassID, courseGraph);
+      System.out.println("p2 out");
+      System.out.println(l);
+      toMerge.add(l);
     }
+    System.out.println("in pathway");
+    System.out.println(toMerge);
     return mergeSortedLists(toMerge, new ShortPathComparator());
   }
 }

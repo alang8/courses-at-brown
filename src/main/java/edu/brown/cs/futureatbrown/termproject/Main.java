@@ -161,8 +161,8 @@ public final class Main {
         double cRP = prefJSON.getDouble("crsRatingPref");
         double pRP = prefJSON.getDouble("profRatingPref");
         double cSP = prefJSON.getDouble("crsSizePref");
-        double aHI = aHP / 5.0 * 7.5;
-        double mHI = mHP / 5.0 * 13.8;
+        double aHI = (aHP / 5.0 * 75) + 15;
+        double mHI = Math.max(mHP / 5.0 * 400, 300);
         int cSI = (int) cSP / 5 * 72;
         int minNumCourses = 0;
         int maxNumCourses = 26;
@@ -172,12 +172,12 @@ public final class Main {
         PreparedStatement prep = cConn.prepareStatement(query);
         ResultSet rs = prep.executeQuery();
 
-        double bFP = 5;
-        int cSM = 400;
+        double bFP = 1;
+        int cSM = 500;
 
         if (rs.next()) {
           minNumCourses = rs.getInt(1);
-          maxNumCourses = Math.min(2 * minNumCourses, 32);
+          maxNumCourses = Math.min((int) (1.5 * minNumCourses), 32);
         } else {
           System.out.println("ERROR: GetPathHandler, couldn't find table for " + conc);
         }
@@ -190,60 +190,49 @@ public final class Main {
           introCourses.add(rs.getString(1));
         }
 
+
         /*
           averages
           avg hours : 7.53125
           max hours : 13.755
           class size: 72.3703703703704
            */
-//        setGlobalParams(double crsRatingPref, double profRatingPref, double avgHoursPref,
-//        double avgHoursInput, int minNumClasses, int maxNumClasses,
-//        double balanceFactorPref, double totalMaxHoursInput,
-//        double classSizePref, int classSizeInput, int classSizeMax,
-//        HashMap<String, Integer> groupData, HashMap<String, CourseWay > courseWayData)
 
         Map<String, CourseWay> cWays = Database.getCourseWays(conc + "Courses");
         Map<String, Integer> gData = Database.getGroups(conc + "Groups");
 
 
         System.out.println("setting params and getting path: ");
-          theGraph.setGlobalParams(cRP, pRP, aHP, aHI, minNumCourses, maxNumCourses, bFP, mHI, cSP, cSI, cSM, gData, cWays);
-          List<List<CourseEdge>> paths = graphAlg.pathway(introCourses, theGraph);
+        theGraph.setGlobalParams(cRP, pRP, aHP, aHI, minNumCourses, maxNumCourses, bFP, mHI, cSP, cSI, cSM, gData, cWays);
+        List<List<CourseEdge>> paths = graphAlg.pathway(introCourses, theGraph);
 
-          List<CourseEdge> bestPath = paths.get(0);
+        System.out.println("best paths: ");
+        System.out.println(paths.get(0));
 
-          System.out.println("best path: ");
-          for (CourseEdge e : bestPath) {
-            System.out.println(e);
+        List<CourseEdge> bestPath = paths.get(0);
+
+        int currentOverallSem = 0;
+        int prevCourseSem = 1;
+
+        for (int i =0; i< bestPath.size(); i++) {
+          CourseEdge curEdge = bestPath.get(i);
+          CourseNode curNode = curEdge.getStart();
+          if(curNode.getSem() != prevCourseSem && curNode.getSem() != 0) {
+            currentOverallSem = Math.min(currentOverallSem + 1, 9);
+            prevCourseSem = (prevCourseSem == 1) ? 2:1;
           }
+          thePath.put(curNode.getID(), currentOverallSem);
 
-//          int currentOverallSem = 0;
-//          int prevCourseSem = 0;
-//          CourseEdge curEdge = bestPath.get(0);
-//
-//          //TODO will the list of edges be in "order"? if so...
-//          CourseNode curNode;
-//          for(CourseEdge c : bestPath) {
-//            CourseNode curNode = c.getStart();
-//            if(curNode.getSem() != prevCourseSem && curNode.getSem() != 0) {
-//              currentOverallSem += 1;
-//            }
-//            thePath.put(curNode.getID(), currentOverallSem);
-//            //TODO assumes that consecutive edges share start / end
-//          }
-//
-//          //once at end, need to include final node. TODO if thats how its formatted
-//          curNode = c.getEnd();
-//          if(curNode.getSem() != prevCourseSem && curNode.getSem() != 0) {
-//              currentOverallSem += 1;
-//          }
-//          thePath.put(curNode.getID(), currentOverallSem);
+          if(i == bestPath.size() - 1) {
+            curNode = curEdge.getEnd();
+            if(curNode.getSem() != prevCourseSem && curNode.getSem() != 0) {
+              currentOverallSem = Math.min(currentOverallSem + 1, 9);
+              prevCourseSem = (prevCourseSem == 1) ? 2:1;
+            }
+            thePath.put(curNode.getID(), currentOverallSem);
+          }
+        }
 
-        thePath.put("CSCI 0170", 0);
-        thePath.put("CSCI 0180", 1);
-        thePath.put("MATH 0540", 1);
-        thePath.put("CSCI 0220", 2);
-        thePath.put("APMA 0350", 2);
       } catch (JSONException | SQLException e) {
         e.printStackTrace();
       } catch (InvalidAlgorithmParameterException e) {

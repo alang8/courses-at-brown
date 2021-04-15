@@ -321,8 +321,7 @@ public class CourseAlgorithmTest {
       Database.getGroups("csciABMLGroups"), Database.getCourseWays("csciABMLCourses"));
 
     List<CourseEdge> pathWithRequirements = courseAlgorithms.dijkstraPath("CSCI 0150", "CSCI 0170", finalGraph);
-    System.out.println("/////////////////////////////////");
-    System.out.println(pathWithRequirements);
+
     Assert.assertEquals(pathWithRequirements, List.of(
       finalGraph.getEdgeSet().get("CSCI 0150").get("CSCI 0190"),
       finalGraph.getEdgeSet().get("CSCI 0190").get("MATH 0190"),

@@ -1,4 +1,4 @@
-import React, { useRef, useState } from "react";
+import { useRef, useState } from "react";
 import { Container, Form, Header, Button, Segment } from "semantic-ui-react";
 import FormattedInput from "../modules/FormattedInput";
 import { InAuthenticaedPageProps, ValidNewUser, ValidPass } from "../classes/Authentication";
