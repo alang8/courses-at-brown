@@ -15,7 +15,7 @@ const ClassGraph = (props) => {
     const fgRef = useRef();
     const [theCourses, setCourses] = useState([]);
     const [allCourseInfo, setAllCourseinfo] = useState({});
-    const [gData, setGData] = useState({ "nodes": [{}], "links": [{}] });
+    const [gData, setGData] = useState({ "nodes": [], "links": [] });
 
     let theSemester = { 0: "Fall 2021", 1: "Spring 2022", 2: "Fall 2022", 3: "Spring 2023", 4: "Fall 2023", 5: "Spring 2024", 6: "Fall 2024", 7: "Spring 2025", 8: "Fall 2025", 9: "Spring 2026" }
 
@@ -59,6 +59,7 @@ const ClassGraph = (props) => {
         let linkArray = [];
         let i;
         let tempCourseInfo = {};
+        const thePath = [];
 
         console.log(theCourses);
         for (i = 0; i < theCourses.length; i++) {
@@ -72,16 +73,31 @@ const ClassGraph = (props) => {
                     linkArray.push({ "source": prereqIDs[z], "target": curID });
                 }
             }
-            let val = 8;
-            if (curID in props.path) {
-                val = 100;
-            }
-            nodeArray.push({ 'id': curID, 'name': curID, 'val': val });
+            // let val = 8;
+            // if (curID in props.path) {
+            //     val = 100;
+            // }
+            nodeArray.push({ 'id': curID, 'name': curID });
             tempCourseInfo[curID] = theCourses[i];
         }
 
+        for (i = 0; i < 9; i++) {
+            const dests = [];
+            const origs = [];
+            for (let code in props.path) {
+                if (props.path[code] === i)
+                    origs.push(code);
+                else if (props.path[code] === i + 1) {
+                    dests.push(code);
+                }
+
+            }
+            origs.forEach((o) =>
+                dests.forEach((d) =>
+                    thePath.push({ "source": o, "target": d })));
+        }
         setAllCourseinfo(tempCourseInfo);
-        setGData({ "nodes": nodeArray, "links": linkArray });
+        setGData({ "nodes": nodeArray, "links": linkArray.concat(thePath) });
     }
 
     //Want to get all course data upon load
@@ -98,7 +114,7 @@ const ClassGraph = (props) => {
 
     //State vars for the popup window when clicking on a specific node.
     const [open, setOpen] = useState(true);
-    const [curCourse, setCurCourse] = useState({ name: "DEFAULT", dept: "DEFAULT", code: "DEFAULT" });
+    const [curCourse, setCurCourse] = useState({ name: "DEFAULT", dept: "CSCI", code: "DEFAULT" });
     const closeModal = () => setOpen(false);
 
     useEffect(() => setOpen(!open), [curCourse])
@@ -142,45 +158,86 @@ const ClassGraph = (props) => {
      * @param color - the color of the node (based on course department).
      * @param ctx - the context in which we will draw the node.
      */
-    function nodePaint({ id, x, y }, color, ctx) {
+    function nodePaint({ id, x, y }, ctx) {
         if (id in props.path) {
-            ctx.fillStyle = GetColorRaw(id.substring(0, 4));
+            // ctx.fillStyle = GetColorRaw(id.substring(0, 4));
+            // ctx.strokeStyle = GetColorRaw(id.substring(0, 4));
             ctx.beginPath();
-            ctx.arc(x, y, 100, 0, 2 * Math.PI, false);
-            ctx.fill();
+            // ctx.arc(x, y, 100, 0, 2 * Math.PI, false);
+            // ctx.fill();
             ctx.fillStyle = "white"
-            ctx.font = 'bold 24px Sans-Serif';
+            ctx.font = 'bold 24px Crimson Text Times New Roman serif';
             ctx.textAlign = 'center';
             ctx.textBaseline = 'middle';
             ctx.fillText(id, x, y - 15);
             ctx.fillText(theSemester[props.path[id]], x, y + 9);
             ctx.stroke();
         } else {
-            ctx.fillStyle = "#b1c2de";
+            ctx.fillStyle = "white";
             ctx.beginPath();
-            ctx.arc(x, y, 15, 0, 2 * Math.PI, false);
+            ctx.arc(x, y, 13, 0, 2 * Math.PI, false);
             ctx.fill();
         }
+        //     
+        //     if (id) {
+        //         console.log("undefined node")
+        //     } else {
+        //         console.log("oop")
+        //     }
+        //     // ctx.strokeStyle = GetColorRaw(id.substring(0, 4));
+        //     ctx.beginPath();
+        //     ctx.arc(x, y, 20, 0, 2 * Math.PI, false);
+        //     ctx.fill();
+        // }
     }
+
+    // function edgePaint()
 
     //Changing the force values to display our graph in a reasonable way.
     useEffect(() => {
-        fgRef.current.d3Force("charge").strength(-15000);
-        fgRef.current.d3Force("link").strength(0);
+        fgRef.current.d3Force("charge").strength(-20000);
+        fgRef.current.d3Force("link").strength(0.20);
     });
+
+    function nodeInPath(inPath, notInPath) {
+        return (node) => (node.id in props.path) ? inPath : notInPath
+    }
+
+    function edgeInPath(inPath, notInPath) {
+        return (edge) => (edge.source.id in props.path && edge.target.id in props.path) ? inPath : notInPath
+    }
+
+    function edgeColor(edge) {
+        return (edge.source.id in props.path && edge.target.id in props.path) ?
+            "black" : GetColorRaw(edge.source.id?.substring(0, 4) ?? 'ECON');
+    }
+
+    function edgeLabel(edge) {
+        return (edge.source.id in props.path && edge.target.id in props.path) ?
+            theSemester[props.path[edge.source.id]] + " > " + theSemester[props.path[edge.target.id]] 
+            : undefined
+    }
 
     return <div>
         <div id="graphWrapper">
             <ForceGraph2D
                 graphData={gData}
-                onNodeClick={(n, e) => { displayedCourseInfo(n); }}
+                onNodeClick={(n, e) => displayedCourseInfo(n) }
                 ref={fgRef}
                 showNavInfo={true}
-                dagMode={"radialin"}
-                dagLevelDistance={100}
-                // height={600}
-                // width={1125}
-                nodeCanvasObject={(node, ctx) => nodePaint(node, "black", ctx)}
+                dagMode={"radialout"}
+                nodeVal={nodeInPath(600, 20)}
+                nodeColor={node => GetColorRaw(node.id?.substring(0, 4) ?? 'ECON')}
+                linkColor={edgeColor}
+                linkWidth={edgeInPath(2, 1)}
+                linkCurvature={edgeInPath(0.3, 0)}
+                linkDirectionalParticles={edgeInPath(3, 1)}
+                linkDirectionalParticleWidth={edgeInPath(8, 4)}
+                linkDirectionalArrowLength={30}
+                linkDirectionalArrowRelPos={1}
+                linkLabel={edgeLabel}
+                nodeCanvasObject={(node, ctx) => nodePaint(node, ctx)}
+                nodeCanvasObjectMode={() => "after"}
             />
         </div>
         <CourseInfo
@@ -188,7 +245,7 @@ const ClassGraph = (props) => {
             setDisplay={closeModal}
             shouldDisplay={open}
             button={{ func: props.saveFunction }}
-            shouldDisable={(test) => props.user.getSaved().find(c => GetCode(c) === GetCode(test)) !== undefined} />
+            shouldDisable={(test) => (props.user.getSaved().find(c => GetCode(c) === GetCode(test)) !== undefined)} />
     </div>
 }
 
