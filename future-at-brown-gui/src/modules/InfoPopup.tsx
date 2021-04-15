@@ -2,7 +2,7 @@ import React from "react";
 import { Icon, Popup } from "semantic-ui-react";
 
 interface Props {
-    message?: string
+    message?: React.ReactNode
 }
 
 //Module which represents the an information popup to describe how our site works.

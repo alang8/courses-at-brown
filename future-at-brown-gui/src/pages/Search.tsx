@@ -4,7 +4,7 @@ import { Button, Container, Dimmer, Dropdown, DropdownProps, Grid, GridColumn, H
 import { Course, FindCourse, GetCode } from "../classes/Course";
 import { SearchParams } from "../classes/SearchParams";
 import User from "../classes/User";
-import { ButtonFooter, ProfileButton } from "../modules/BottomButton";
+import { ButtonFooter, GraphButton, ProfileButton } from "../modules/BottomButton";
 import ExpandableCourses from "../modules/ExpandableCourses";
 import ParamSlider from "../modules/ParamSliders";
 import SignOutHeader from "../modules/SignOutHeader";
@@ -22,6 +22,7 @@ interface Params {
     user: User;
     setUser: (user: User | undefined) => void;
     setPath: (path: { [id: string]: number }) => void;
+    firstSearch: boolean;
 }
 
 /**
@@ -83,12 +84,13 @@ const Search: React.FC<Params> = (props) => {
 
     return <Dimmer.Dimmable active={loadingPath} as={WrapDiv}>
         <ProfileButton />
+        <GraphButton justify="left" disabled={props.firstSearch} />
         <SignOutHeader setUser={props.setUser} user={props.user}
             heading={{
                 title: "Search", information: "This page allows you to put in preferences "
                     + "about the path you want to take though Brown (things such as class size, rating, "
                     + "etc) so that the algorithm can find your optimal path through a concentration"
-            }} />)
+            }} />
         <Dimmer active={loadingPath} blurring>
             <Loader />
         </Dimmer>

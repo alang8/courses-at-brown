@@ -1,7 +1,6 @@
-import React, { useState, useEffect } from "react"
-import { Accordion, Button, Container, Dropdown, Grid, GridColumn, Header, Segment, Sticky } from "semantic-ui-react"
-import { AuthenticatedPageProps } from "../classes/Authentication";
-import { FindCourse, GetCode } from "../classes/Course";
+import { useState, useEffect } from "react"
+import { Accordion, Button, Container, Dropdown, Grid, GridColumn, Header, Segment } from "semantic-ui-react"
+import { FindCourse } from "../classes/Course";
 import { SearchParams } from "../classes/SearchParams";
 import { SignOutUser } from "../classes/User";
 import { ButtonFooter, SearchButton } from "../modules/BottomButton";
