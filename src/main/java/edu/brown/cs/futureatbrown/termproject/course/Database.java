@@ -22,7 +22,7 @@ public final class Database {
   private static final List<String> ALLOWED_COURSES =
     List.of("apmaABCourses", "csciABMLCourses", "mathABCourses", "mathSCBCourses");
 
-  private Database() {}
+  public Database() {}
 
   /**
    * Constructor that instantiates the database and creates tables.

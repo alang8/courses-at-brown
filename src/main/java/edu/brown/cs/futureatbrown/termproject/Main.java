@@ -14,7 +14,9 @@ import java.util.Map;
 
 import com.google.common.collect.ImmutableMap;
 import com.google.gson.Gson;
+import edu.brown.cs.futureatbrown.termproject.course.CourseEdge;
 import edu.brown.cs.futureatbrown.termproject.course.CourseGraph;
+import edu.brown.cs.futureatbrown.termproject.course.CourseNode;
 import edu.brown.cs.futureatbrown.termproject.course.Database;
 import edu.brown.cs.futureatbrown.termproject.graph.GraphAlgorithms;
 import joptsimple.OptionParser;
@@ -112,17 +114,17 @@ public final class Main {
       Spark.before((request, response) -> response.header("Access-Control-Allow-Origin", "*"));
 
 
-      Database d = new Database;
-      d.setupGraph();
-      CourseGraph g = d.getGraph();
-      GraphAlgorithms graphAlg = new GraphAlgorithms();
-
+      Database.init(courseDBPath);
+      Database.setupGraph();
+      CourseGraph g = Database.getGraph();
+      GraphAlgorithms<CourseNode, CourseEdge, CourseGraph> graphAlg = new GraphAlgorithms<>();
 
       //Setting up spark routes.
       Spark.post("/login", new UserDataHandlers.LoginHandler(userDataConn));
       Spark.post("/signup", new UserDataHandlers.SignUpHandler(userDataConn));
       Spark.post("/checkname", new UserDataHandlers.CheckUsernameHandler(userDataConn));
       Spark.post("/getcourses", new CourseDataHandlers.ClassDataHandler(courseDataConn));
+      Spark.post("/getconcs", new CourseDataHandlers.GetConcentrationHandler(courseDataConn));
       Spark.post("/courseinfo", new CourseDataHandlers.GetCourseHandler(courseDataConn));
       Spark.post("/writecourse", new UserDataHandlers.WriteCourseHandler(userDataConn));
       Spark.post("/removecourse", new UserDataHandlers.RemoveCourseHandler(userDataConn));
@@ -131,7 +133,7 @@ public final class Main {
       Spark.post("/deleteuser", new UserDataHandlers.DeleteUserHandler(userDataConn));
       Spark.post("/path", new GetPathHandler(courseDataConn));
     } catch (ClassNotFoundException | SQLException e) {
-      System.out.println("Couldnt connect to SQL user data!");
+      System.out.println("Couldn't connect to SQL user data!");
     }
   }
 

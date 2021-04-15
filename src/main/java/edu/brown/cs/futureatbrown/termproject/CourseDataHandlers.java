@@ -128,4 +128,34 @@ public class CourseDataHandlers {
       return GSON.toJson(variables);
     }
   }
+
+  /**
+   * Handler For getting a specific course object from the database.
+   */
+  public static class GetConcentrationHandler implements Route {
+    private static final Gson GSON = new Gson();
+    private Connection conn;
+
+    GetConcentrationHandler(Connection c) {
+      this.conn = c;
+    }
+
+    @Override
+    public Object handle(Request request, Response response) {
+      Map<String, String> concs = new HashMap<>();
+      try {
+        String query = "SELECT * FROM concentrations;";
+        PreparedStatement prep = conn.prepareStatement(query);
+        ResultSet rs = prep.executeQuery();
+
+        while(rs.next()) {
+          concs.put(rs.getString(1), rs.getString(2));
+        }
+      } catch (SQLException e) {
+        e.printStackTrace();
+      }
+      Map<String, Object> variables = ImmutableMap.of("concentrations", concs);
+      return GSON.toJson(variables);
+    }
+  }
 }
