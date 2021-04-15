@@ -10,7 +10,7 @@ interface Params {
     shouldDisplay: boolean;
     setDisplay: (set: boolean) => void;
     shouldDisable?: (testCourse: Course) => boolean;
-    button?:  {
+    button?: {
         func: (addCourse: Course) => Promise<any>;
         name?: string;
         icon?: SemanticICONS;
@@ -31,10 +31,10 @@ const CourseInfo: React.FC<Params> = (props) => {
         if (loading) {
             if (props.button) {
                 props.button!.func(course)
-                .then(() => setLoading(false));
+                    .then(() => setLoading(false));
             } else {
                 setLoading(false);
-            }  
+            }
         }
     }, [loading])
 
@@ -63,7 +63,7 @@ const CourseInfo: React.FC<Params> = (props) => {
                     </Grid.Row>
                     <Grid.Row divided>
                         <Grid.Column width={10}>
-                        <Grid.Row>
+                            <Grid.Row>
                                 <p>
                                     <Icon name="sitemap" />
                                     <strong>Prereqs: </strong>

@@ -23,6 +23,8 @@ const App: React.FC<{}> = () => {
   const [path, setPath] = useState<Path | undefined>(GetStoredPath());
   const [redirectGraph, setRedirect] = useState<boolean>(false);
 
+  const redirectMessage = useRef<String | undefined>(undefined);
+
   // routes to be used if the user is not logged in (profile page otherwise)
   const InauthenticatedRoute = (route: string, loginProcess: JSX.Element): JSX.Element => {
     return <Route exact path={route}>

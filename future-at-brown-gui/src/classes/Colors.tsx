@@ -2,11 +2,11 @@ import { SemanticCOLORS } from "semantic-ui-react/dist/commonjs/generic";
 import User from "./User"
 
 const colorCycle: SemanticCOLORS[] =
-    ['red', 'orange', 'yellow', 'olive', 'green', 'teal', 
-    'blue','violet', 'purple', 'pink', 'brown', 'grey'];
+    ['blue','violet', 'purple', 'pink', 'red', 'orange',
+    'yellow', 'olive', 'green', 'teal', 'brown', 'grey'];
 const colorMap: {[name:string]:string} =
-    {'red':'#B03060', 'orange':'#FE9A76', 'yellow':'#FFD700', 'olive':'#32CD32', 'green':'#016936', 'teal':'#008080',
-        'blue':'#0E6EB8','violet':'#EE82EE', 'purple':'#B413EC', 'pink':'#FF1493', 'brown':'#A52A2A', 'grey':'#A0A0A0'};
+    {'red':'#db2828', 'orange':'#f2711c', 'yellow':'#fbbd08', 'olive':'#b5cc18', 'green':'#21ba45', 'teal':'#00b5ad',
+        'blue':'#2185d0','violet':'#6435c9', 'purple':'#a333c8', 'pink':'#e03997', 'brown':'#a5673f', 'grey':'#767676'};
 
 const cycle: string[] = [];
 
