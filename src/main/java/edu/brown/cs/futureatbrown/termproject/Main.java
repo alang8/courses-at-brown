@@ -14,6 +14,9 @@ import java.util.Map;
 
 import com.google.common.collect.ImmutableMap;
 import com.google.gson.Gson;
+import edu.brown.cs.futureatbrown.termproject.course.CourseGraph;
+import edu.brown.cs.futureatbrown.termproject.course.Database;
+import edu.brown.cs.futureatbrown.termproject.graph.GraphAlgorithms;
 import joptsimple.OptionParser;
 import joptsimple.OptionSet;
 import org.json.JSONException;
@@ -108,12 +111,12 @@ public final class Main {
       Connection courseDataConn = DriverManager.getConnection(courseDBUrl);
       Spark.before((request, response) -> response.header("Access-Control-Allow-Origin", "*"));
 
-      /*
-      Database d = new Database();
+
+      Database d = new Database;
       d.setupGraph();
       CourseGraph g = d.getGraph();
       GraphAlgorithms graphAlg = new GraphAlgorithms();
-       */
+
 
       //Setting up spark routes.
       Spark.post("/login", new UserDataHandlers.LoginHandler(userDataConn));

@@ -17,6 +17,9 @@ import java.util.Base64;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * Class which holds all of the handlers related to user data (signup/login stuff).
+ */
 public class UserDataHandlers {
 
   /**

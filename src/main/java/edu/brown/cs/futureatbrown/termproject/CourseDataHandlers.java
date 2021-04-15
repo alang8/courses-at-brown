@@ -17,6 +17,9 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * Class which holds all of the handlers related to course data.
+ */
 public class CourseDataHandlers {
 
   /**
