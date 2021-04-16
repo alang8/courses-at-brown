@@ -8,8 +8,8 @@ import { ButtonFooter, GraphButton, ProfileButton } from "../modules/BottomButto
 import ExpandableCourses from "../modules/ExpandableCourses";
 import ParamSlider from "../modules/ParamSliders";
 import SignOutHeader from "../modules/SignOutHeader";
-import { groupEnd } from "node:console";
 
+//configs for axios request
 const config = {
     headers: {
         "Content-Type": "application/json",
@@ -47,10 +47,10 @@ const Search: React.FC<Params> = (props) => {
     //Function to get the path
     const getPath = async (): Promise<void> => {
         setLoading(true);
-        console.log("concentration", concentration)
+        console.log("Requesting path for concentration", concentration)
         const toSend = {
-            prefs: prefs.current,
-            concentration: "csciABML"
+            prefs: prefs,
+            concentration: concentration
         };
         console.log("requesting path")
         await axios.post(
@@ -68,7 +68,7 @@ const Search: React.FC<Params> = (props) => {
             });
     }
 
-    useEffect(() => console.log("rerender", prefs));
+    //function to get the concentrations currently in our database.
     useEffect(() => {
         axios.post<{ [concentrations: string]: { [key: string]: string } }>(
             'http://localhost:4567/getconcs',

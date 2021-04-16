@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { Card, Grid, Header, Icon, SemanticICONS } from 'semantic-ui-react';
 import { GetColor } from '../classes/Colors'
 import CourseInfo from "./CourseInfo";

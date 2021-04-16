@@ -83,21 +83,14 @@ public class GraphAlgorithms<Node extends GraphNode, Edge extends GraphEdge,
       // Pop off the minHeap
       Node currNode = minHeap.remove();
       String currID = currNode.getID();
-//      System.out.println("--------------------------------------------");
-//      System.out.println("CURRENT NODE: " + currNode);
       // Process Node only if it hasn't been visited yet
       if (!currNode.visited()) {
         // Iterate through all of the neighbors of the current node
         for (Edge E : edgeSet.get(currID).values()) {
           // Get Neighbor and calculate score to neighbor from currrent node
           Node neighbor = (Node) E.getEnd();
-//          System.out.println("CURRENT EDGE: " + E);
           List<Edge> prevPath = new ArrayList<>(nodeSet.get(currID).getPreviousPath());
-//          System.out.println("PREVIOUS PATH: " + prevPath);
-//          System.out.println("OLD WEIGHT: " + currNode.getWeight());
           double newWeight = currNode.getWeight() + E.getWeight();
-//          System.out.println("NEW WEIGHT: " + newWeight);
-//          System.out.println("--------------------------------------------");
           // Update hashMap and add to minHeap if neighbor can be reached betterly
           if (nodeSet.get(neighbor.getID()).getWeight() > newWeight) {
             nodeSet.get(neighbor.getID()).setWeight(newWeight);
@@ -195,11 +188,9 @@ public class GraphAlgorithms<Node extends GraphNode, Edge extends GraphEdge,
     // List to store the k shortest path results
     List<List<Edge>> results = new ArrayList<>();
     G graphCopy = (G) graph.copy();
-    GraphAlgorithms uncached = new GraphAlgorithms();
+    GraphAlgorithms<Node, Edge, Graph<Node, Edge>> uncached = new GraphAlgorithms<>();
     // Determine the shortest path from the start to the end.
     results.add(uncached.dijkstraPath(startID, endID, graphCopy));
-//  System.out.println("----------------------------------");
-//  System.out.println("RESULTS INITIALIZED TO: " + results);
     // List to store potential k shortest paths
     PriorityQueue<List<Edge>> potentialPaths =
         new PriorityQueue<>(new ShortPathComparator());
@@ -220,22 +211,18 @@ public class GraphAlgorithms<Node extends GraphNode, Edge extends GraphEdge,
         GraphAlgorithms currAlgos = new GraphAlgorithms();
         // Get the Root Path up to but excluding the spur node to create deviations from
         List<Edge> rootPath = results.get(kidx - 1).stream().limit(i).collect(Collectors.toList());
-//      System.out.println("ROOT PATH: " + rootPath);
         for (List<Edge> path : results) {
-//        System.out.println("PATH: " + path);
           // If they have the same root path, nullify the edge that was explored before
           List<Edge> rootOfPath = path.stream().limit(i).collect(Collectors.toList());
           if (rootPath.equals(rootOfPath)) {
             String fromNodeID = path.get(i).getStart().getID();
             String toNodeID = path.get(i).getEnd().getID();
-//          System.out.println("NULLIFYING EDGE " + currGraph.getEdgeSet().get(fromNodeID).get(toNodeID));
             currGraph.getEdgeSet().get(fromNodeID).get(toNodeID)
                 .setWeight(Double.POSITIVE_INFINITY);
           }
         }
         // Make it so that the Root Path has all been visited before
         if (rootPath.size() > 0) {
-//        System.out.println("ROOT PATH VISITED");
           currGraph.getNodeSet().get(rootPath.get(0).getStart().getID()).setVisited(true);
           for (Edge e : rootPath) {
             currGraph.getNodeSet().get(e.getEnd().getID()).setVisited(true);
@@ -246,7 +233,6 @@ public class GraphAlgorithms<Node extends GraphNode, Edge extends GraphEdge,
         if (spurPath == null) {
           continue;
         }
-//      System.out.println("SPUR PATH: " + spurPath);
         // Concatenate to get potential alternate path
         List<Edge> totalPath = new ArrayList<>();
         totalPath.addAll(rootPath);
@@ -277,7 +263,6 @@ public class GraphAlgorithms<Node extends GraphNode, Edge extends GraphEdge,
   private <T> List<T> mergeSortedLists(List<List<T>> sortedLists, Comparator<T> comparator) {
     PriorityQueue<T> sortedQueue = new PriorityQueue<>(comparator);
 
-    List<List<T>> reversedSortedLists = new ArrayList<>();
     for (List<T> sortedList : sortedLists) {
       for (T elem : sortedList) {
         sortedQueue.add(elem);
@@ -301,13 +286,10 @@ public class GraphAlgorithms<Node extends GraphNode, Edge extends GraphEdge,
   public List<List<Edge>> pathway(List<String> introCourses, G courseGraph) throws InvalidAlgorithmParameterException {
     List<List<List<Edge>>> toMerge = new ArrayList<>();
     for (String introClassID : introCourses) {
-      System.out.println("in pathway");
       List<List<Edge>> l = dijkstraPathTree(introClassID, courseGraph);
-      System.out.println("p2 out");
-      System.out.println(l);
       toMerge.add(l);
     }
-    System.out.println("in pathway");
+    System.out.println("In Pathway:");
     System.out.println(toMerge);
     return mergeSortedLists(toMerge, new ShortPathComparator());
   }

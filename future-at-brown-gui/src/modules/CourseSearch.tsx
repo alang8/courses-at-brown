@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef } from "react";
 import { Button, Card, Form, Grid, Header, Modal, SemanticICONS } from 'semantic-ui-react';
 import { SemanticCOLORS } from "semantic-ui-react/dist/commonjs/generic";
 import { Course } from '../classes/Course'

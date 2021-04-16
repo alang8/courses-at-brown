@@ -1,4 +1,4 @@
-import React, { createRef, useEffect } from "react"
+import { createRef, useEffect } from "react"
 import ClassGraph from "../modules/ClassGraph.jsx";
 import "../css/Graph.css"
 import SignOutHeader from "../modules/SignOutHeader";
@@ -49,7 +49,7 @@ const GraphDisplay: React.FC<Params> = (props) => {
         <SearchButton />
         <CustomButton text={"Pathway"} color={"blue"} icon={"columns"} />
         <SignOutHeader setUser={props.setUser} user={props.user} dontDisplace
-            heading={{ title: "Graph", information: "A visual display of the suggested courses you should take at Brown" }} />
+            heading={{ title: "Graph", information: "A visual display of the suggested courses you should take at Brown. Black lines indicate courses in your path, other edges indicate prerequisite relationships. Nodes/Edges are color-coded by department." }} />
         <div style={{ height: '100vh', width: '100vw' }}>
             {getContent()}
         </div>

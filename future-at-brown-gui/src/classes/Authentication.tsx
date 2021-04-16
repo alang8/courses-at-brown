@@ -84,7 +84,7 @@ const matchingLogin = async (user: string, pass: string): Promise<string> => {
             config
         ).then(response => {
             isValid = response.data["isValid"];
-            console.log("in then")
+            console.log("Authentication.tsx 87 Login attempt: is valid?")
             console.log(isValid)
         }).catch(function (error) {
             console.log(error);
@@ -145,6 +145,6 @@ export interface AuthenticatedPageProps {
 }
 
 //Props for Unauthenticated pages (pages anyone can see).
-export interface InAuthenticaedPageProps {
+export interface InAuthenticatedPageProps {
     setLogin: (user: User) => void;
 }
