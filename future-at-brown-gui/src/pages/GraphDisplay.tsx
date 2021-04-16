@@ -1,8 +1,8 @@
-import { createRef } from "react"
+import { createRef, useEffect } from "react"
 import ClassGraph from "../modules/ClassGraph.jsx";
 import "../css/Graph.css"
 import SignOutHeader from "../modules/SignOutHeader";
-import { ProfileButton, SearchButton } from "../modules/BottomButton";
+import { CustomButton, ProfileButton, SearchButton } from "../modules/BottomButton";
 import User from "../classes/User";
 import { Course } from "../classes/Course";
 import { Container, Header } from "semantic-ui-react";
@@ -24,7 +24,7 @@ const GraphDisplay: React.FC<Params> = (props) => {
 
     const ref = createRef<HTMLElement>();
 
-    props.onRender?.();
+    useEffect(props.onRender ?? (() => {}), []);
 
     const getContent = (): JSX.Element => {
         if (props.path) {
@@ -32,7 +32,7 @@ const GraphDisplay: React.FC<Params> = (props) => {
             return <ClassGraph
                 path={props.path}
                 saveFunction={(c: Course) => props.user.saveCourse(c)}
-                ref={ref}
+                setRef={ref}
                 user={props.user} />
         }
         return <Container textAlign={"center"}>
@@ -47,6 +47,7 @@ const GraphDisplay: React.FC<Params> = (props) => {
     return <div className="total" style={{ overflow: "hidden" }}>
         <ProfileButton />
         <SearchButton />
+        <CustomButton text={"Pathway"} color={"blue"} icon={"columns"} />
         <SignOutHeader setUser={props.setUser} user={props.user} dontDisplace
             heading={{ title: "Graph", information: "A visual display of the suggested courses you should take at Brown. Black lines indicate courses in your path, other edges indicate prerequisite relationships. Nodes/Edges are color-coded by department." }} />
         <div style={{ height: '100vh', width: '100vw' }}>

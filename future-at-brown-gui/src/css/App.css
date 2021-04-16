@@ -69,9 +69,15 @@ ul {
     margin-left: calc(98vw - 10vh);
 }
 
+.bottom-float.center {
+    margin-left: 45vw;
+    margin-right: 45vw;
+}
+
 .bottom-float .ui.button {
     height: 10vh;
     width: 10vh;
+    background-color: white;
 }
 
 .bottom-float .ui.button:hover {
