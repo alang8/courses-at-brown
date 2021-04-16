@@ -18,7 +18,7 @@ const makeButton = (icon: SemanticICONS, name: string,
         </Button>
     )
     return <div className={"bottom-float " + justify} >
-        {(link && !disabled) ? <Link to={'/' + link} children={button} />
+        {(link) ? <Link to={'/' + link} children={button} />
             : button}
     </div>
 }

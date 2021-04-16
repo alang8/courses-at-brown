@@ -15,7 +15,7 @@ import GraphDisplay from "./pages/GraphDisplay";
 import TestComponent, { TestComponent2 } from './pages/TestComponents';
 import NotFound from './pages/NotFound';
 import User, { GetStoredUser } from './classes/User';
-import { GetStoredPath, Path, StorePath } from './classes/Path';
+import { ClearStoredPath, GetStoredPath, Path, StorePath } from './classes/Path';
 
 /**
  * File which drives our whole app using Node/npm. Routes all of our pages together.
@@ -39,6 +39,9 @@ const App: React.FC<{}> = () => {
       {(user) ? protectedContent : <Redirect to="/splash" />}
     </Route>;
   }
+
+  
+  useEffect(ClearStoredPath, []);
 
   // redirect only if path changes to a defined value
   useEffect(() => {

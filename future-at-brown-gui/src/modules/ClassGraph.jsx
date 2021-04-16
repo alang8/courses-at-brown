@@ -450,7 +450,7 @@ const ClassGraph = (props) => {
     }
 
     //State vars for the popup window when clicking on a specific node.
-    const [open, setOpen] = useState(false);
+    const [open, setOpen] = useState(true);
     const [curCourse, setCurCourse] = useState({ name: "DEFAULT", dept: "CSCI", code: "DEFAULT" });
 
     useEffect(() => setOpen(!open), [curCourse]);
@@ -498,7 +498,7 @@ const ClassGraph = (props) => {
         fgRef.current.d3Force("link").strength(0.10);
     });
 
-    //Function which returns a function which returns a given value if the node is in the path, and another one otherwise.
+    //Function that determines the size of a given node
     function nodeInPath(inPath, notInPath) {
         return (node) => (node.id in props.path) ? inPath : notInPath
     }
@@ -509,17 +509,13 @@ const ClassGraph = (props) => {
             ? inPath : notInPath
     }
 
+    function edgeRelatedToPath(related, notRelated) {
+        return (edge) => (edge.source.id in props.path) ? related : notRelated;
+    }
     //Function which returns an edges corresponding color.
     function edgeColor(edge) {
         return (edge.source.id in props.path && edge.target.id in props.path) ?
             "black" : GetColorRaw(edge.source.id?.substring(0, 4) ?? "CSCI");
-    }
-
-    //Function which returns an edge's label
-    function edgeLabel(edge) {
-        return (edge.source.id in props.path && edge.target.id in props.path) ?
-            theSemester[props.path[edge.source.id]] + " > " + theSemester[props.path[edge.target.id]]
-            : undefined
     }
 
     return <div>
@@ -538,13 +534,11 @@ const ClassGraph = (props) => {
                 nodeVal={nodeInPath(600, 20)}
                 nodeColor={node => GetColorRaw(node.id?.substring(0, 4) ?? "CSCI")}
                 linkColor={edgeColor}
-                linkWidth={edgeInPath(2, 1)}
-                linkCurvature={edgeInPath(0.3, 0)}
-                linkDirectionalParticles={edgeInPath(5, 1)}
-                linkDirectionalParticleWidth={edgeInPath(8, 4)}
-                linkDirectionalArrowLength={edgeInPath(30, 0)}
+                linkWidth={edgeInPath(1.5, 1)}
+                linkDirectionalParticles={edgeRelatedToPath(5, 1)}
+                linkDirectionalParticleWidth={edgeRelatedToPath(6, 4)}
+                linkDirectionalArrowLength={edgeInPath(30, 20)}
                 linkDirectionalArrowRelPos={1}
-                linkLabel={edgeLabel}
                 nodeCanvasObject={(node, ctx) => nodePaint(node, ctx)}
                 nodeCanvasObjectMode={() => "after"}
             />
