@@ -340,7 +340,7 @@ public class CourseAlgorithmTest {
 
     // PRESET COURSES
     setup();
-    Database.setupGraph(List.of("CSCI 0160"));
+    Database.setupGraph(List.of("CSCI 0150", "CSCI 0160"));
     CourseGraph presetGraph = Database.getGraph();
     presetGraph.setGlobalParams(1, 1, 1,
       10, 0, 18, 1,

@@ -89,10 +89,10 @@ public final class Database {
 
      for (Iterator<CourseNode> it = iterateAllCourseNodes(); it.hasNext(); ) {
        CourseNode node = it.next();
-       if (!prevCoursesID.contains(node.getID())) {
-         courseNodes.add(node);
-       } else {
+       courseNodes.add(node);
+       if (prevCoursesID.contains(node.getID())) {
          prevCourses.add(node);
+         node.setVisited(true);
        }
      }
 
