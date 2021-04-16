@@ -198,12 +198,14 @@ public class CourseEdge extends GraphEdge<CourseNode> {
     Set<List<String>> preReqs = this.end.getPrereqSet();
     List<String> previousPath = convertPath(this.start.getPreviousPath());
     previousPath.add(this.start.getID()); // Make sure to add the from node to the path
+    List<CourseNode> coursesTaken = this.start.getPreviousCourses();
+    List<String> coursesTakenID = coursesTaken.stream().map(CourseNode::getID).collect(Collectors.toList());
 
     // Check to make sure that all prerequisites are satisfied
     boolean satisfiedAllPrereqs = true;
 
     for (List<String> group : preReqs) {
-      boolean satisfiedPrereq = !Collections.disjoint(group, previousPath);
+      boolean satisfiedPrereq = !Collections.disjoint(group, previousPath) || !Collections.disjoint(group, coursesTakenID);
       if (!satisfiedPrereq) {
         satisfiedAllPrereqs = false;
         break;
@@ -220,7 +222,7 @@ public class CourseEdge extends GraphEdge<CourseNode> {
     // PENALTY: MUST REACH MIN NUMBER OF CLASSES //
     ///////////////////////////////////////////////
     if (null != this.minNumClasses &&
-        previousPath.size() < this.minNumClasses &&
+        previousPath.size() + coursesTaken.size() < this.minNumClasses &&
         this.end.equals(this.globalEnd)) {
 //      System.out.println("ENDING BUT HASN'T REACHED MIN EDGE");
       return Double.POSITIVE_INFINITY;
@@ -230,7 +232,7 @@ public class CourseEdge extends GraphEdge<CourseNode> {
     // PENALTY: CANNOT EXCEED MAX NUMBER OF CLASSES //
     //////////////////////////////////////////////////
     if (null != this.maxNumClasses) {
-      if (previousPath.size() >= this.maxNumClasses) {
+      if (previousPath.size() + coursesTaken.size() > this.maxNumClasses) {
 //        System.out.println("EXCEEDED MAX NUM CLASSES");
         return Double.POSITIVE_INFINITY;
       }
@@ -309,7 +311,7 @@ public class CourseEdge extends GraphEdge<CourseNode> {
       this.maxNumClasses = DEFAULT_MAX_CLASSES;
     }
 
-    avgNumClasses = (this.minNumClasses + this.maxNumClasses) / 2;
+    avgNumClasses = (this.minNumClasses + this.maxNumClasses) / 2.0;
 
     // According to the credit hour guidance average hours per class should
     // be 12 hours (4 hours class + 8 hours out of class)
@@ -324,7 +326,7 @@ public class CourseEdge extends GraphEdge<CourseNode> {
     }
 
     // Get the Total Avg Hours up to this point
-    Double totalAvgHours = prevTotalAvgHours;
+    double totalAvgHours = prevTotalAvgHours;
     totalAvgHours += classAvgHours;
     this.end.setPrevTotalAvgHours(totalAvgHours);
 
@@ -405,10 +407,10 @@ public class CourseEdge extends GraphEdge<CourseNode> {
     if (null != this.prereqs) {
       for (List<CourseNode> group : this.prereqs) {
         List<String> groupIDs = group.stream()
-            .filter(elem -> elem != null)
-            .map(elem -> elem.getID())
+            .filter(Objects::nonNull)
+            .map(CourseNode::getID)
             .collect(Collectors.toList());
-        if (!Collections.disjoint(groupIDs, previousPath)) {
+        if (!Collections.disjoint(groupIDs, previousPath) || !Collections.disjoint(groupIDs,coursesTakenID)) {
           continue;
         }
         if (group.contains(this.end)) {
@@ -423,10 +425,12 @@ public class CourseEdge extends GraphEdge<CourseNode> {
 
     // FROM NOW ON INCLUDE END NODE IN PREVIOUS PATH
     List<String> totalPath = new ArrayList<>(previousPath);
+    totalPath.addAll(coursesTakenID);
     totalPath.add(this.end.getID());
     int currentGroup = this.start.getCurrentGroup();
     int currentNumInGroup = this.start.getCurrentNumInGroup();
-
+    List<List<String>> coursesAccountedFor = this.start.getCoursesTakenAccountedFor();
+//    System.out.println("CURRENT GROUP: " + currentGroup);
     boolean satisfiedAllPathwayReqs = true;
 //    System.out.println("Total Path: " + totalPath);
 
@@ -447,33 +451,38 @@ public class CourseEdge extends GraphEdge<CourseNode> {
             if (previousPath.containsAll(sequence)) {
               continue;
             }
-
-            if (totalPath.containsAll(sequence)) {
+            if (coursesTakenID.containsAll(sequence) && !coursesAccountedFor.contains(sequence)) {
               currentNumInGroup += 1;
+//              System.out.println("CURRENT GROUP " + currentGroup + " UPDATING NUM TO " + currentNumInGroup);
+              coursesAccountedFor.add(sequence);
+            } else if (totalPath.containsAll(sequence)) {
+              currentNumInGroup += 1;
+//              System.out.println("CURRENT GROUP " + currentGroup + " UPDATING NUM TO " + currentNumInGroup);
               this.weight -= 5000;
+            }
               int numReq = this.groupData.get(coursewayGroupID);
 
-              if (numReq == currentNumInGroup) {
+              if (numReq <= currentNumInGroup) {
                 currentGroup += 1;
-                this.end.setCurrentGroup(currentGroup);
-                this.end.setCurrentNumInGroup(0);
+                currentNumInGroup = 0;
+//                System.out.println("NUM REQUIREMENTS: " + numReq);
 //                System.out.println("CURRENT GROUP UPDATING TO " + currentGroup);
-              } else {
-                this.end.setCurrentGroup(currentGroup);
-                this.end.setCurrentNumInGroup(currentNumInGroup);
               }
             }
           }
         }
+        this.end.setCurrentGroup(currentGroup);
+        this.end.setCurrentNumInGroup(currentNumInGroup);
+        this.end.setCoursesTakenAccountedFor(coursesAccountedFor);
       }
 
       // PENALTY: STOP IT FROM FINISHING IF IT DOESN'T SATISFY ALL PATHWAY REQUIREMENTS
 //      System.out.println("SATISFIED ALL PATHWAYS? - " + satisfiedAllPathwayReqs);
       if (!satisfiedAllPathwayReqs && this.end.equals(this.globalEnd)) {
+//        System.out.println("CURRENT GROUP: " + currentGroup);
 //        System.out.println("PATHWAY BLOCK");
         return Double.POSITIVE_INFINITY;
       }
-    }
 
     return this.weight;
   }

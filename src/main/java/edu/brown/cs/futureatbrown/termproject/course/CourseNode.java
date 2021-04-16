@@ -35,6 +35,8 @@ public class CourseNode extends GraphNode<CourseEdge> implements Locatable {
   private final double[] coordinates;
   private int currentGroup = 1;
   private int currentNumInGroup = 0;
+  private List<CourseNode> previousCourses = new ArrayList<>();
+  private List<List<String>> coursesTakenAccountedFor = new ArrayList<>();
 
   /**
    * Constructs a new CourseNode with the given parameters.
@@ -337,6 +339,22 @@ public class CourseNode extends GraphNode<CourseEdge> implements Locatable {
 
   public void setPrevTotalMaxHours(Double prevTotalMaxHours) {
     this.prevTotalMaxHours = prevTotalMaxHours;
+  }
+
+  public List<CourseNode> getPreviousCourses() {
+    return previousCourses;
+  }
+
+  public void setPreviousCourses(List<CourseNode> previousCourses) {
+    this.previousCourses = previousCourses;
+  }
+
+  public List<List<String>> getCoursesTakenAccountedFor() {
+    return coursesTakenAccountedFor;
+  }
+
+  public void setCoursesTakenAccountedFor(List<List<String>> coursesTakenAccountedFor) {
+    this.coursesTakenAccountedFor = coursesTakenAccountedFor;
   }
 
   @Override

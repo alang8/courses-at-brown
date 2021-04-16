@@ -110,7 +110,7 @@ public final class Main {
 
 
       Database.init(courseDBPath);
-      Database.setupGraph();
+      Database.setupGraph(new ArrayList<>());
       CourseGraph g = Database.getGraph();
       GraphAlgorithms<CourseNode, CourseEdge, CourseGraph> graphAlg = new GraphAlgorithms<>();
 

@@ -83,11 +83,17 @@ public final class Database {
    * Sets up a k-complete graph connecting all of the courses in the database
    *
    */
-   public static void setupGraph() throws SQLException {
+   public static void setupGraph(List<String> prevCoursesID) throws SQLException {
      List<CourseNode> courseNodes = new ArrayList<>();
+     List<CourseNode> prevCourses = new ArrayList<>();
+
      for (Iterator<CourseNode> it = iterateAllCourseNodes(); it.hasNext(); ) {
        CourseNode node = it.next();
-       courseNodes.add(node);
+       if (!prevCoursesID.contains(node.getID())) {
+         courseNodes.add(node);
+       } else {
+         prevCourses.add(node);
+       }
      }
 
      // Add Nodes to the Graph
@@ -98,6 +104,7 @@ public final class Database {
            .filter(node -> !node.equals(startNode))
            .map(node -> new CourseEdge(startNode.getID() + " - " + node.getID(), startNode, node))
            .collect(Collectors.toList())));
+       startNode.setPreviousCourses(prevCourses);
      }
    }
 
