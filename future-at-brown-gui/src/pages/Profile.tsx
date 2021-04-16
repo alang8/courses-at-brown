@@ -3,7 +3,7 @@ import { Accordion, Button, Container, Dropdown, Grid, GridColumn, Header, Segme
 import { FindCourse } from "../classes/Course";
 import { SearchParams } from "../classes/SearchParams";
 import { SignOutUser } from "../classes/User";
-import { ButtonFooter, SearchButton } from "../modules/BottomButton";
+import { ButtonFooter, GraphButton, SearchButton } from "../modules/BottomButton";
 import ExpandableCourses from "../modules/ExpandableCourses";
 import ParamSlider from "../modules/ParamSliders";
 import SignOutHeader from "../modules/SignOutHeader";
@@ -13,6 +13,7 @@ import User from "../classes/User";
 interface Params {
     user: User;
     setUser: (user: User | undefined) => void;
+    hasGraph?: any;
 }
 
 const Profile: React.FC<Params> = (props) => {
@@ -33,6 +34,7 @@ const Profile: React.FC<Params> = (props) => {
 
     return <div className="total">
         <SearchButton />
+        <GraphButton justify="right" disabled={!props.hasGraph} />
         <Container>
             <SignOutHeader setUser={props.setUser} user={props.user} heading={{
                 information: "A place to explore the courses you saved, manage saved user data, "

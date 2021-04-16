@@ -77,6 +77,7 @@ ul {
 .bottom-float .ui.button {
     height: 10vh;
     width: 10vh;
+    background-color: white;
 }
 
 .bottom-float .ui.button:hover {

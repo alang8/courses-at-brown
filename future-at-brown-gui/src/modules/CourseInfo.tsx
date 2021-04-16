@@ -67,7 +67,8 @@ const CourseInfo: React.FC<Params> = (props) => {
                                 <p>
                                     <Icon name="sitemap" />
                                     <strong>Prereqs: </strong>
-                                    {course.prereqs ?? "None (or none listed)"}
+                                    {(!course.prereqs || course.prereqs.length === 0) ?
+                                        "None (or none listed)" : course.prereqs}
                                 </p>
                             </Grid.Row>
                             <Grid.Row>

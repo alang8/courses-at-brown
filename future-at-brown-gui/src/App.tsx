@@ -44,6 +44,7 @@ const App: React.FC<{}> = () => {
     if (path) setRedirect(true);
   }, [path]);
 
+  console.log("path", path);
   return (
     <Router>
       <Switch>
@@ -54,7 +55,7 @@ const App: React.FC<{}> = () => {
         {AuthenticatedRoute("/search", <Search user={user!}
           setUser={setUser}
           setPath={StorePath(setPath)}
-          firstSearch={path !== undefined} />)}
+          hasGraph={path ? false : true} />)}
         {AuthenticatedRoute("/profile", <Profile user={user!} setUser={setUser} />)}
         {InauthenticatedRoute("/splash", <SplashPage setLogin={setUser} />)}
         {AuthenticatedRoute("/graph", <GraphDisplay user={user!} setUser={setUser} path={path} onRender={() => setRedirect(false)} />)}

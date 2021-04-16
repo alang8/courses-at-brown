@@ -8,7 +8,7 @@ const makeButton = (icon: SemanticICONS, name: string,
     color?: SemanticCOLORS, func?: () => any, disabled?: boolean): JSX.Element => {
 
     const button = (
-        <Button animated circular color={color} onClick={func} disabled={disabled}>
+        <Button inverted animated circular color={color} onClick={func} disabled={disabled}>
             <Button.Content visible>
                 <Icon name={icon} />
             </Button.Content>

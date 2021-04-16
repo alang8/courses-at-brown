@@ -22,7 +22,7 @@ interface Params {
     user: User;
     setUser: (user: User | undefined) => void;
     setPath: (path: { [id: string]: number }) => void;
-    firstSearch: boolean;
+    hasGraph?: boolean;
 }
 
 /**
@@ -49,7 +49,7 @@ const Search: React.FC<Params> = (props) => {
         setLoading(true);
         console.log("concentration", concentration)
         const toSend = {
-            prefs: prefs,
+            prefs: prefs.current,
             concentration: "csciABML"
         };
         console.log("requesting path")
@@ -84,7 +84,7 @@ const Search: React.FC<Params> = (props) => {
 
     return <Dimmer.Dimmable active={loadingPath} as={WrapDiv}>
         <ProfileButton />
-        <GraphButton justify="left" disabled={props.firstSearch} />
+        <GraphButton justify="left" disabled={!props.hasGraph} />
         <SignOutHeader setUser={props.setUser} user={props.user}
             heading={{
                 title: "Search", information: "This page allows you to put in preferences "
