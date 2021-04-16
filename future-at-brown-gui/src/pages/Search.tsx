@@ -79,7 +79,9 @@ const Search: React.FC<Params> = (props) => {
         });
     }, []);
 
-    const setPrefsAsync = async (pref: SearchParams) => setPrefs(pref)
+    const setPrefsAsync = async (pref: SearchParams) => {
+        setPrefs(pref)
+    }
 
     return <Dimmer.Dimmable active={loadingPath} as={WrapDiv}>
         <ProfileButton />
@@ -93,7 +95,6 @@ const Search: React.FC<Params> = (props) => {
             <Loader />
         </Dimmer>
         <Container>
-
             <Grid padded stretched centered>
                 <Grid.Row>
                     <Grid.Column>
@@ -101,16 +102,16 @@ const Search: React.FC<Params> = (props) => {
                     </Grid.Column>
                 </Grid.Row>
                 <Grid.Row stretched>
-                    <Grid.Column>
+                    <GridColumn>
                         <Segment color="blue">
                             <Header as="h2" content={"Preferences"} />
                             <ParamSlider curUser={props.user} prefChange={setPrefsAsync} />
                         </Segment>
-                    </Grid.Column>
+                    </GridColumn>
                 </Grid.Row>
                 <Grid.Row stretched>
                     <Grid.Column>
-                        <ExpandableCourses courses={takenCourses} title={"Taken coures"} modify={{
+                        <ExpandableCourses courses={takenCourses} title={"Taken courses"} modify={{
                             searcher: FindCourse,
                             addCourse: async (course: Course) => setTakenCourses(takenCourses.concat(course)),
                             removeCourse: async (code: string) => setTakenCourses(takenCourses.filter(c => GetCode(c) !== code))
@@ -142,7 +143,7 @@ const Search: React.FC<Params> = (props) => {
                                 content={"Submit"}
                                 className={"gradient"}
                             />
-                            : <Message header={"Error"} icon="warning" color="red" 
+                            : <Message header={"Error"} icon="warning" color="red"
                                 content={"Please select a concentration before continuing"} />
                         }
                     </Grid.Column>
