@@ -25,7 +25,6 @@ const App: React.FC<{}> = () => {
   const [path, setPath] = useState<Path | undefined>(GetStoredPath());
   const [redirectGraph, setRedirect] = useState<boolean>(false);
 
-
   // routes to be used if the user is not logged in (profile page otherwise)
   const InauthenticatedRoute = (route: string, loginProcess: JSX.Element): JSX.Element => {
     return <Route exact path={route}>
@@ -39,9 +38,6 @@ const App: React.FC<{}> = () => {
       {(user) ? protectedContent : <Redirect to="/splash" />}
     </Route>;
   }
-
-  
-  useEffect(ClearStoredPath, []);
 
   // redirect only if path changes to a defined value
   useEffect(() => {
@@ -60,7 +56,7 @@ const App: React.FC<{}> = () => {
           setUser={setUser}
           setPath={StorePath(setPath)}
           hasGraph={path ? false : true} />)}
-        {AuthenticatedRoute("/profile", <Profile user={user!} setUser={setUser} />)}
+        {AuthenticatedRoute("/profile", <Profile user={user!} setUser={setUser} setPath={setPath}/>)}
         {InauthenticatedRoute("/splash", <SplashPage setLogin={setUser} />)}
         {AuthenticatedRoute("/graph", <GraphDisplay user={user!} setUser={setUser} path={path} onRender={() => setRedirect(false)} />)}
         {InauthenticatedRoute("/login", <Login setLogin={setUser} />)}

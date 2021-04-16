@@ -82,7 +82,7 @@ const Search: React.FC<Params> = (props) => {
 
     return <Dimmer.Dimmable active={loadingPath} as={WrapDiv}>
         <ProfileButton />
-        <GraphButton justify="left" disabled={!props.hasGraph} />
+        <GraphButton justify="left" />
         <SignOutHeader setUser={props.setUser} user={props.user}
                        heading={{
                            title: "Search", information: "This page allows you to put in preferences "

@@ -85,6 +85,7 @@ class User {
             let courseCode = savedArr[c].dept + " " + savedArr[c].code
             await this.removeSaved(courseCode);
         }
+        this.saved = [];
         localStorage.setItem(USER_LOCATION, this.stringify());
     }
 
@@ -195,6 +196,7 @@ class User {
             let courseCode = takenArr[c].dept + " " + takenArr[c].code
             await this.removeTaken(courseCode);
         }
+        this.taken = [];
         localStorage.setItem(USER_LOCATION, this.stringify());
     }
 
@@ -233,8 +235,8 @@ class User {
     //Function to reset the data to default for to a user.
     async resetData() {
         await this.setPreferences(defaultParams);
-        await this.clearSaved()
-        await this.clearTaken()
+        await this.clearSaved();
+        await this.clearTaken();
     }
 
     //Function to delete all the data related to a user from the database.
@@ -272,13 +274,6 @@ class User {
             prefs: this.preferences
         }
         return JSON.stringify(jsonVersion);
-    }
-
-    isIn(where: "taken" | "saved"): (course: Course) => boolean {
-        return (course: Course) => {
-            const test = (where === "taken") ? this.getSaved() : this.getTaken();
-            return test.find((c) => GetCode(c) === GetCode(course)) !== undefined;
-        }
     }
 }
 

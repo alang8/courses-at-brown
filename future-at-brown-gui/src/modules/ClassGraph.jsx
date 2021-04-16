@@ -530,10 +530,10 @@ const ClassGraph = (props) => {
                 nodeVal={nodeInPath(600, 20)}
                 nodeColor={node => GetColorRaw(node.id?.substring(0, 4) ?? "CSCI")}
                 linkColor={edgeColor}
-                linkWidth={edgeInPath(1.5, 1)}
-                linkDirectionalParticles={edgeRelatedToPath(5, 1)}
+                linkWidth={edgeRelatedToPath(1.5, 1)}
+                linkDirectionalParticles={edgeRelatedToPath(4, 1)}
                 linkDirectionalParticleWidth={edgeRelatedToPath(6, 4)}
-                linkDirectionalArrowLength={edgeInPath(30, 20)}
+                linkDirectionalArrowLength={edgeRelatedToPath(30, 20)}
                 linkDirectionalArrowRelPos={1}
                 nodeCanvasObject={(node, ctx) => nodePaint(node, ctx)}
                 nodeCanvasObjectMode={() => "after"}

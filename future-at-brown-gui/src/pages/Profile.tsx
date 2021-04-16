@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react"
-import { Accordion, Button, Container, Dropdown, Grid, GridColumn, Header, Segment } from "semantic-ui-react"
+import { Accordion, Button, Container, Dropdown, Grid, GridColumn, Header, Icon, Segment } from "semantic-ui-react"
 import { FindCourse } from "../classes/Course";
 import { SearchParams } from "../classes/SearchParams";
 import { SignOutUser } from "../classes/User";
@@ -8,12 +8,13 @@ import ExpandableCourses from "../modules/ExpandableCourses";
 import ParamSlider from "../modules/ParamSliders";
 import SignOutHeader from "../modules/SignOutHeader";
 import User from "../classes/User";
+import { ClearStoredPath, Path } from "../classes/Path";
 
 //The parameters for our search page: the current user, a method to set the user, and a method to set the path.
 interface Params {
     user: User;
     setUser: (user: User | undefined) => void;
-    hasGraph?: any;
+    setPath: (path: Path | undefined) => void;
 }
 
 const Profile: React.FC<Params> = (props) => {
@@ -34,7 +35,7 @@ const Profile: React.FC<Params> = (props) => {
 
     return <div className="total">
         <SearchButton />
-        <GraphButton justify="right" disabled={!props.hasGraph} />
+        <GraphButton justify="right" />
         <Container>
             <SignOutHeader setUser={props.setUser} user={props.user} heading={{
                 information: "A place to explore the courses you saved, manage saved user data, "
@@ -54,24 +55,37 @@ const Profile: React.FC<Params> = (props) => {
                         <Dropdown floating text="Data settings " icon="setting">
                             <Dropdown.Menu>
                                 <Dropdown.Item text='Clear saved courses' icon='x'
-                                               onClick={() =>
-                                                   props.user.clearSaved().then(forceRerender)
-                                               } />
+                                    onClick={() =>
+                                        props.user.clearSaved().then(forceRerender)
+                                    } />
                                 <Dropdown.Item text='Clear taken courses' icon='x'
-                                               onClick={() =>
-                                                   props.user.clearTaken().then(forceRerender)
-                                               } />
+                                    onClick={() =>
+                                        props.user.clearTaken().then(forceRerender)
+                                    } />
                                 <Dropdown.Divider />
-                                <Dropdown.Item text='Reset data' icon='refresh'
-                                               onClick={() =>
-                                                   props.user.resetData().then(forceRerender)
-                                               } />
+                                <Dropdown.Item onClick={() => {
+                                    ClearStoredPath();
+                                    props.setPath(undefined);
+                                }}>
+                                    <Icon.Group>
+                                        <Icon name='search' />
+                                        <Icon corner="bottom left" name='x' />
+                                    </Icon.Group>
+                                    {"Clear current search"}
+                                </Dropdown.Item>
+                                <Dropdown.Divider />
+                                <Dropdown.Item text='Reset all data' icon='refresh'
+                                    onClick={() => {
+                                        ClearStoredPath();
+                                        props.setPath(undefined);
+                                        props.user.resetData().then(forceRerender);
+                                    }} />
                                 {(props.user.isGuest) ?
                                     undefined :
                                     <Dropdown.Item text='Delete account' icon='remove user'
-                                                   onClick={() =>
-                                                       props.user.deleteUser()
-                                                           .then(() => SignOutUser(props.setUser))} />}
+                                        onClick={() =>
+                                            props.user.deleteUser()
+                                                .then(() => SignOutUser(props.setUser))} />}
                             </Dropdown.Menu>
                         </Dropdown>
                     </Grid.Column>
@@ -102,7 +116,7 @@ const Profile: React.FC<Params> = (props) => {
                             <GridColumn>
                                 <Segment color='blue'>
                                     <Header as="h2" content={"Preferences"} />
-                                    <ParamSlider curUser={props.user} prefChange={setPrefs} />
+                                    <ParamSlider curUser={props.user} prefChange={setPrefs}/>
                                     <div style={{ textAlign: "right" }}>
                                         <Button
                                             loading={loadingPrefs}
@@ -116,13 +130,13 @@ const Profile: React.FC<Params> = (props) => {
                         <Grid.Row stretched>
                             <Grid.Column>
                                 <ExpandableCourses color={'green'}
-                                                   courses={props.user.getTaken()}
-                                                   title={"Taken courses"}
-                                                   modify={{
-                                                       searcher: FindCourse,
-                                                       addCourse: e => { return props.user.takeCourse(e); },
-                                                       removeCourse: c => { return props.user.removeTaken(c); }
-                                                   }} key={curRender ? 0 : 1} />
+                                    courses={props.user.getTaken()}
+                                    title={"Taken courses"}
+                                    modify={{
+                                        searcher: FindCourse,
+                                        addCourse: e => { return props.user.takeCourse(e); },
+                                        removeCourse: c => { return props.user.removeTaken(c); }
+                                    }} key={curRender ? 0 : 1} />
                             </Grid.Column>
                         </Grid.Row>
                     </Grid>

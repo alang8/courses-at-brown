@@ -24,7 +24,7 @@ interface Params {
 const GraphDisplay: React.FC<Params> = (props) => {
 
     const ref = createRef<HTMLElement>();
-    const [curDepts, setCurDepts] = useState<string[]>(["APMA", "CSCI"]);
+    const [curDepts, setCurDepts] = useState<string[]>([]);
 
     useEffect(props.onRender ?? (() => { }), []);
 
@@ -61,8 +61,8 @@ const GraphDisplay: React.FC<Params> = (props) => {
                                 A visual display of the suggested courses you should take at Brown. 
                                 Black lines indicate courses in your path, other edges indicate 
                                 prerequisite relationships. Nodes/Edges are color-coded by department.
-                                Large and frequent particles to a certain node means that that class
-                                is related to a class currently in the path.
+                                A slightly larger edge with more freqent particles to a certain node 
+                                means that that class is related to a class currently in the path.
                         </Grid.Column>
                         </Grid.Row>
                         {(curDepts.length > 0) ?
