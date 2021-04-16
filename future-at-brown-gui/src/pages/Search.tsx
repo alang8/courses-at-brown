@@ -8,8 +8,8 @@ import { ButtonFooter, ProfileButton } from "../modules/BottomButton";
 import ExpandableCourses from "../modules/ExpandableCourses";
 import ParamSlider from "../modules/ParamSliders";
 import SignOutHeader from "../modules/SignOutHeader";
-import { groupEnd } from "node:console";
 
+//configs for axios request
 const config = {
     headers: {
         "Content-Type": "application/json",
@@ -65,6 +65,7 @@ const Search: React.FC<Params> = (props) => {
             });
     }
 
+    //function to get the concentrations currently in our database.
     useEffect(() => {
         axios.post<{ [concentrations: string]: { [key: string]: string } }>(
             'http://localhost:4567/getconcs',

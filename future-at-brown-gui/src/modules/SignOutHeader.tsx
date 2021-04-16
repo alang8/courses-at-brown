@@ -1,10 +1,10 @@
-import React from "react";
 import { Button, Container, Grid, Header, Icon, Segment, Sticky } from "semantic-ui-react";
 import { AuthenticatedPageProps } from "../classes/Authentication";
-import { ClearStoredPath } from "../classes/Path";
-import { ClearStoredUser, SignOutUser } from "../classes/User";
+import { SignOutUser } from "../classes/User";
 import InfoPopup from "./InfoPopup";
 
+//The props needed for a sign out header - the strings displayed and a boolean if the
+// button should displace others or not
 interface Props extends AuthenticatedPageProps {
     heading?: {
         title: string;
@@ -12,6 +12,11 @@ interface Props extends AuthenticatedPageProps {
     }
     dontDisplace?: boolean;
 }
+
+/**
+ * Module which serves as the header for our page which allows a user to sign out.
+ * @param props - the parameters as specified above.
+ */
 const SignOutHeader: React.FC<Props> = (props) => {
 
     const header: JSX.Element = <Container>

@@ -14,10 +14,6 @@ export interface Course {
     avgHours?: number;
 }
 
-export type CourseInventory = {
-    [course: string]: Course;
-}
-
 const config = {
     headers: {
         "Content-Type": "application/json",

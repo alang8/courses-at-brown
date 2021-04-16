@@ -1,7 +1,9 @@
-import React from "react";
 import { Link } from "react-router-dom";
 import { Container, Icon, Header, Button } from "semantic-ui-react";
 
+/**
+ * Our "Page not found" page.
+ */
 const NotFound: React.FC<void> = () => (
     <Container className="total-page">
       <Icon name='question' size='massive' />

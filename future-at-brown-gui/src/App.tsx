@@ -1,4 +1,4 @@
-import { useRef, useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import {
   BrowserRouter as Router,
   Route,
@@ -17,8 +17,10 @@ import NotFound from './pages/NotFound';
 import User, { GetStoredUser } from './classes/User';
 import { GetStoredPath, Path, StorePath } from './classes/Path';
 
+/**
+ * File which drives our whole app using Node/npm. Routes all of our pages together.
+ */
 const App: React.FC<{}> = () => {
-
   const [user, setUser] = useState<User | undefined>(GetStoredUser());
   const [path, setPath] = useState<Path | undefined>(GetStoredPath());
   const [redirectGraph, setRedirect] = useState<boolean>(false);

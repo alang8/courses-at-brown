@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { Link } from "react-router-dom";
 import { Button, Card, Header } from "semantic-ui-react";
 import { FindCourse } from "../classes/Course";
@@ -11,6 +11,9 @@ import FormattedInput from "../modules/FormattedInput";
 import InfoPopup from "../modules/InfoPopup";
 import ParamSlider from "../modules/ParamSliders";
 
+/**
+ * Component which we use to test all of our individual components/style before integrating into our actual website
+ */
 const TestComponent: React.FC<{}> = () => {
 
   const [error, setError] = useState<Array<String>>(["Uhoh", "more meesages"]);
