@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react"
-import { Accordion, Button, Container, Dropdown, Grid, GridColumn, Header, Segment } from "semantic-ui-react"
+import { Accordion, Button, Container, Dropdown, Grid, GridColumn, Header, Segment, Sticky } from "semantic-ui-react"
 import { FindCourse } from "../classes/Course";
 import { SearchParams } from "../classes/SearchParams";
 import { SignOutUser } from "../classes/User";
@@ -16,6 +16,10 @@ interface Params {
     hasGraph?: any;
 }
 
+/**
+ * Page serving as our profile page.
+ * @param props - the parameters for a profile page, specified above.
+ */
 const Profile: React.FC<Params> = (props) => {
 
     const [prefs, setPrefs] = useState<SearchParams>(props.user.getPreferences());
@@ -23,8 +27,10 @@ const Profile: React.FC<Params> = (props) => {
     const [showSettings, setSettings] = useState<boolean>(false);
     const [curRender, setCurRerender] = useState<boolean>(false);
 
+    //Rerender handler when signing out/deleting account.
     const forceRerender = () => setCurRerender(!curRender);
 
+    //Writing our preferences to the database.
     useEffect(() => {
         if (loadingPrefs) {
             props.user.setPreferences(prefs)
@@ -128,7 +134,6 @@ const Profile: React.FC<Params> = (props) => {
                     </Grid>
                 </Accordion.Content>
             </Accordion>
-
             <ButtonFooter />
         </Container>
     </div >

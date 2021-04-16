@@ -35,7 +35,6 @@ const ClassGraph = (props) => {
      */
     function getCourseData() {
         const toSend = {};
-
         let courseData = [];
 
         axios.post(
@@ -77,7 +76,6 @@ const ClassGraph = (props) => {
         let tempCourseInfo = {};
         const thePath = [];
 
-        console.log(theCourses);
         for (i = 0; i < theCourses.length; i++) {
             let curID = theCourses[i]['id']
             let prereqInfo = theCourses[i]['prereqs']
@@ -201,23 +199,27 @@ const ClassGraph = (props) => {
     //Changing the force values to display our graph in a reasonable way.
     useEffect(() => {
         fgRef.current.d3Force("charge").strength(-20000);
-        fgRef.current.d3Force("link").strength(0.20);
+        fgRef.current.d3Force("link").strength(0.10);
     });
 
+    //Function which returns a function which returns a given value if the node is in the path, and another one otherwise.
     function nodeInPath(inPath, notInPath) {
         return (node) => (node.id in props.path) ? inPath : notInPath
     }
 
+    //Function which returns a function which returns a given value if the edge is in the path, and another one otherwise.
     function edgeInPath(inPath, notInPath) {
         return (edge) => (edge.source.id in props.path && edge.target.id in props.path)
             ? inPath : notInPath
     }
 
+    //Function which returns an edges corresponding color.
     function edgeColor(edge) {
         return (edge.source.id in props.path && edge.target.id in props.path) ?
             "black" : GetColorRaw(edge.source.id?.substring(0, 4) ?? "CSCI");
     }
 
+    //Function which returns an edge's label
     function edgeLabel(edge) {
         return (edge.source.id in props.path && edge.target.id in props.path) ?
             theSemester[props.path[edge.source.id]] + " > " + theSemester[props.path[edge.target.id]]
@@ -244,7 +246,7 @@ const ClassGraph = (props) => {
                 linkCurvature={edgeInPath(0.3, 0)}
                 linkDirectionalParticles={edgeInPath(5, 1)}
                 linkDirectionalParticleWidth={edgeInPath(8, 4)}
-                linkDirectionalArrowLength={30}
+                linkDirectionalArrowLength={edgeInPath(30, 0)}
                 linkDirectionalArrowRelPos={1}
                 linkLabel={edgeLabel}
                 nodeCanvasObject={(node, ctx) => nodePaint(node, ctx)}

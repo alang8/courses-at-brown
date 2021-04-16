@@ -1,11 +1,15 @@
-import React, { useRef, useState } from "react";
+import { useRef, useState } from "react";
 import { Button, Container, Form, Header, Segment } from "semantic-ui-react";
 import FormattedInput from "../modules/FormattedInput";
-import { ValidPass, ValidUser, ValidLogin, InAuthenticaedPageProps } from "../classes/Authentication";
+import { ValidPass, ValidUser, ValidLogin, InAuthenticatedPageProps } from "../classes/Authentication";
 import { getUser } from "../classes/User";
 import { HomeButton } from "../modules/BottomButton";
 
-const Login: React.FC<InAuthenticaedPageProps> = (props) => {
+/**
+ * Component which serves as our login page.
+ * @param props - the props which correspond to an authenticated page.
+ */
+const Login: React.FC<InAuthenticatedPageProps> = (props) => {
     const username = useRef<string>("");
     const password = useRef<string>("");
 
@@ -14,6 +18,9 @@ const Login: React.FC<InAuthenticaedPageProps> = (props) => {
     const [userError, setUserError] = useState<Array<string>>([]);
     const [passError, setPassError] = useState<Array<string>>([]);
 
+    /**
+     * Handler for when the user hits submit on a login attempt
+     */
     const handleSubmit = () => {
         const passErr: string[] = ValidPass(password.current);
         const userErr: string[] = ValidUser(username.current);

@@ -1,10 +1,13 @@
-import React from "react";
 import { Link } from "react-router-dom";
 import { Button, Container, Header } from 'semantic-ui-react';
-import { InAuthenticaedPageProps } from "../classes/Authentication";
+import { InAuthenticatedPageProps } from "../classes/Authentication";
 import User from "../classes/User";
 
-const SplashPage: React.FC<InAuthenticaedPageProps> = (props) => {
+/**
+ * Our splash page for the site, where users start their experience!
+ * @param props -  the props for an inauthenticated page.
+ */
+const SplashPage: React.FC<InAuthenticatedPageProps> = (props) => {
     return (
         <div className="total image">
             <Container className="total-page">

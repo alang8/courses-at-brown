@@ -1,5 +1,8 @@
 import { SemanticCOLORS } from "semantic-ui-react/dist/commonjs/generic";
-import User from "./User"
+
+/**
+ * Class which stores all of our color info - which department corresponds to which color.
+ */
 
 const colorCycle: SemanticCOLORS[] =
     ['blue','violet', 'purple', 'pink', 'red', 'orange',
@@ -10,6 +13,7 @@ const colorMap: {[name:string]:string} =
 
 const cycle: string[] = [];
 
+//Function to get the semantic-ui color which corresponds to a given code.
 export function GetColor (code: string): SemanticCOLORS {
     const lowerCode = code.toLowerCase();
     if (cycle.indexOf(lowerCode) === -1) {
@@ -18,6 +22,7 @@ export function GetColor (code: string): SemanticCOLORS {
     return colorCycle[cycle.indexOf(lowerCode) % colorCycle.length];
 }
 
+//Function to get the hex color which corresponds to a given code.
 export function GetColorRaw (code: string): String {
     const lowerCode = code.toLowerCase();
     if (cycle.indexOf(lowerCode) === -1) {
@@ -26,10 +31,4 @@ export function GetColorRaw (code: string): String {
     let colorName = colorCycle[cycle.indexOf(lowerCode) % colorCycle.length];
 
     return colorMap[colorName];
-}
-
-
-
-export const ClearColor = () => {
-    cycle.splice(0, cycle.length);
 }

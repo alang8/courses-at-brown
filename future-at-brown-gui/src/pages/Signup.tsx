@@ -1,23 +1,29 @@
 import { useRef, useState } from "react";
 import { Container, Form, Header, Button, Segment } from "semantic-ui-react";
 import FormattedInput from "../modules/FormattedInput";
-import { InAuthenticaedPageProps, ValidNewUser, ValidPass } from "../classes/Authentication";
+import { InAuthenticatedPageProps, ValidNewUser, ValidPass } from "../classes/Authentication";
 import { newUser } from "../classes/User";
 import { HomeButton } from "../modules/BottomButton";
 import InfoPopup from "../modules/InfoPopup";
 
-const Signup: React.FC<InAuthenticaedPageProps> = (props) => {
-
+/**
+ * Page serving as our signup page.
+ * @param props - the props for an inauthenticated page.
+ */
+const Signup: React.FC<InAuthenticatedPageProps> = (props) => {
+    //variables to hold user input
     const username = useRef<string>("");
     const password = useRef<string>("");
     const confPass = useRef<string>("");
 
     const [isLoading, setLoading] = useState<boolean>(false);
 
+    //variables to hold error messages
     const [userError, setUserError] = useState<Array<string>>([]);
     const [passError, setPassError] = useState<Array<string>>([]);
     const [confError, setConfError] = useState<Array<string>>([]);
 
+    //handler for when user attempts to sign up
     const handleSubmit = () => {
         const passErr: string[] = ValidPass(password.current);
         const confErr: string[] =

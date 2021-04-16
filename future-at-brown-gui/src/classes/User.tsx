@@ -1,7 +1,7 @@
 import axios from "axios";
 import { Course, GetCode } from "./Course";
 import { ClearStoredPath } from "./Path";
-import { defaultParams, SearchParamNames, SearchParams } from "./SearchParams";
+import { defaultParams, SearchParams } from "./SearchParams";
 
 const config = {
     headers: {
@@ -12,8 +12,10 @@ const config = {
 
 const USER_LOCATION = "user";
 
+/**
+ * JS representation of a user of our site.
+ */
 class User {
-
     // accesible variables
     readonly username: string;
     readonly isGuest: boolean;
@@ -43,6 +45,7 @@ class User {
         return [...this.saved];
     }
 
+    //Function to save a course for a given user
     async saveCourse(toSave: Course): Promise<Course[]> {
         if (this.saved === undefined) {
             this.saved = [toSave];
@@ -51,8 +54,6 @@ class User {
         }
 
         let courseCode = GetCode(toSave);
-        console.log("course code to save in savecourse")
-        console.log(courseCode)
         const toSend = {
             username: this.username,
             column: "saved_courses",
@@ -77,6 +78,7 @@ class User {
         return this.getSaved();
     }
 
+    //Function to clear all the saved courses for a user.
     async clearSaved(): Promise<void> {
         let savedArr = this.getSaved();
         for (let c in savedArr) {
@@ -86,6 +88,7 @@ class User {
         localStorage.setItem(USER_LOCATION, this.stringify());
     }
 
+    //Function to remove a specific course from a users saved course
     async removeSaved(courseCode: string): Promise<Course[]> {
         this.saved = this.saved.filter((c) => GetCode(c) !== courseCode);
         console.log("remove saved taken")
@@ -115,11 +118,11 @@ class User {
     }
 
     // taken courses
-
     getTaken(): Course[] {
         return [...this.taken];
     }
 
+    //Function to add a course to a users taken courses.
     async takeCourse(toAdd: Course): Promise<Course[]> {
         console.log(this)
         console.log(this.taken)
@@ -156,6 +159,7 @@ class User {
         return this.getTaken()
     }
 
+    //Function to remove a taken course from our user.
     async removeTaken(codeToRemove: string): Promise<Course[]> {
 
         this.taken = this.taken.filter((c) => GetCode(c) !== codeToRemove);
@@ -165,8 +169,6 @@ class User {
             column: "taken_courses",
             course: codeToRemove
         };
-        console.log("in remove taken")
-        console.log(toSend);
 
         if (!this.isGuest) {
             await axios.post(
@@ -186,6 +188,7 @@ class User {
         return this.getTaken()
     }
 
+    //Function to clear a users taken courses
     async clearTaken(): Promise<void> {
         let takenArr = this.getTaken();
         for (let c in takenArr) {
@@ -196,11 +199,11 @@ class User {
     }
 
     // preferences
-
     getPreferences(): SearchParams {
         return { ...this.preferences }
     }
 
+    //Function to set a users preferences in the database
     async setPreferences(prefs: SearchParams): Promise<SearchParams> {
         this.preferences = prefs;
 
@@ -227,14 +230,15 @@ class User {
         return this.getPreferences();
     }
 
+    //Function to reset the data to default for to a user.
     async resetData() {
         await this.setPreferences(defaultParams);
         await this.clearSaved()
         await this.clearTaken()
     }
 
+    //Function to delete all the data related to a user from the database.
     async deleteUser(): Promise<void> {
-        // do some sql stuff
         const toSend = {
             username: this.username
         };
@@ -372,8 +376,10 @@ export const GetStoredUser = (): User | undefined => {
     }
 }
 
+//Function to clear the user in memory
 export const ClearStoredUser = () => localStorage.removeItem(USER_LOCATION);
 
+//Function to sign a user out of our site.
 export const SignOutUser = (userSetter: (user: User | undefined) => void) => {
     ClearStoredUser();
     ClearStoredPath();
