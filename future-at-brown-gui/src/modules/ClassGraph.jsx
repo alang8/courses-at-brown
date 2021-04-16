@@ -51,19 +51,6 @@ const ClassGraph = (props) => {
         });
     }
 
-    //Want to get all course data upon load
-    useEffect(() => {
-        getCourseData();
-    }, []);
-
-    //Want to setup the nodes once we recieved all the course info.
-    useEffect(() => {
-        console.log("setup nodes");
-        console.log(theCourses);
-        console.log("path", setUpPath());
-        setupNodes();
-    }, [theCourses])
-
     /**
      * Function to setup the node and link array for the ForceGraph component.
      */
@@ -147,17 +134,33 @@ const ClassGraph = (props) => {
                     path[semLevel]['classes'].push(rawToCourse(findRaw(code)));
                 }
             }
+            origs.forEach((o) =>
+                dests.forEach((d) =>
+                    thePath.push({ "source": o, "target": d })));
         }
+
 
         console.log("path more", path);
         curPath.current = path;
     }
 
+    //Want to get all course data upon load
+    useEffect(() => {
+        getCourseData();
+    }, []);
+
+    //Want to setup the nodes once we recieved all the course info.
+    useEffect(() => {
+        console.log("setup nodes");
+        console.log(theCourses);
+        setupNodes();
+    }, [theCourses])
+
     //State vars for the popup window when clicking on a specific node.
     const [open, setOpen] = useState(false);
     const [curCourse, setCurCourse] = useState({ name: "DEFAULT", dept: "CSCI", code: "DEFAULT" });
 
-    useEffect(() => setOpen(!open), [curCourse]);
+    useEffect(() => setOpen(!open), [curCourse])
 
     /**
      * Function to retrieve the relevant data for the clicked course popup.
@@ -169,7 +172,25 @@ const ClassGraph = (props) => {
         console.log(classID)
         console.log(allCourseInfo[classID]);
         let rawCourse = allCourseInfo[classID]
-        setCurCourse(rawToCourse(rawCourse));
+        console.log("displ course info")
+        console.log(rawCourse)
+        let encodedPrereq = rawCourse['prereqs'];
+        let prereqText = encodedPrereq.replaceAll("&", " and ")
+        prereqText = prereqText.replaceAll("|", " or ")
+        let clickedCourse = {
+            name: rawCourse['name'],
+            dept: classID.substring(0, 4),
+            code: classID.substring(4),
+            description: rawCourse['desc'],
+            rating: rawCourse['crsrat'],
+            latestProf: rawCourse['instr'],
+            latestProfRating: rawCourse['profrat'],
+            maxHours: rawCourse['maxhr'],
+            avgHours: rawCourse['avghr'],
+            prereqs: (prereqText === "" ? "None Listed" : prereqText),
+        }
+        setCurCourse(clickedCourse)
+
     }
 
     /**
@@ -182,12 +203,14 @@ const ClassGraph = (props) => {
      */
     function nodePaint({ id, x, y }, ctx) {
         if (id in props.path) {
+
             ctx.fillStyle = "white"
             ctx.font = 'bold 24px Crimson Text Times New Roman serif';
             ctx.textAlign = 'center';
             ctx.textBaseline = 'middle';
             ctx.fillText(id, x, y - 15);
             ctx.fillText(theSemester[props.path[id]], x, y + 9);
+            ctx.stroke();
         } else {
             ctx.fillStyle = "white";
             ctx.beginPath();
@@ -235,7 +258,7 @@ const ClassGraph = (props) => {
         <div id="graphWrapper" ref={props.setRef}>
             <ForceGraph2D
                 graphData={gData}
-                onNodeClick={(n, e) => displayedCourseInfo(n)}
+                onNodeClick={(n, e) => displayedCourseInfo(n) }
                 ref={fgRef}
                 showNavInfo={true}
                 dagMode={"radialout"}

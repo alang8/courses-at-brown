@@ -1,10 +1,11 @@
+import React from "react"
 import { Link } from "react-router-dom"
 import { Button, Icon, SemanticCOLORS, SemanticICONS } from "semantic-ui-react"
 
 //Module which creates the main buttons for our website.
 const makeButton = (icon: SemanticICONS, name: string,
-    justify: "left" | "right" | "center", link?: string,
-    color?: SemanticCOLORS, func?: () => any, disabled?: boolean): JSX.Element => {
+                    justify: "left" | "right" | "center", link?: string,
+                    color?: SemanticCOLORS, func?: () => any, disabled?: boolean): JSX.Element => {
 
     const button = (
         <Button inverted animated circular color={color} onClick={func} disabled={disabled}>

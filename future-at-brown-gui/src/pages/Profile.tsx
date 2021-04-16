@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react"
-import { Accordion, Button, Container, Dropdown, Grid, GridColumn, Header, Segment, Sticky } from "semantic-ui-react"
+import { Accordion, Button, Container, Dropdown, Grid, GridColumn, Header, Segment } from "semantic-ui-react"
 import { FindCourse } from "../classes/Course";
 import { SearchParams } from "../classes/SearchParams";
 import { SignOutUser } from "../classes/User";
@@ -16,10 +16,6 @@ interface Params {
     hasGraph?: any;
 }
 
-/**
- * Page serving as our profile page.
- * @param props - the parameters for a profile page, specified above.
- */
 const Profile: React.FC<Params> = (props) => {
 
     const [prefs, setPrefs] = useState<SearchParams>(props.user.getPreferences());
@@ -27,10 +23,8 @@ const Profile: React.FC<Params> = (props) => {
     const [showSettings, setSettings] = useState<boolean>(false);
     const [curRender, setCurRerender] = useState<boolean>(false);
 
-    //Rerender handler when signing out/deleting account.
     const forceRerender = () => setCurRerender(!curRender);
 
-    //Writing our preferences to the database.
     useEffect(() => {
         if (loadingPrefs) {
             props.user.setPreferences(prefs)
@@ -60,24 +54,24 @@ const Profile: React.FC<Params> = (props) => {
                         <Dropdown floating text="Data settings " icon="setting">
                             <Dropdown.Menu>
                                 <Dropdown.Item text='Clear saved courses' icon='x'
-                                    onClick={() =>
-                                        props.user.clearSaved().then(forceRerender)
-                                    } />
+                                               onClick={() =>
+                                                   props.user.clearSaved().then(forceRerender)
+                                               } />
                                 <Dropdown.Item text='Clear taken courses' icon='x'
-                                    onClick={() =>
-                                        props.user.clearTaken().then(forceRerender)
-                                    } />
+                                               onClick={() =>
+                                                   props.user.clearTaken().then(forceRerender)
+                                               } />
                                 <Dropdown.Divider />
                                 <Dropdown.Item text='Reset data' icon='refresh'
-                                    onClick={() =>
-                                        props.user.resetData().then(forceRerender)
-                                    } />
+                                               onClick={() =>
+                                                   props.user.resetData().then(forceRerender)
+                                               } />
                                 {(props.user.isGuest) ?
                                     undefined :
                                     <Dropdown.Item text='Delete account' icon='remove user'
-                                        onClick={() =>
-                                            props.user.deleteUser()
-                                                .then(() => SignOutUser(props.setUser))} />}
+                                                   onClick={() =>
+                                                       props.user.deleteUser()
+                                                           .then(() => SignOutUser(props.setUser))} />}
                             </Dropdown.Menu>
                         </Dropdown>
                     </Grid.Column>
@@ -122,18 +116,19 @@ const Profile: React.FC<Params> = (props) => {
                         <Grid.Row stretched>
                             <Grid.Column>
                                 <ExpandableCourses color={'green'}
-                                    courses={props.user.getTaken()}
-                                    title={"Taken courses"}
-                                    modify={{
-                                        searcher: FindCourse,
-                                        addCourse: e => { return props.user.takeCourse(e); },
-                                        removeCourse: c => { return props.user.removeTaken(c); }
-                                    }} key={curRender ? 0 : 1} />
+                                                   courses={props.user.getTaken()}
+                                                   title={"Taken courses"}
+                                                   modify={{
+                                                       searcher: FindCourse,
+                                                       addCourse: e => { return props.user.takeCourse(e); },
+                                                       removeCourse: c => { return props.user.removeTaken(c); }
+                                                   }} key={curRender ? 0 : 1} />
                             </Grid.Column>
                         </Grid.Row>
                     </Grid>
                 </Accordion.Content>
             </Accordion>
+
             <ButtonFooter />
         </Container>
     </div >

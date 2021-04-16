@@ -2,14 +2,12 @@ import { useEffect, useRef, useState } from "react"
 import axios from "axios";
 import { Button, Container, Dimmer, Dropdown, DropdownProps, Grid, GridColumn, Header, Loader, Message, Segment, Sticky } from "semantic-ui-react"
 import { Course, FindCourse, GetCode } from "../classes/Course";
-import { SearchParams } from "../classes/SearchParams";
 import User from "../classes/User";
 import { ButtonFooter, GraphButton, ProfileButton } from "../modules/BottomButton";
 import ExpandableCourses from "../modules/ExpandableCourses";
 import ParamSlider from "../modules/ParamSliders";
 import SignOutHeader from "../modules/SignOutHeader";
 
-//configs for axios request
 const config = {
     headers: {
         "Content-Type": "application/json",
@@ -42,15 +40,15 @@ const Search: React.FC<Params> = (props) => {
 
     const WrapDiv: React.FC<{}> = (props) =>
         <div className="total" style={{ overflow: loadingPath ? "hidden" : "auto" }}
-            children={props.children} />
+             children={props.children} />
 
     //Function to get the path
     const getPath = async (): Promise<void> => {
         setLoading(true);
-        console.log("Requesting path for concentration", concentration)
+        console.log("concentration", concentration)
         const toSend = {
-            prefs: prefs,
-            concentration: concentration
+            prefs: prefs.current,
+            concentration: "csciABML"
         };
         console.log("requesting path")
         await axios.post(
@@ -68,7 +66,7 @@ const Search: React.FC<Params> = (props) => {
             });
     }
 
-    //function to get the concentrations currently in our database.
+    useEffect(() => console.log("rerender", prefs));
     useEffect(() => {
         axios.post<{ [concentrations: string]: { [key: string]: string } }>(
             'http://localhost:4567/getconcs',
@@ -86,11 +84,11 @@ const Search: React.FC<Params> = (props) => {
         <ProfileButton />
         <GraphButton justify="left" disabled={!props.hasGraph} />
         <SignOutHeader setUser={props.setUser} user={props.user}
-            heading={{
-                title: "Search", information: "This page allows you to put in preferences "
-                    + "about the path you want to take though Brown (things such as class size, rating, "
-                    + "etc) so that the algorithm can find your optimal path through a concentration"
-            }} />
+                       heading={{
+                           title: "Search", information: "This page allows you to put in preferences "
+                               + "about the path you want to take though Brown (things such as class size, rating, "
+                               + "etc) so that the algorithm can find your optimal path through a concentration"
+                       }} />
         <Dimmer active={loadingPath} blurring>
             <Loader />
         </Dimmer>
@@ -148,7 +146,7 @@ const Search: React.FC<Params> = (props) => {
                                 className={"gradient"}
                             />
                             : <Message header={"Error"} icon="warning" color="red"
-                                content={"Please select a concentration before continuing"} />
+                                       content={"Please select a concentration before continuing"} />
                         }
                     </Grid.Column>
                 </Grid.Row>

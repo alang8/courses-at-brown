@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Accordion, Button, Card, Header, Icon, Segment } from "semantic-ui-react";
 import CourseTile from "./CourseTile";
 import { Course, GetCode } from "../classes/Course";
@@ -64,16 +64,16 @@ const ExpandableCourses: React.FC<Params> = (props) => {
         <Card key="5">
             <Button.Group vertical className="fill" compact>
                 <Button icon
-                    labelPosition='left'
-                    color={'green'}
-                    onClick={() => setAdding(true)}>
+                        labelPosition='left'
+                        color={'green'}
+                        onClick={() => setAdding(true)}>
                     <Icon name='plus' />
                     {"Add"}
                 </Button>
                 <Button icon
-                    labelPosition='left'
-                    color={'red'}
-                    onClick={() => setRemoving(true)}>
+                        labelPosition='left'
+                        color={'red'}
+                        onClick={() => setRemoving(true)}>
                     <Icon name='x' />
                     {"Remove"}
                 </Button>
@@ -95,14 +95,14 @@ const ExpandableCourses: React.FC<Params> = (props) => {
     //Component for search bars when adding/removing courses.
     const searchers = (): JSX.Element[] =>
         [<CourseSearch key={1} color={'red'}
-            searcher={
-                async (inp: string) =>
-                    displayed.filter((c) => (c.code + c.dept).toLowerCase().indexOf(inp.toLowerCase()) !== -1)}
-            resolveButton={{ func: remove, icon: 'x', name: 'Remove course' }} initialResults={displayed}
-            setDisplay={setRemoving} shouldDisplay={isRemoving} heading={"Find the course to remove"} />,
-        <CourseSearch key={2} shouldDisableCourse={alreadyIn} color={'green'}
-            searcher={props.modify!.searcher} resolveButton={{ func: add }}
-            setDisplay={setAdding} shouldDisplay={isAdding} heading={"Find a course to add"} />]
+                       searcher={
+                           async (inp: string) =>
+                               displayed.filter((c) => (c.code + c.dept).toLowerCase().indexOf(inp.toLowerCase()) !== -1)}
+                       resolveButton={{ func: remove, icon: 'x', name: 'Remove course' }} initialResults={displayed}
+                       setDisplay={setRemoving} shouldDisplay={isRemoving} heading={"Find the course to remove"} />,
+            <CourseSearch key={2} shouldDisableCourse={alreadyIn} color={'green'}
+                          searcher={props.modify!.searcher} resolveButton={{ func: add }}
+                          setDisplay={setAdding} shouldDisplay={isAdding} heading={"Find a course to add"} />]
 
     return (
         <Segment color={props.color}>

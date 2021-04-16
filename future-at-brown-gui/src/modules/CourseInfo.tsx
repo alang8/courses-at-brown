@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { Button, Grid, Header, Icon, Modal, SemanticICONS } from 'semantic-ui-react';
 import { GetColor } from '../classes/Colors'
 import { Course, GetCode } from '../classes/Course'
@@ -110,11 +110,11 @@ const CourseInfo: React.FC<Params> = (props) => {
                         <Grid.Column width={6} textAlign="center">
                             <Grid.Row centered>
                                 <Button icon
-                                    disabled={props.shouldDisable?.(course)}
-                                    loading={loading}
-                                    labelPosition='left'
-                                    className="fill" color={color}
-                                    onClick={() => setLoading(true)}>
+                                        disabled={props.shouldDisable?.(course)}
+                                        loading={loading}
+                                        labelPosition='left'
+                                        className="fill" color={color}
+                                        onClick={() => setLoading(true)}>
                                     <Icon name={props.button?.icon ?? 'add'} />
                                     {props.button?.name ?? "Save Course"}
                                 </Button>
