@@ -273,6 +273,13 @@ class User {
         }
         return JSON.stringify(jsonVersion);
     }
+
+    isIn(where: "taken" | "saved"): (course: Course) => boolean {
+        return (course: Course) => {
+            const test = (where === "taken") ? this.getSaved() : this.getTaken();
+            return test.find((c) => GetCode(c) === GetCode(course)) !== undefined;
+        }
+    }
 }
 
 export default User;

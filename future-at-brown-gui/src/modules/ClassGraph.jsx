@@ -1,6 +1,8 @@
 import { useEffect, useRef, useState } from "react"
-import CourseInfo from "../modules/CourseInfo";
+import CourseInfo from "./CourseInfo";
 import { ForceGraph2D } from 'react-force-graph';
+import PathTiles from './PathTiles';
+import { CustomButton } from './BottomButton'
 import axios from "axios";
 import "../css/Graph.css"
 import { GetColorRaw } from '../classes/Colors'
@@ -12,6 +14,7 @@ import { GetCode } from '../classes/Course'
  * @returns {JSX.Element} - an html object which holds the ForceGraph2D.
  */
 const ClassGraph = (props) => {
+
     const fgRef = useRef();
     const [theCourses, setCourses] = useState([]);
     const [allCourseInfo, setAllCourseinfo] = useState({});
@@ -75,15 +78,60 @@ const ClassGraph = (props) => {
             tempCourseInfo[curID] = theCourses[i];
         }
 
-        //create edges for our pathway.
-        for (i = 0; i < 9; i++) {
-            const dests = [];
-            const origs = [];
+        // for (i = 0; i < 9; i++) {
+        //     const dests = [];
+        //     const origs = [];
+        //     for (let code in props.path) {
+        //         if (props.path[code] === i)
+        //             origs.push(code);
+        //         else if (props.path[code] === i + 1) {
+        //             dests.push(code);
+        //         }
+
+        //     }
+        //     origs.forEach((o) =>
+        //         dests.forEach((d) =>
+        //             thePath.push({ "source": o, "target": d })));
+        // }
+        setAllCourseinfo(tempCourseInfo);
+        setGData({ "nodes": nodeArray, "links": linkArray.concat(thePath) });
+    }
+
+    function rawToCourse(rawCourse) {
+        let encodedPrereq = rawCourse['prereqs'];
+        let prereqText = encodedPrereq.replaceAll("&", " and ")
+        prereqText = prereqText.replaceAll("|", " or ")
+        return {
+            name: rawCourse['name'],
+            dept: rawCourse['id'].substring(0, 4),
+            code: rawCourse['id'].substring(4),
+            description: rawCourse['desc'],
+            rating: rawCourse['crsrat'],
+            latestProf: rawCourse['instr'],
+            latestProfRating: rawCourse['profrat'],
+            maxHours: rawCourse['maxhr'],
+            avgHours: rawCourse['avghr'],
+            prereqs: prereqText,
+        };
+    }
+
+
+    const [openPath, setOpenPath] = useState(false);
+    const closePath = () => setOpenPath(false);
+    const curPath = useRef()
+
+    function setUpPath() {
+        const path = [];
+
+        for (let semLevel in theSemester) {
+            // console.log("level", semLevel); 
+            // console.log(semester);
+            path[semLevel] = { semester: theSemester[semLevel], classes: [] };
+            const findRaw = (code) => theCourses.find((c) => c.id === code);
             for (let code in props.path) {
-                if (props.path[code] === i)
-                    origs.push(code);
-                else if (props.path[code] === i + 1) {
-                    dests.push(code);
+                if (String(props.path[code]) === String(semLevel) && findRaw(code)) {
+                    console.log("code", code, findRaw(code));
+                    path[semLevel]['classes'].push(rawToCourse(findRaw(code)));
                 }
             }
             origs.forEach((o) =>
@@ -91,8 +139,9 @@ const ClassGraph = (props) => {
                     thePath.push({ "source": o, "target": d })));
         }
 
-        setAllCourseinfo(tempCourseInfo);
-        setGData({ "nodes": nodeArray, "links": linkArray.concat(thePath) });
+
+        console.log("path more", path);
+        curPath.current = path;
     }
 
     //Want to get all course data upon load
@@ -108,9 +157,8 @@ const ClassGraph = (props) => {
     }, [theCourses])
 
     //State vars for the popup window when clicking on a specific node.
-    const [open, setOpen] = useState(true);
+    const [open, setOpen] = useState(false);
     const [curCourse, setCurCourse] = useState({ name: "DEFAULT", dept: "CSCI", code: "DEFAULT" });
-    const closeModal = () => setOpen(false);
 
     useEffect(() => setOpen(!open), [curCourse])
 
@@ -155,11 +203,7 @@ const ClassGraph = (props) => {
      */
     function nodePaint({ id, x, y }, ctx) {
         if (id in props.path) {
-            // ctx.fillStyle = GetColorRaw(id.substring(0, 4));
-            // ctx.strokeStyle = GetColorRaw(id.substring(0, 4));
-            ctx.beginPath();
-            // ctx.arc(x, y, 100, 0, 2 * Math.PI, false);
-            // ctx.fill();
+
             ctx.fillStyle = "white"
             ctx.font = 'bold 24px Crimson Text Times New Roman serif';
             ctx.textAlign = 'center';
@@ -188,7 +232,8 @@ const ClassGraph = (props) => {
 
     //Function which returns a function which returns a given value if the edge is in the path, and another one otherwise.
     function edgeInPath(inPath, notInPath) {
-        return (edge) => (edge.source.id in props.path && edge.target.id in props.path) ? inPath : notInPath
+        return (edge) => (edge.source.id in props.path && edge.target.id in props.path)
+            ? inPath : notInPath
     }
 
     //Function which returns an edges corresponding color.
@@ -205,7 +250,12 @@ const ClassGraph = (props) => {
     }
 
     return <div>
-        <div id="graphWrapper">
+        <CustomButton 
+            text={"Pathway"} 
+            color={"blue"} 
+            icon={"columns"} 
+            func={() => {console.log("opened"); setOpenPath(true);}}/>
+        <div id="graphWrapper" ref={props.setRef}>
             <ForceGraph2D
                 graphData={gData}
                 onNodeClick={(n, e) => displayedCourseInfo(n) }
@@ -228,10 +278,17 @@ const ClassGraph = (props) => {
         </div>
         <CourseInfo
             course={curCourse}
-            setDisplay={closeModal}
+            setDisplay={setOpen}
             shouldDisplay={open}
             button={{ func: props.saveFunction }}
-            shouldDisable={(test) => (props.user.getSaved().find(c => GetCode(c) === GetCode(test)) !== undefined)} />
+            shouldDisable={(test) =>
+                (props.user.getSaved().find(c => GetCode(c) === GetCode(test)) !== undefined)} />
+        <PathTiles
+            disp={curPath.current}
+            shouldDisplay={openPath}
+            setDisplay={setOpenPath}
+            user={props.user}
+        />
     </div>
 }
 
