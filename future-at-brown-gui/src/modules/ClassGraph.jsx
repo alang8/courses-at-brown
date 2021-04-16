@@ -1,6 +1,8 @@
 import { useEffect, useRef, useState } from "react"
-import CourseInfo from "../modules/CourseInfo";
+import CourseInfo from "./CourseInfo";
 import { ForceGraph2D } from 'react-force-graph';
+import PathTiles from './PathTiles';
+import { CustomButton } from './BottomButton'
 import axios from "axios";
 import "../css/Graph.css"
 import { GetColorRaw } from '../classes/Colors'
@@ -12,6 +14,7 @@ import { GetCode } from '../classes/Course'
  * @returns {JSX.Element} - an html object which holds the ForceGraph2D.
  */
 const ClassGraph = (props) => {
+
     const fgRef = useRef();
     const [theCourses, setCourses] = useState([]);
     const [allCourseInfo, setAllCourseinfo] = useState({});
@@ -127,31 +130,34 @@ const ClassGraph = (props) => {
         };
     }
 
+
+    const [openPath, setOpenPath] = useState(false);
+    const closePath = () => setOpenPath(false);
+    const curPath = useRef()
+
     function setUpPath() {
-        const path = {};
+        const path = [];
 
         for (let semLevel in theSemester) {
-            // console.log("level", semLevel);
-            const semester = theSemester[semLevel]
+            // console.log("level", semLevel); 
             // console.log(semester);
+            path[semLevel] = { semester: theSemester[semLevel], classes: [] };
             const findRaw = (code) => theCourses.find((c) => c.id === code);
-            path[semester] = []
             for (let code in props.path) {
-                if (String(props.path[code]) === String(semLevel)){
-                    console.log("code", code);
-                    path[semester].push(rawToCourse(findRaw(code)));
+                if (String(props.path[code]) === String(semLevel) && findRaw(code)) {
+                    console.log("code", code, findRaw(code));
+                    path[semLevel]['classes'].push(rawToCourse(findRaw(code)));
                 }
             }
         }
 
-        console.log("path", path);
-        return path;
+        console.log("path more", path);
+        curPath.current = path;
     }
 
     //State vars for the popup window when clicking on a specific node.
-    const [open, setOpen] = useState(true);
+    const [open, setOpen] = useState(false);
     const [curCourse, setCurCourse] = useState({ name: "DEFAULT", dept: "CSCI", code: "DEFAULT" });
-    const closeModal = () => setOpen(false);
 
     useEffect(() => setOpen(!open), [curCourse]);
 
@@ -159,7 +165,7 @@ const ClassGraph = (props) => {
      * Function to retrieve the relevant data for the clicked course popup.
      * @param nodeInfo - the information of the clicked node (basically just the dept + code as a string).
      */
-     function displayedCourseInfo(nodeInfo) {
+    function displayedCourseInfo(nodeInfo) {
         console.log("user", props.user.getSaved())
         let classID = nodeInfo['id'];
         console.log(classID)
@@ -178,34 +184,19 @@ const ClassGraph = (props) => {
      */
     function nodePaint({ id, x, y }, ctx) {
         if (id in props.path) {
-            // ctx.beginPath();
             ctx.fillStyle = "white"
             ctx.font = 'bold 24px Crimson Text Times New Roman serif';
             ctx.textAlign = 'center';
             ctx.textBaseline = 'middle';
             ctx.fillText(id, x, y - 15);
             ctx.fillText(theSemester[props.path[id]], x, y + 9);
-            // ctx.stroke();
         } else {
             ctx.fillStyle = "white";
             ctx.beginPath();
             ctx.arc(x, y, 13, 0, 2 * Math.PI, false);
             ctx.fill();
         }
-        //     
-        //     if (id) {
-        //         console.log("undefined node")
-        //     } else {
-        //         console.log("oop")
-        //     }
-        //     // ctx.strokeStyle = GetColorRaw(id.substring(0, 4));
-        //     ctx.beginPath();
-        //     ctx.arc(x, y, 20, 0, 2 * Math.PI, false);
-        //     ctx.fill();
-        // }
     }
-
-    // function edgePaint()
 
     //Changing the force values to display our graph in a reasonable way.
     useEffect(() => {
@@ -218,7 +209,8 @@ const ClassGraph = (props) => {
     }
 
     function edgeInPath(inPath, notInPath) {
-        return (edge) => (edge.source.id in props.path && edge.target.id in props.path) ? inPath : notInPath
+        return (edge) => (edge.source.id in props.path && edge.target.id in props.path)
+            ? inPath : notInPath
     }
 
     function edgeColor(edge) {
@@ -233,6 +225,11 @@ const ClassGraph = (props) => {
     }
 
     return <div>
+        <CustomButton 
+            text={"Pathway"} 
+            color={"blue"} 
+            icon={"columns"} 
+            func={() => {console.log("opened"); setOpenPath(true);}}/>
         <div id="graphWrapper" ref={props.setRef}>
             <ForceGraph2D
                 graphData={gData}
@@ -256,10 +253,17 @@ const ClassGraph = (props) => {
         </div>
         <CourseInfo
             course={curCourse}
-            setDisplay={closeModal}
+            setDisplay={setOpen}
             shouldDisplay={open}
             button={{ func: props.saveFunction }}
-            shouldDisable={(test) => (props.user.getSaved().find(c => GetCode(c) === GetCode(test)) !== undefined)} />
+            shouldDisable={(test) =>
+                (props.user.getSaved().find(c => GetCode(c) === GetCode(test)) !== undefined)} />
+        <PathTiles
+            disp={curPath.current}
+            shouldDisplay={openPath}
+            setDisplay={setOpenPath}
+            user={props.user}
+        />
     </div>
 }
 

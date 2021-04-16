@@ -50,7 +50,7 @@ const CourseInfo: React.FC<Params> = (props) => {
                     color={color} />
             </Modal.Header>
 
-            <Modal.Content>
+            <Modal.Content scrolling>
                 <Grid padded relaxed="very" stretched>
                     <Grid.Row centered>
                         <Header as="h3"><em>{course.name}</em></Header>
