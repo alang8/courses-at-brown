@@ -1,10 +1,10 @@
-import { useEffect, useState } from "react"
+import { useEffect, useRef, useState } from "react"
 import axios from "axios";
 import { Button, Container, Dimmer, Dropdown, DropdownProps, Grid, GridColumn, Header, Loader, Message, Segment, Sticky } from "semantic-ui-react"
 import { Course, FindCourse, GetCode } from "../classes/Course";
 import { SearchParams } from "../classes/SearchParams";
 import User from "../classes/User";
-import { ButtonFooter, ProfileButton } from "../modules/BottomButton";
+import { ButtonFooter, GraphButton, ProfileButton } from "../modules/BottomButton";
 import ExpandableCourses from "../modules/ExpandableCourses";
 import ParamSlider from "../modules/ParamSliders";
 import SignOutHeader from "../modules/SignOutHeader";
@@ -22,6 +22,7 @@ interface Params {
     user: User;
     setUser: (user: User | undefined) => void;
     setPath: (path: { [id: string]: number }) => void;
+    hasGraph?: boolean;
 }
 
 /**
@@ -30,7 +31,9 @@ interface Params {
  */
 const Search: React.FC<Params> = (props) => {
 
-    const [prefs, setPrefs] = useState<SearchParams>(props.user.getPreferences());
+    const prefs = useRef(props.user.getPreferences());
+    // const takenCourses = useRef(props.user.getTaken());
+    // const [prefs, setPrefs] = useState<SearchParams>(props.user.getPreferences());
     const [takenCourses, setTakenCourses] = useState<Course[]>(props.user.getTaken());
     const [concentration, setConcentration] = useState<string | undefined>(undefined);
 
@@ -79,10 +82,9 @@ const Search: React.FC<Params> = (props) => {
         });
     }, []);
 
-    const setPrefsAsync = async (pref: SearchParams) => setPrefs(pref)
-
     return <Dimmer.Dimmable active={loadingPath} as={WrapDiv}>
         <ProfileButton />
+        <GraphButton justify="left" disabled={!props.hasGraph} />
         <SignOutHeader setUser={props.setUser} user={props.user}
             heading={{
                 title: "Search", information: "This page allows you to put in preferences "
@@ -104,7 +106,10 @@ const Search: React.FC<Params> = (props) => {
                     <Grid.Column>
                         <Segment color="blue">
                             <Header as="h2" content={"Preferences"} />
-                            <ParamSlider curUser={props.user} prefChange={setPrefsAsync} />
+                            <ParamSlider
+                                params={prefs.current}
+                                curUser={props.user}
+                                prefChange={(p) => prefs.current = p} />
                         </Segment>
                     </Grid.Column>
                 </Grid.Row>
@@ -142,7 +147,7 @@ const Search: React.FC<Params> = (props) => {
                                 content={"Submit"}
                                 className={"gradient"}
                             />
-                            : <Message header={"Error"} icon="warning" color="red" 
+                            : <Message header={"Error"} icon="warning" color="red"
                                 content={"Please select a concentration before continuing"} />
                         }
                     </Grid.Column>

@@ -7,6 +7,7 @@ import User from "../classes/User";
 
 //Parameters for a slider - the current user, a function to set the preference for the user, a function to signify loading.
 interface Params {
+    params?: SearchParams;
     curUser?: User;
     prefChange?: (newPref: SearchParams) => void;
     setLoading?: (set: boolean) => void;
@@ -18,7 +19,9 @@ interface Params {
  */
 const ParamSlider: React.FC<Params> = (props) => {
 
-    const [pref, setPrefs] = useState<SearchParams>(props.curUser?.getPreferences() ?? defaultParams);
+    const [pref, setPrefs] = useState<SearchParams>(
+        props.params ?? props.curUser?.getPreferences() ?? defaultParams);
+
 
     //Function to actually create a single slider.
     const makeSlider = (
@@ -40,7 +43,7 @@ const ParamSlider: React.FC<Params> = (props) => {
                     <Slider
                         min={0}
                         max={10}
-                        defaultValue={props.curUser?.getPreferences()[id]}
+                        defaultValue={pref[id]}
                         step={0.1}
                         trackStyle={{ backgroundColor: color }}
                         handleStyle={{ borderColor: color }}
@@ -51,7 +54,9 @@ const ParamSlider: React.FC<Params> = (props) => {
                         }}
                         onAfterChange={(newVal: number) => {
                             if (props.prefChange) {
+                                console.log("b4", pref);
                                 pref[id] = newVal;
+                                console.log(pref);
                                 props.prefChange({...pref})
                             }
                         }}

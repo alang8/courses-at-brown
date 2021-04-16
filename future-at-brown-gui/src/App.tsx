@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import {
   BrowserRouter as Router,
   Route,
@@ -43,19 +43,23 @@ const App: React.FC<{}> = () => {
   // redirect only if path changes to a defined value
   useEffect(() => {
     if (path) setRedirect(true);
-    }, [path]);
+  }, [path]);
 
+  console.log("path", path);
   return (
     <Router>
       <Switch>
         <Route path="/test-components" component={TestComponent} />
         <Route path="/test-route" component={TestComponent2} />
-        {redirectGraph ? <Route path="/search"><Redirect to="/graph"/></Route> : undefined}
+        {redirectGraph ? <Route path="/search"><Redirect to="/graph" /></Route> : undefined}
         {InauthenticatedRoute("/", <Redirect to="/splash" />)}
-        {AuthenticatedRoute("/search", <Search user={user!} setUser={setUser} setPath={StorePath(setPath)}/>)}
-        {AuthenticatedRoute("/profile", <Profile user={user!} setUser={setUser}/>)}
+        {AuthenticatedRoute("/search", <Search user={user!}
+          setUser={setUser}
+          setPath={StorePath(setPath)}
+          hasGraph={path ? false : true} />)}
+        {AuthenticatedRoute("/profile", <Profile user={user!} setUser={setUser} />)}
         {InauthenticatedRoute("/splash", <SplashPage setLogin={setUser} />)}
-        {AuthenticatedRoute("/graph", <GraphDisplay user={user!} setUser={setUser} path={path} onRender={() => setRedirect(false)}/>)}
+        {AuthenticatedRoute("/graph", <GraphDisplay user={user!} setUser={setUser} path={path} onRender={() => setRedirect(false)} />)}
         {InauthenticatedRoute("/login", <Login setLogin={setUser} />)}
         {InauthenticatedRoute("/signup", <Signup setLogin={setUser} />)}
         <Route path="*" component={NotFound} />
