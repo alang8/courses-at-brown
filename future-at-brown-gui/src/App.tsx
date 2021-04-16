@@ -15,7 +15,7 @@ import GraphDisplay from "./pages/GraphDisplay";
 import TestComponent, { TestComponent2 } from './pages/TestComponents';
 import NotFound from './pages/NotFound';
 import User, { GetStoredUser } from './classes/User';
-import { GetStoredPath, Path, StorePath } from './classes/Path';
+import { ClearStoredPath, GetStoredPath, Path, StorePath } from './classes/Path';
 
 /**
  * File which drives our whole app using Node/npm. Routes all of our pages together.
@@ -24,7 +24,6 @@ const App: React.FC<{}> = () => {
   const [user, setUser] = useState<User | undefined>(GetStoredUser());
   const [path, setPath] = useState<Path | undefined>(GetStoredPath());
   const [redirectGraph, setRedirect] = useState<boolean>(false);
-
 
   // routes to be used if the user is not logged in (profile page otherwise)
   const InauthenticatedRoute = (route: string, loginProcess: JSX.Element): JSX.Element => {
@@ -57,7 +56,7 @@ const App: React.FC<{}> = () => {
           setUser={setUser}
           setPath={StorePath(setPath)}
           hasGraph={path ? false : true} />)}
-        {AuthenticatedRoute("/profile", <Profile user={user!} setUser={setUser} />)}
+        {AuthenticatedRoute("/profile", <Profile user={user!} setUser={setUser} setPath={setPath}/>)}
         {InauthenticatedRoute("/splash", <SplashPage setLogin={setUser} />)}
         {AuthenticatedRoute("/graph", <GraphDisplay user={user!} setUser={setUser} path={path} onRender={() => setRedirect(false)} />)}
         {InauthenticatedRoute("/login", <Login setLogin={setUser} />)}

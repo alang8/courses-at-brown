@@ -5,10 +5,10 @@ import { Button, Icon, SemanticCOLORS, SemanticICONS } from "semantic-ui-react"
 //Module which creates the main buttons for our website.
 const makeButton = (icon: SemanticICONS, name: string,
                     justify: "left" | "right" | "center", link?: string,
-                    color?: SemanticCOLORS, func?: () => any, disabled?: boolean): JSX.Element => {
+                    color?: SemanticCOLORS, func?: () => any): JSX.Element => {
 
     const button = (
-        <Button inverted animated circular color={color} onClick={func} disabled={disabled}>
+        <Button inverted animated circular color={color} onClick={func} >
             <Button.Content visible>
                 <Icon name={icon} />
             </Button.Content>
@@ -18,7 +18,7 @@ const makeButton = (icon: SemanticICONS, name: string,
         </Button>
     )
     return <div className={"bottom-float " + justify} >
-        {(link && !disabled) ? <Link to={'/' + link} children={button} />
+        {(link) ? <Link to={'/' + link} children={button} />
             : button}
     </div>
 }
@@ -40,8 +40,7 @@ export const ProfileButton: React.FC<{}> = () => {
 
 export const GraphButton: React.FC<{ disabled?: boolean, justify: "left" | "right" }> =
     (props) => {
-        return makeButton("sitemap", "Graph", props.justify, "graph", "blue", undefined,
-            props.disabled);
+        return makeButton("sitemap", "Graph", props.justify, "graph", "blue", undefined);
     }
 
 interface Params {

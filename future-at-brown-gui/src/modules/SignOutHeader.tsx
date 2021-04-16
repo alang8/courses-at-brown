@@ -8,7 +8,7 @@ import InfoPopup from "./InfoPopup";
 interface Props extends AuthenticatedPageProps {
     heading?: {
         title: string;
-        information: string;
+        information: string | React.ReactNode;
     }
     dontDisplace?: boolean;
 }

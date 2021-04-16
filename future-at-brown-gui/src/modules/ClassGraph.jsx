@@ -60,8 +60,9 @@ const ClassGraph = (props) => {
     useEffect(() => {
         console.log("setup nodes");
         console.log(theCourses);
-        console.log("path", setUpPath());
+        setUpPath();
         setupNodes();
+        setUpDepts();
     }, [theCourses])
 
     /**
@@ -91,21 +92,6 @@ const ClassGraph = (props) => {
             tempCourseInfo[curID] = theCourses[i];
         }
 
-        // for (i = 0; i < 9; i++) {
-        //     const dests = [];
-        //     const origs = [];
-        //     for (let code in props.path) {
-        //         if (props.path[code] === i)
-        //             origs.push(code);
-        //         else if (props.path[code] === i + 1) {
-        //             dests.push(code);
-        //         }
-
-        //     }
-        //     origs.forEach((o) =>
-        //         dests.forEach((d) =>
-        //             thePath.push({ "source": o, "target": d })));
-        // }
         setAllCourseinfo(tempCourseInfo);
         setGData({ "nodes": nodeArray, "links": linkArray.concat(thePath) });
     }
@@ -151,8 +137,20 @@ const ClassGraph = (props) => {
         curPath.current = path;
     }
 
+
+    function setUpDepts() {
+        const depts = [];
+        theCourses.forEach((course) => {
+            const dept = course.id.substring(0, 4);
+            if (!depts.includes(dept))
+                depts.push(dept);
+        })
+        // console.log("depts", depts);
+        props.setDepts(depts);
+    }
+
     //State vars for the popup window when clicking on a specific node.
-    const [open, setOpen] = useState(false);
+    const [open, setOpen] = useState(true);
     const [curCourse, setCurCourse] = useState({ name: "DEFAULT", dept: "CSCI", code: "DEFAULT" });
 
     useEffect(() => setOpen(!open), [curCourse]);
@@ -200,28 +198,19 @@ const ClassGraph = (props) => {
         fgRef.current.d3Force("link").strength(0.10);
     });
 
-    //Function which returns a function which returns a given value if the node is in the path, and another one otherwise.
+    //Function that determines the size of a given node
     function nodeInPath(inPath, notInPath) {
         return (node) => (node.id in props.path) ? inPath : notInPath
     }
 
     //Function which returns a function which returns a given value if the edge is in the path, and another one otherwise.
-    function edgeInPath(inPath, notInPath) {
-        return (edge) => (edge.source.id in props.path && edge.target.id in props.path)
-            ? inPath : notInPath
+    function edgeRelatedToPath(related, notRelated) {
+        return (edge) => (edge.source.id in props.path) ? related : notRelated;
     }
-
     //Function which returns an edges corresponding color.
     function edgeColor(edge) {
         return (edge.source.id in props.path && edge.target.id in props.path) ?
             "black" : GetColorRaw(edge.source.id?.substring(0, 4) ?? "CSCI");
-    }
-
-    //Function which returns an edge's label
-    function edgeLabel(edge) {
-        return (edge.source.id in props.path && edge.target.id in props.path) ?
-            theSemester[props.path[edge.source.id]] + " > " + theSemester[props.path[edge.target.id]]
-            : undefined
     }
 
     return <div>
@@ -240,11 +229,11 @@ const ClassGraph = (props) => {
                 nodeVal={nodeInPath(600, 20)}
                 nodeColor={node => GetColorRaw(node.id?.substring(0, 4) ?? "CSCI")}
                 linkColor={edgeColor}
-                linkWidth={1}
-                linkDirectionalParticles={1}
-                linkDirectionalParticleWidth={4}
+                linkWidth={edgeRelatedToPath(1.5, 1)}
+                linkDirectionalParticles={edgeRelatedToPath(4, 1)}
+                linkDirectionalParticleWidth={edgeRelatedToPath(6, 4)}
+                linkDirectionalArrowLength={edgeRelatedToPath(30, 20)}
                 linkDirectionalArrowRelPos={1}
-                linkLabel={edgeLabel}
                 nodeCanvasObject={(node, ctx) => nodePaint(node, ctx)}
                 nodeCanvasObjectMode={() => "after"}
             />
