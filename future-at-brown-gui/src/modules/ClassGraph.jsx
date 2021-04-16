@@ -128,9 +128,7 @@ const ClassGraph = (props) => {
         };
     }
 
-
     const [openPath, setOpenPath] = useState(false);
-    const closePath = () => setOpenPath(false);
     const curPath = useRef()
 
     function setUpPath() {
@@ -242,11 +240,9 @@ const ClassGraph = (props) => {
                 nodeVal={nodeInPath(600, 20)}
                 nodeColor={node => GetColorRaw(node.id?.substring(0, 4) ?? "CSCI")}
                 linkColor={edgeColor}
-                linkWidth={edgeInPath(2, 1)}
-                linkCurvature={edgeInPath(0.3, 0)}
-                linkDirectionalParticles={edgeInPath(5, 1)}
-                linkDirectionalParticleWidth={edgeInPath(8, 4)}
-                linkDirectionalArrowLength={edgeInPath(30, 0)}
+                linkWidth={1}
+                linkDirectionalParticles={1}
+                linkDirectionalParticleWidth={4}
                 linkDirectionalArrowRelPos={1}
                 linkLabel={edgeLabel}
                 nodeCanvasObject={(node, ctx) => nodePaint(node, ctx)}

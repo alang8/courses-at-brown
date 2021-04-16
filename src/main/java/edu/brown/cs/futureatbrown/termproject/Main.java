@@ -13,9 +13,11 @@ import java.util.*;
 import com.google.common.collect.ImmutableMap;
 import com.google.gson.Gson;
 import edu.brown.cs.futureatbrown.termproject.course.*;
+import edu.brown.cs.futureatbrown.termproject.graph.Graph;
 import edu.brown.cs.futureatbrown.termproject.graph.GraphAlgorithms;
 import joptsimple.OptionParser;
 import joptsimple.OptionSet;
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import spark.Request;
@@ -110,9 +112,8 @@ public final class Main {
 
 
       Database.init(courseDBPath);
-      Database.setupGraph(new ArrayList<>());
-      CourseGraph g = Database.getGraph();
       GraphAlgorithms<CourseNode, CourseEdge, CourseGraph> graphAlg = new GraphAlgorithms<>();
+
 
       //Setting up spark routes.
       Spark.post("/login", new UserDataHandlers.LoginHandler(userDataConn));
@@ -126,7 +127,7 @@ public final class Main {
       Spark.post("/setpreference", new UserDataHandlers.SetPreferenceHandler(userDataConn));
       Spark.post("/loaduser", new UserDataHandlers.LoadUserHandler(userDataConn, courseDataConn));
       Spark.post("/deleteuser", new UserDataHandlers.DeleteUserHandler(userDataConn));
-      Spark.post("/path", new GetPathHandler(courseDataConn, g, graphAlg));
+      Spark.post("/path", new GetPathHandler(courseDataConn, graphAlg));
     } catch (ClassNotFoundException | SQLException e) {
       System.out.println("Couldn't connect to SQL user data!");
     }
@@ -139,12 +140,10 @@ public final class Main {
     private static final Gson GSON = new Gson();
     private final Connection cConn;
     private final GraphAlgorithms<CourseNode, CourseEdge, CourseGraph> graphAlg;
-    private final CourseGraph theGraph;
 
-    GetPathHandler(Connection c, CourseGraph g, GraphAlgorithms<CourseNode, CourseEdge, CourseGraph> ga) {
+    GetPathHandler(Connection c, GraphAlgorithms<CourseNode, CourseEdge, CourseGraph> gA) {
       this.cConn = c;
-      this.graphAlg = ga;
-      this.theGraph = g;
+      this.graphAlg = gA;
     }
 
     @Override
@@ -162,8 +161,8 @@ public final class Main {
         double pRP = prefJSON.getDouble("profRatingPref");
         double cSP = prefJSON.getDouble("crsSizePref");
         double aHI = (aHP / 5.0 * 75) + 15;
-        double mHI = Math.max(mHP / 5.0 * 400, 300);
-        int cSI = (int) cSP / 5 * 72;
+        double mHI = Math.max(mHP / 5.0 * 600, 600);
+        int cSI = (int) cSP / 5 * 72 + 50;
         int minNumCourses = 0;
         int maxNumCourses = 26;
 
@@ -190,7 +189,6 @@ public final class Main {
           introCourses.add(rs.getString(1));
         }
 
-
         /*
           averages
           avg hours : 7.53125
@@ -201,6 +199,15 @@ public final class Main {
         Map<String, CourseWay> cWays = Database.getCourseWays(conc + "Courses");
         Map<String, Integer> gData = Database.getGroups(conc + "Groups");
 
+        JSONArray takenArray = data.getJSONArray("taken");
+        List<String> takenCourses = new ArrayList<>();
+
+        for(int i = 0; i < takenArray.length(); i++) {
+          takenCourses.add((String) takenArray.get(i));
+        }
+
+        Database.setupGraph(new ArrayList<>());
+        CourseGraph theGraph = Database.getGraph();
 
         System.out.println("setting params and getting path: ");
         theGraph.setGlobalParams(cRP, pRP, aHP, aHI, minNumCourses, maxNumCourses, bFP, mHI, cSP, cSI, cSM, gData, cWays);

@@ -46,9 +46,18 @@ const Search: React.FC<Params> = (props) => {
     const getPath = async (): Promise<void> => {
         setLoading(true);
         console.log("concentration", concentration)
+        console.log("user info before path", takenCourses)
+        let takenCodes: String[] = [];
+        let i;
+        for (i = 0; i < takenCourses.length; i++) {
+            let curCourse = takenCourses[i];
+            console.log(curCourse)
+            takenCodes = [(curCourse["dept"] + " " + curCourse["code"]), ...takenCodes]
+        }
         const toSend = {
             prefs: prefs.current,
-            concentration: "csciABML"
+            concentration: concentration,
+            taken: takenCodes
         };
         console.log("requesting path")
         await axios.post(
