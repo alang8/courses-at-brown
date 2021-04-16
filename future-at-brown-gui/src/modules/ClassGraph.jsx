@@ -356,8 +356,9 @@ const ClassGraph = (props) => {
     useEffect(() => {
         console.log("setup nodes");
         console.log(theCourses);
-        console.log("path", setUpPath());
+        setUpPath();
         setupNodes();
+        setUpDepts();
     }, [theCourses])
 
     /**
@@ -387,21 +388,6 @@ const ClassGraph = (props) => {
             tempCourseInfo[curID] = theCourses[i];
         }
 
-        // for (i = 0; i < 9; i++) {
-        //     const dests = [];
-        //     const origs = [];
-        //     for (let code in props.path) {
-        //         if (props.path[code] === i)
-        //             origs.push(code);
-        //         else if (props.path[code] === i + 1) {
-        //             dests.push(code);
-        //         }
-
-        //     }
-        //     origs.forEach((o) =>
-        //         dests.forEach((d) =>
-        //             thePath.push({ "source": o, "target": d })));
-        // }
         setAllCourseinfo(tempCourseInfo);
         setGData({ "nodes": nodeArray, "links": linkArray.concat(thePath) });
     }
@@ -424,9 +410,7 @@ const ClassGraph = (props) => {
         };
     }
 
-
     const [openPath, setOpenPath] = useState(false);
-    const closePath = () => setOpenPath(false);
     const curPath = useRef()
 
     function setUpPath() {
@@ -447,6 +431,18 @@ const ClassGraph = (props) => {
 
         console.log("path more", path);
         curPath.current = path;
+    }
+
+
+    function setUpDepts() {
+        const depts = [];
+        theCourses.forEach((course) => {
+            const dept = course.id.substring(0, 4);
+            if (!depts.includes(dept))
+                depts.push(dept);
+        })
+        // console.log("depts", depts);
+        props.setDepts(depts);
     }
 
     //State vars for the popup window when clicking on a specific node.
