@@ -14,9 +14,9 @@ public class KDNode<T extends Locatable> {
    * Takes in the a Locatable for the current node of the KD Tree, and assigns the left and the
    * right children of the KD Tree to other sub KD Trees.
    *
-   * @param data the current node in the KD Tree.
-   * @param leftChild the left sub tree of the KD Tree.
-   * @param rightChild the right sub tree of the KD Tree.
+   * @param data the current node in the KD Tree
+   * @param leftChild the left sub tree of the KD Tree
+   * @param rightChild the right sub tree of the KD Tree
    */
   public KDNode(T data, KDNode<T> leftChild, KDNode<T> rightChild) {
     assert data != null;
@@ -28,7 +28,7 @@ public class KDNode<T extends Locatable> {
   /**
    * Returns the Locatable value stored in the current KD Tree.
    *
-   * @return the Locatable data stored in the current KD Tree.
+   * @return the Locatable data stored in the current KD Tree
    */
   public T getData() {
     return data;
@@ -37,7 +37,7 @@ public class KDNode<T extends Locatable> {
   /**
    * Returns the left child tree of the current KD Tree.
    *
-   * @return the left child tree of the current KD Tree.
+   * @return the left child tree of the current KD Tree
    */
   public KDNode<T> getLeftChild() {
     return leftChild;
@@ -46,7 +46,7 @@ public class KDNode<T extends Locatable> {
   /**
    * Returns the right child tree of the current KD Tree.
    *
-   * @return the right child tree of the current KD Tree.
+   * @return the right child tree of the current KD Tree
    */
   public KDNode<T> getRightChild() {
     return rightChild;

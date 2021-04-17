@@ -34,7 +34,7 @@ public class CourseGraph implements Graph<CourseNode, CourseEdge> {
   private Map<String, Integer> groupData;
   private Map<String, CourseWay> courseWayData;
 
-  private Set<List<CourseNode>> prereqs; //Global Prerequisites of the target end node
+  private Set<List<CourseNode>> prereqs; // Global Prerequisites of the target end node
 
   /**
    * Constructs a new CourseGraph with the given parameters.
@@ -65,12 +65,14 @@ public class CourseGraph implements Graph<CourseNode, CourseEdge> {
   }
 
   /**
-   * Sets up all the global parameters of the graph in this edge
-   * RECALL that all of these are relative so Preferences of all 10s are the same as Preferences of all 1s
+   * Sets up all the global parameters of the graph in this edge.
+   * <p>
+   * RECALL that all of these are relative so preferences of all 10s are the same as Preferences of all 1s
+   *
    * @param crsRatingPref Course Rating Preference: How Important is the Course Rating (0 - 10)
    * @param profRatingPref Professor Rating Preference: How Important is the Professor Rating (0 - 10)
    * @param avgHoursPref Average Hours Preference: How Important is the Avg Hours of the Class (0 - 10)
-   * Penalty applied when the Total Sum of Avg Hours of all courses in the pathway exceed the total Acceptable
+   * Penalty applied when the Total Sum of Avg Hours of all courses in the pathway exceed the total acceptable
    * Avg Hours. Penalty based on how much it goes over.
    * @param avgHoursInput Average Hours Input: User Inputted Optimal Avg Hours per class
    * @param minNumClasses Minimum Number of Courses the pathway must contain

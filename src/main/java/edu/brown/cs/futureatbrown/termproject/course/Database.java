@@ -80,8 +80,9 @@ public final class Database {
   }
 
   /**
-   * Sets up a k-complete graph connecting all of the courses in the database
+   * Sets up a k-complete Graph connecting all of the CourseNodes in the database.
    *
+   * @throws SQLException if an error occurs in any SQL query
    */
    public static void setupGraph(List<String> prevCoursesID) throws SQLException {
      List<CourseNode> courseNodes = new ArrayList<>();
@@ -109,8 +110,9 @@ public final class Database {
    }
 
   /**
-   * Returns the Graph that was set up.
-   * @return the graph from the nodes in the database
+   * Returns the Graph that was set up from the above method.
+   *
+   * @return the Graph from the CourseNodes in the database
    */
    public static CourseGraph getGraph() {
     return graph;

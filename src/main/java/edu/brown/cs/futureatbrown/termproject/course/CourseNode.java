@@ -82,8 +82,7 @@ public class CourseNode extends GraphNode<CourseEdge> implements Locatable {
   }
 
   /**
-   * Resets the Hours back to 0.0 at the beginning of every dijkstra call
-   * Also Resets current Group back to 1
+   * Resets the hours to 0.0 and current group to 1 at the beginning of every Dijkstra call.
    */
   public void resetHoursAndGroups() {
     this.prevTotalAvgHours = 0.0;
@@ -92,27 +91,46 @@ public class CourseNode extends GraphNode<CourseEdge> implements Locatable {
     this.currentNumInGroup = 0;
   }
 
+  /**
+   * Returns the current group of this CourseNode. This value should be unique to this node.
+   *
+   * @return the current group
+   */
   public int getCurrentGroup() {
     return currentGroup;
   }
 
+  /**
+   * Sets the current group of this CourseNode. This value should be unique to this node.
+   *
+   * @param currentGroup the current group
+   */
   public void setCurrentGroup(int currentGroup) {
     this.currentGroup = currentGroup;
   }
 
+  /**
+   * Returns the number of courses in the current group of this CourseNode.
+   *
+   * @return the current number
+   */
   public int getCurrentNumInGroup() {
     return currentNumInGroup;
   }
 
+  /**
+   * Returns the number of courses in the current group of this CourseNode.
+   *
+   * @param currentNumInGroup the number of courses
+   */
   public void setCurrentNumInGroup(int currentNumInGroup) {
     this.currentNumInGroup = currentNumInGroup;
   }
 
   /**
-   * Returns the ID of this CourseNode.
-   * This value should be unique to this node.
+   * Returns the id of this CourseNode. This value should be unique to this node.
    *
-   * @return the ID
+   * @return the id
    */
   @Override
   public String getID() {
@@ -166,7 +184,8 @@ public class CourseNode extends GraphNode<CourseEdge> implements Locatable {
 
   /**
    * Returns the set of this CourseNode's prerequisite ids.
-   * Each group contains the options required to fulfill that group's requirement
+   * <p>
+   * Each group contains the options required to fulfill that group's requirement.
    *
    * @return the set of prerequisites of groups
    */
@@ -276,9 +295,9 @@ public class CourseNode extends GraphNode<CourseEdge> implements Locatable {
   }
 
   /**
-   * Returns the weight of the node.
+   * Returns the weight of the CourseNode.
    *
-   * @return The weight.
+   * @return the weight
    */
   @Override
   public double getWeight() {
@@ -325,45 +344,89 @@ public class CourseNode extends GraphNode<CourseEdge> implements Locatable {
     return prevPath;
   }
 
+  /**
+   * Returns the previous total average hours of the CourseNode.
+   *
+   * @return the previous total average hours
+   */
   public Double getPrevTotalAvgHours() {
     return prevTotalAvgHours;
   }
 
+  /**
+   * Sets the previous total average hours of the CourseNode.
+   *
+   * @param prevTotalAvgHours the previous total average hours
+   */
   public void setPrevTotalAvgHours(Double prevTotalAvgHours) {
     this.prevTotalAvgHours = prevTotalAvgHours;
   }
 
+  /**
+   * Returns the previous total max hours of the CourseNode.
+   *
+   * @return the previous total max hours
+   */
   public Double getPrevTotalMaxHours() {
     return prevTotalMaxHours;
   }
 
+  /**
+   * Sets the previous total max hours of the CourseNode.
+   *
+   * @param prevTotalMaxHours the previous total max hours
+   */
   public void setPrevTotalMaxHours(Double prevTotalMaxHours) {
     this.prevTotalMaxHours = prevTotalMaxHours;
   }
 
+  /**
+   * Returns the previous courses of the CourseNode.
+   *
+   * @return the previous courses
+   */
   public List<CourseNode> getPreviousCourses() {
     return previousCourses;
   }
 
+  /**
+   * Sets the previous courses of the CourseNode.
+   *
+   * @param previousCourses the previous courses
+   */
   public void setPreviousCourses(List<CourseNode> previousCourses) {
     this.previousCourses = previousCourses;
   }
 
+  /**
+   * Returns the taken courses of the CourseNode that were accounted for.
+   *
+   * @return the taken courses that were accounted for
+   */
   public List<List<String>> getCoursesTakenAccountedFor() {
     return coursesTakenAccountedFor;
   }
 
+  /**
+   * Sets the taken courses of the CourseNode that were accounted for.
+   *
+   * @param coursesTakenAccountedFor the taken courses that were accounted for
+   */
   public void setCoursesTakenAccountedFor(List<List<String>> coursesTakenAccountedFor) {
     this.coursesTakenAccountedFor = coursesTakenAccountedFor;
   }
 
+  /**
+   * Checks if this CourseNode is equal to another object.
+   *
+   * @return a boolean signifying if the objects are equal
+   */
   @Override
   public boolean equals(Object o) {
     if (this == o) return true;
     if (o == null || getClass() != o.getClass()) return false;
     CourseNode that = (CourseNode) o;
-
-    // WHEN NODES ARE NOT EQUAL IDENTIFY THE OFFENDING COMPONENT
+//  WHEN NODES ARE NOT EQUAL IDENTIFY THE OFFENDING COMPONENT
 //    if (!Objects.equals(id, that.id)) {
 //      System.out.println("ID: Expected " + id + ", GOT " + that.id);
 //    }
@@ -403,7 +466,6 @@ public class CourseNode extends GraphNode<CourseEdge> implements Locatable {
 //    if (!Arrays.equals(coordinates, that.coordinates)) {
 //      System.out.println("COORDINATES: Expected " + Arrays.toString(coordinates) + ", GOT " + Arrays.toString(that.coordinates));
 //    }
-
     return Objects.equals(sem, that.sem) &&
         Objects.equals(course_rating, that.course_rating) &&
         Objects.equals(prof_rating, that.prof_rating) &&
@@ -420,15 +482,20 @@ public class CourseNode extends GraphNode<CourseEdge> implements Locatable {
         Arrays.equals(coordinates, that.coordinates);
   }
 
+  /**
+   * Returns a hash representation of a CourseNode.
+   *
+   * @return the hash code
+   */
   @Override
   public int hashCode() {
     return Objects.hash(id);
   }
 
   /**
-   * Returns a string representing a node.
+   * Returns a string representing a CourseNode.
    *
-   * @return A string representing a node.
+   * @return A string representing a CourseNode.
    */
   @Override
   public String toString() {
@@ -436,8 +503,9 @@ public class CourseNode extends GraphNode<CourseEdge> implements Locatable {
   }
 
   /**
-   * Returns a copy of the node
-   * @return A copy of the node
+   * Returns a copy of the CourseNode.
+   *
+   * @return a copy of the CourseNode
    */
   @Override
   public CourseNode copy() {

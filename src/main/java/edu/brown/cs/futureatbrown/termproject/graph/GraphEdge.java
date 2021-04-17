@@ -1,72 +1,80 @@
 package edu.brown.cs.futureatbrown.termproject.graph;
 
 /**
- * The graph Edge interface represents a general Edge in a graph
- * @param <Node> is an objct that extends graph node
+ * The GraphEdge interface represents a general Edge in a graph.
+ *
+ * @param <Node> is an object that extends GraphNode
  */
 public abstract class GraphEdge<Node extends GraphNode> {
+
   /**
-   * Gets the edge's ID.
+   * Gets the id of the Edge.
+   *
    * @return the id
    */
-
   public abstract String getID();
 
   /**
-   * Gets the weight of the edge.
-   * @return weight
+   * Gets the weight of the Edge.
+   *
+   * @return the weight
    */
   public abstract double getWeight();
 
   /**
    * Sets the weight of the edge.
+   *
+   * @param weight the weight
    */
   public abstract void setWeight(double weight);
 
   /**
-   * Sets the starting Node
-   * @param startingNode
+   * Sets the start Node of the Edge.
+   *
+   * @param startingNode the start Node
    */
   public abstract void setStart(Node startingNode);
 
   /**
-   * returns the starting node.
-   * @return start
+   * Gets the start Node of the Edge.
+   *
+   * @return the start Node
    */
   public abstract Node getStart();
 
   /**
-   * Sets the end node.
-   * @param endingNode
+   * Sets the end Node of the Edge.
+   *
+   * @param endingNode the end Node
    */
   public abstract void setEnd(Node endingNode);
 
   /**
-   * retrieves the end node.
-   * @return the end node
+   * Gets the end Node of the Edge.
+   *
+   * @return the end Node
    */
   public abstract Node getEnd();
 
   /**
-   * Creates a copy of the edge
-   * @return a copy of the edge
+   * Creates a copy of the Edge
+   *
+   * @return a copy of the Edge
    */
   public abstract GraphEdge copy();
 
   /**
-   * Force implementation to override equals
+   * Force implementation to override equals.
    */
   public abstract boolean equals(Object other);
 
   /**
-   * Force implementation to override Hash
+   * Force implementation to override hashCode.
    */
   public abstract int hashCode();
 
   /**
-   * Force implementation to override toString
+   * Force implementation to override toString.
    */
   public abstract String toString();
-
-  //REMEMBER TO OVERRIDE EQUALS AND HASH
 }

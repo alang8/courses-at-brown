@@ -37,7 +37,7 @@ public final class Main {
   /**
    * The initial method called when execution begins.
    *
-   * @param args An array of command line arguments
+   * @param args an array of command line arguments
    */
   public static void main(String[] args) {
     new Main(args).run();
@@ -63,9 +63,10 @@ public final class Main {
       runSparkServer((int) options.valueOf("port"));
     }
 
-//    CommandParser commandParser = new CommandParser();
-//    REPL repl = new REPL(commandParser);
-//    repl.read(System.in, System.out, System.err);
+//  REPL setup is finished, but not necessary as of now
+//  CommandParser commandParser = new CommandParser();
+//  REPL repl = new REPL(commandParser);
+//  repl.read(System.in, System.out, System.err);
   }
 
   private static FreeMarkerEngine createEngine() {
@@ -102,7 +103,7 @@ public final class Main {
     String loginDBPath = "data/userDatabase.sqlite3";
     String courseDBPath = "data/courseDatabase.sqlite3";
     try {
-      //Setting up database connections.
+      // Setting up database connections
       Class.forName("org.sqlite.JDBC");
       String loginDBUrl = "jdbc:sqlite:" + loginDBPath;
       Connection userDataConn = DriverManager.getConnection(loginDBUrl);
@@ -110,12 +111,10 @@ public final class Main {
       Connection courseDataConn = DriverManager.getConnection(courseDBUrl);
       Spark.before((request, response) -> response.header("Access-Control-Allow-Origin", "*"));
 
-
       Database.init(courseDBPath);
       GraphAlgorithms<CourseNode, CourseEdge, CourseGraph> graphAlg = new GraphAlgorithms<>();
 
-
-      //Setting up spark routes.
+      // Setting up spark routes
       Spark.post("/login", new UserDataHandlers.LoginHandler(userDataConn));
       Spark.post("/signup", new UserDataHandlers.SignUpHandler(userDataConn));
       Spark.post("/checkname", new UserDataHandlers.CheckUsernameHandler(userDataConn));
@@ -188,13 +187,6 @@ public final class Main {
         while (rs.next()) {
           introCourses.add(rs.getString(1));
         }
-
-        /*
-          averages
-          avg hours : 7.53125
-          max hours : 13.755
-          class size: 72.3703703703704
-           */
 
         Map<String, CourseWay> cWays = Database.getCourseWays(conc + "Courses");
         Map<String, Integer> gData = Database.getGroups(conc + "Groups");

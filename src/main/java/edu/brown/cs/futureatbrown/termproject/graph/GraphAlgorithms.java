@@ -6,7 +6,7 @@ import java.util.stream.Collectors;
 
 /**
  * A class which contains all the short-path algorithms and short-path data of the inputted graph
- * for the Future @ Brown (FAB) app
+ * for the Future @ Brown (FAB) app.
  */
 public class GraphAlgorithms<Node extends GraphNode, Edge extends GraphEdge,
     G extends Graph<Node, Edge>> {
@@ -14,6 +14,9 @@ public class GraphAlgorithms<Node extends GraphNode, Edge extends GraphEdge,
   private HashMap<String, HashMap<String, List<Edge>>> results;
 
   // ------------------------------------- Comparators ------------------------------------
+  /**
+   * A class that compares the weights of two paths to find the better one.
+   */
   class ShortPathComparator implements Comparator<List<Edge>> {
     @Override
     public int compare(List<Edge> path1, List<Edge> path2) {
@@ -40,8 +43,8 @@ public class GraphAlgorithms<Node extends GraphNode, Edge extends GraphEdge,
   // ----------------------------- Graph Short Path Algorithms -----------------------------
 
   /**
-   * A helper function which initializes/reinitializes the nodes in the current graph to
-   * the initial conditions needed for Dijkstra's algorithm. Assumes that start is in nodeSet
+   * A helper function which initializes/re-initializes the nodes in the current graph to
+   * the initial conditions needed for Dijkstra's algorithm. Assumes that start is in nodeSet.
    */
   private void dijkstraSetup(String startID, G graph) {
     for (Node n : graph.getNodeSet().values()) {
@@ -53,16 +56,16 @@ public class GraphAlgorithms<Node extends GraphNode, Edge extends GraphEdge,
   }
 
   /**
-   * A helper function which uses an dijkstra algorithm to find the 'shortest' path,
-   * represented as an ordered list of Edges, from the start Node to the end Node.
+   * A helper function which uses an dijkstra algorithm to find the 'shortest' path, represented as
+   * an ordered list of Edges, from the start Node to the end Node.
    *
-   * @param startID the start Node's ID
-   * @param endID   the end Node's ID
-   * @return a List of Edges which represents the optimal path from the start Node to
-   * the end Node. The List will be empty if the start Node is the end Node.
-   * Null will be returned if the end node isn't reachable by the start node.
+   * @param startID the start Node's id
+   * @param endID the end Node's id
+   * @return a List of Edges which represents the optimal path from the start Node to the end Node;
+   * the List will be empty if the start Node is the end Node; null will be returned if the end node
+   * isn't reachable by the start node
    * @throws InvalidAlgorithmParameterException if either the start node or the end node is not
-   *           in the graph.
+   * contained in the graph
    */
   private final List<Edge> dijkstraHelper(String startID, String endID, G graph)
       throws InvalidAlgorithmParameterException {
@@ -118,15 +121,17 @@ public class GraphAlgorithms<Node extends GraphNode, Edge extends GraphEdge,
 
   /**
    * A function which checks the cache for the 'shortest' path, and calculates the shortest path
-   * from the start to end node represented as an ordered list of Edges if the 'shortest' path is not in the cache.
+   * from the start to end node represented as an ordered list of Edges if the 'shortest' path is
+   * not in the cache.
    *
-   * @param startID the start Node's ID
-   * @param endID   the end Node's ID
-   * @return a List of Edges which represents the optimal path from the start Node to
-   * the end Node. The List will be empty if the start Node is the end Node.
-   * Null will be returned if the end node isn't reachable by the start node.
+   * @param startID the start Node's id
+   * @param endID the end Node's id
+   * @param graph the Graph to search through
+   * @return a List of Edges which represents the optimal path from the start Node to the end Node;
+   * the List will be empty if the start Node is the end Node; null will be returned if the end node
+   * isn't reachable by the start node
    * @throws InvalidAlgorithmParameterException if either the start node or the end node is not
-   *           in the graph.
+   * contained in the graph
    */
   public final List<Edge> dijkstraPath(String startID, String endID, G graph)
       throws InvalidAlgorithmParameterException {
@@ -140,17 +145,17 @@ public class GraphAlgorithms<Node extends GraphNode, Edge extends GraphEdge,
   }
 
   /**
-   * A Function that creates a Short Path Tree from a starting Node and returns a ordered list
-   *  containing all of the Short Paths to every other node in the same concentration (Graph)
-   *  using Dijkstras. The list is ordered from shortest path to longest path!
+   * A function that creates a Short Path Tree from a starting Node and returns a ordered list
+   * containing all of the Short Paths to every other node in the same concentration (Graph)
+   * using Dijkstras. The list is ordered from shortest path to longest path!
    *
-   * @param startID the start Node's ID
-   * @param graph   the graph that the short path tree will be built from
+   * @param startID the start Node's id
+   * @param graph the graph that the short path tree will be built from
    * @return a List of k List of Edges which represents the optimal paths from the start Node to
-   * the end Node. The List will be empty if the start Node is the end Node.
-   * Null will be returned if the end node isn't reachable by the start node.
+   * the end Node; the List will be empty if the start Node is the end Node; null will be returned
+   * if the end node isn't reachable by the start node
    * @throws InvalidAlgorithmParameterException if either the start node or the end node is not
-   *         in the graph.
+   * contained in the graph
    */
   public final List<List<Edge>> dijkstraPathTree(String startID, G graph)
       throws InvalidAlgorithmParameterException {
@@ -170,18 +175,19 @@ public class GraphAlgorithms<Node extends GraphNode, Edge extends GraphEdge,
   }
 
   /**
-   * A function which uses an yen's algorithm to find the k 'shortest' paths,
-   * represented as an ordered List of paths (from best to worst) where each path
-   * is an ordered List of Edges, from the start Node to the end Node.
+   * A function which uses an Yen's algorithm to find the k 'shortest' paths, represented as an
+   * ordered List of paths (from best to worst) where each path is an ordered List of Edges, from
+   * the start Node to the end Node.
    *
-   * @param startID the start Node's ID
-   * @param endID   the end Node's ID
-   * @param k     the number of paths to return
+   * @param startID the start Node's id
+   * @param endID the end Node's id
+   * @param graph the Graph to search through
+   * @param k the number of paths to return
    * @return a List of k List of Edges which represents the optimal paths from the start Node to
-   * the end Node. The List will be empty if the start Node is the end Node.
-   * Null will be returned if the end node isn't reachable by the start node.
+   * the end Node; the List will be empty if the start Node is the end Node; null will be returned
+   * if the end node isn't reachable by the start node
    * @throws InvalidAlgorithmParameterException if either the start node or the end node is not
-   *           in the graph.
+   * contained in the graph
    */
   public final List<List<Edge>> yenPaths(String startID, String endID, G graph, int k)
       throws InvalidAlgorithmParameterException {
@@ -255,8 +261,8 @@ public class GraphAlgorithms<Node extends GraphNode, Edge extends GraphEdge,
   }
 
   /**
-   * Merges K sorted lists together with a Comparator
-   * @param sortedLists List of Sorted Lists of elements
+   * Merges K sorted lists together with a Comparator.
+   * @param sortedLists List of sorted Lists of elements
    * @param comparator Comparator that compares the elements
    * @return a sorted list of all the elements in sortedLists
    */
@@ -277,11 +283,14 @@ public class GraphAlgorithms<Node extends GraphNode, Edge extends GraphEdge,
   }
 
   /**
-   * PATHWAY ALGORITHM: Run Dijkstra Path Tree from every starting node
-   * Merge the Pathways together while maintaining sortedness
+   * PATHWAY ALGORITHM: Run Dijkstra Path Tree from every starting node. Merge the Pathways together
+   * while maintaining sorted order.
+   *
    * @param introCourses List of Introductory classes to start the pathway search from
    * @param courseGraph Graph to search within
    * @return List of Paths sorted by "shortest" path
+   * @throws InvalidAlgorithmParameterException if either the start node or the end node is not
+   * contained in the graph
    */
   public List<List<Edge>> pathway(List<String> introCourses, G courseGraph) throws InvalidAlgorithmParameterException {
     List<List<List<Edge>>> toMerge = new ArrayList<>();

@@ -10,22 +10,22 @@ public interface Locatable {
   /**
    * Returns the number of dimensions that the locatable is in.
    *
-   * @return return an integer representing the number of dimensions the locatable has.
+   * @return an integer representing the number of dimensions the locatable has
    */
   int getNumOfDimensions();
 
   /**
    * Returns the position of the locatable.
    *
-   * @return an array of doubles representing the locatable's location.
+   * @return an array of doubles representing the locatable's location
    */
   double[] getCoordinates();
 
   /**
    * Returns the nth dimension of a locatable.
    *
-   * @param dim which dimension to get from the locatable.
-   * @return the specified dimension from the locatable.
+   * @param dim which dimension to get from the locatable
+   * @return the specified dimension from the locatable
    */
   double getCoordinate(int dim);
 }

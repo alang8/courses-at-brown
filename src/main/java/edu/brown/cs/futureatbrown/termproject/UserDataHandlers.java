@@ -48,7 +48,7 @@ public class UserDataHandlers {
         prep.setString(1, hashedUsername);
         ResultSet rs = prep.executeQuery();
         if (rs.next()) {
-          //found a match
+          // Found a match
           isTaken = true;
         }
         variables = ImmutableMap.of("isTaken", isTaken);
@@ -156,10 +156,10 @@ public class UserDataHandlers {
         presets.put("crsSizePref", 20.0);
         presets.put("profRatingPref", 2.5);
         if (rs.next()) {
-          //found a match
+          // Found a match
           msg = "Success!";
           isValid = true;
-          //username, password, crs, avg, max, size, prof
+          // username, password, crs, avg, max, size, prof
           double crsRatPref = rs.getDouble(3);
           double avgHrPref = rs.getDouble(4);
           double maxHrPref = rs.getDouble(5);
@@ -340,7 +340,7 @@ public class UserDataHandlers {
     - get user taken classes from udb, split
     - sql select for id in list
     - for each return, map for all data needed for course object
-          - name: string;
+    name: string;
     dept: string;
     code: string;
     prereqs?: string[];
@@ -350,7 +350,6 @@ public class UserDataHandlers {
     latestProfRating?: number;
     maxHours?: number;
     avgHours?: number;
-
     - get user saved classes, split
     - for each return, map same business.
      */
@@ -414,7 +413,7 @@ public class UserDataHandlers {
         }
         ResultSet rs = prep.executeQuery();
         while (rs.next()) {
-          //cols are: id,name,instr,sem,rawprereq,prereq,desc,id,crsrat,profrat,avghr,maxhr,classsz
+          // id, name, instr, sem, rawpre, prereq, desc, id, crsrat, profrat, avghr, maxhr, classsz
           Map<String, Object> curCourseInfo = new HashMap<>();
           curCourseInfo.put("name", rs.getString(2));
           curCourseInfo.put("dept", rs.getString(1).substring(0, 4));

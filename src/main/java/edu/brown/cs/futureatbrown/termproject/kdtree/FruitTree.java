@@ -56,6 +56,8 @@ public class FruitTree<N, F> {
   }
 
   /**
+   * Gets the value of the node.
+   *
    * @return the value of this node
    */
   public N getValue() {
@@ -65,7 +67,7 @@ public class FruitTree<N, F> {
   /**
    * Checks whether a fruit exists at this node.
    * <p>
-   * Equivalent to this.getFruit() == null
+   * Equivalent to this.getFruit() == null.
    *
    * @return whether this node has a fruit
    */
@@ -243,14 +245,12 @@ public class FruitTree<N, F> {
           throw new NoSuchElementException();
         }
         List<FruitTree<N, F>> path = pathsToVisit.pop();
-
         FruitTree<N, F> last = path.get(path.size() - 1);
         for (FruitTree<N, F> child : last.getChildren()) {
           List<FruitTree<N, F>> extendedPath = new ArrayList<>(path);
           extendedPath.add(child);
           pathsToVisit.push(extendedPath);
         }
-
         return path;
       }
     };
@@ -270,7 +270,7 @@ public class FruitTree<N, F> {
   /**
    * Converts this FruitTree into a readable form.
    *
-   * @return a readable form for this FruitTree.
+   * @return a readable form for this FruitTree
    */
   @Override
   public String toString() {
