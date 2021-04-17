@@ -8,7 +8,11 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.List;
 import java.util.stream.Collectors;
 
 /**
@@ -16,13 +20,17 @@ import java.util.stream.Collectors;
  */
 public final class Database {
   private static Connection conn = null;
-  private static final CourseGraph graph = new CourseGraph();
+  private static final CourseGraph COURSE_GRAPH = new CourseGraph();
   private static final List<String> ALLOWED_GROUPS =
-    List.of("apmaABGroups", "csciABMLGroups", "mathABGroups", "mathSCBGroups");
+      List.of("apmaABGroups", "csciABMLGroups", "mathABGroups", "mathSCBGroups");
   private static final List<String> ALLOWED_COURSES =
-    List.of("apmaABCourses", "csciABMLCourses", "mathABCourses", "mathSCBCourses");
+      List.of("apmaABCourses", "csciABMLCourses", "mathABCourses", "mathSCBCourses");
 
-  public Database() {}
+  /**
+   * Constructor that instantiates a new Database object.
+   */
+  public Database() {
+  }
 
   /**
    * Constructor that instantiates the database and creates tables.
@@ -53,8 +61,8 @@ public final class Database {
    * @return the found CourseNode
    */
   public static CourseNode getCourseNode(String id) {
-    try (PreparedStatement statement = conn.prepareStatement("SELECT * FROM courseCR JOIN " +
-        "courseData ON courseCR.id = ? AND courseCR.id = courseData.id")) {
+    try (PreparedStatement statement = conn.prepareStatement("SELECT * FROM courseCR JOIN "
+        + "courseData ON courseCR.id = ? AND courseCR.id = courseData.id")) {
       statement.setString(1, id);
       try (ResultSet results = statement.executeQuery()) {
         if (null == results || results.isClosed()) {
@@ -74,49 +82,51 @@ public final class Database {
    */
   private static Iterator<CourseNode> iterateAllCourseNodes() throws SQLException {
     Statement query = conn.createStatement();
-    ResultSet res = query.executeQuery("SELECT * FROM courseCR JOIN courseData " +
-        "ON courseCR.id = courseData.id");
+    ResultSet res = query.executeQuery("SELECT * FROM courseCR JOIN courseData "
+        + "ON courseCR.id = courseData.id");
     return CourseConversions.iterateResults(res, CourseConversions::resultToCourseNode);
   }
 
   /**
    * Sets up a k-complete Graph connecting all of the CourseNodes in the database.
    *
+   * @param prevCoursesID a list of the previous courses ids
    * @throws SQLException if an error occurs in any SQL query
    */
-   public static void setupGraph(List<String> prevCoursesID) throws SQLException {
-     List<CourseNode> courseNodes = new ArrayList<>();
-     List<CourseNode> prevCourses = new ArrayList<>();
+  public static void setupGraph(List<String> prevCoursesID) throws SQLException {
+    List<CourseNode> courseNodes = new ArrayList<>();
+    List<CourseNode> prevCourses = new ArrayList<>();
 
-     for (Iterator<CourseNode> it = iterateAllCourseNodes(); it.hasNext(); ) {
-       CourseNode node = it.next();
-       courseNodes.add(node);
-       if (prevCoursesID.contains(node.getID())) {
-         prevCourses.add(node);
-         node.setVisited(true);
-       }
-     }
+    for (Iterator<CourseNode> it = iterateAllCourseNodes(); it.hasNext();) {
+      CourseNode node = it.next();
+      courseNodes.add(node);
+      if (prevCoursesID.contains(node.getID())) {
+        prevCourses.add(node);
+        node.setVisited(true);
+      }
+    }
 
-     // Add Nodes to the Graph
-     for (CourseNode startNode : courseNodes) {
-       graph.addNode(startNode,
-         new HashSet<>(courseNodes
-           .stream()
-           .filter(node -> !node.equals(startNode))
-           .map(node -> new CourseEdge(startNode.getID() + " - " + node.getID(), startNode, node))
-           .collect(Collectors.toList())));
-       startNode.setPreviousCourses(prevCourses);
-     }
-   }
+    // Add Nodes to the Graph
+    for (CourseNode startNode : courseNodes) {
+      COURSE_GRAPH.addNode(startNode,
+          new HashSet<>(courseNodes
+              .stream()
+              .filter(node -> !node.equals(startNode))
+              .map(node ->
+                  new CourseEdge(startNode.getID() + " - " + node.getID(), startNode, node))
+              .collect(Collectors.toList())));
+      startNode.setPreviousCourses(prevCourses);
+    }
+  }
 
   /**
    * Returns the Graph that was set up from the above method.
    *
    * @return the Graph from the CourseNodes in the database
    */
-   public static CourseGraph getGraph() {
-    return graph;
-   }
+  public static CourseGraph getGraph() {
+    return COURSE_GRAPH;
+  }
 
   /**
    * Queries a HashMap of a Pathway groups based on the user inputted id. Returns null if not found.
@@ -160,7 +170,7 @@ public final class Database {
         throw new SQLRuntimeException(e);
       }
     } else {
-      throw new IllegalArgumentException("Invalid Courses Table! Must be one of " + ALLOWED_COURSES);
+      throw new IllegalArgumentException("Invalid Courses! Must be one of " + ALLOWED_COURSES);
     }
 
   }

@@ -1,12 +1,24 @@
 package edu.brown.cs.futureatbrown.termproject.graph;
 
 import java.security.InvalidAlgorithmParameterException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.PriorityQueue;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 /**
  * A class which contains all the short-path algorithms and short-path data of the inputted graph
  * for the Future @ Brown (FAB) app.
+ *
+ * @param <Edge> an Edge implementation
+ * @param <G> a generic Graph
+ * @param <Node> a Node implementation
  */
 public class GraphAlgorithms<Node extends GraphNode, Edge extends GraphEdge,
     G extends Graph<Node, Edge>> {
@@ -36,6 +48,9 @@ public class GraphAlgorithms<Node extends GraphNode, Edge extends GraphEdge,
   }
 
   // ------------------------------------- Constructors ------------------------------------
+  /**
+   * A constructor for a GraphAlgorithms object.
+   */
   public GraphAlgorithms() {
     this.results = new HashMap<>();
   }
@@ -67,7 +82,7 @@ public class GraphAlgorithms<Node extends GraphNode, Edge extends GraphEdge,
    * @throws InvalidAlgorithmParameterException if either the start node or the end node is not
    * contained in the graph
    */
-  private final List<Edge> dijkstraHelper(String startID, String endID, G graph)
+  private List<Edge> dijkstraHelper(String startID, String endID, G graph)
       throws InvalidAlgorithmParameterException {
     Map<String, Node> nodeSet = graph.getNodeSet();
     Map<String, Map<String, Edge>> edgeSet = graph.getEdgeSet();
@@ -89,15 +104,15 @@ public class GraphAlgorithms<Node extends GraphNode, Edge extends GraphEdge,
       // Process Node only if it hasn't been visited yet
       if (!currNode.visited()) {
         // Iterate through all of the neighbors of the current node
-        for (Edge E : edgeSet.get(currID).values()) {
+        for (Edge edge : edgeSet.get(currID).values()) {
           // Get Neighbor and calculate score to neighbor from currrent node
-          Node neighbor = (Node) E.getEnd();
+          Node neighbor = (Node) edge.getEnd();
           List<Edge> prevPath = new ArrayList<>(nodeSet.get(currID).getPreviousPath());
-          double newWeight = currNode.getWeight() + E.getWeight();
+          double newWeight = currNode.getWeight() + edge.getWeight();
           // Update hashMap and add to minHeap if neighbor can be reached betterly
           if (nodeSet.get(neighbor.getID()).getWeight() > newWeight) {
             nodeSet.get(neighbor.getID()).setWeight(newWeight);
-            prevPath.add(E);
+            prevPath.add(edge);
             nodeSet.get(neighbor.getID()).setPreviousPath(prevPath);
             minHeap.add(nodeSet.get(neighbor.getID()));
           }
@@ -139,7 +154,7 @@ public class GraphAlgorithms<Node extends GraphNode, Edge extends GraphEdge,
       this.results.put(startID, new HashMap<>());
     }
     if (!this.results.get(startID).containsKey(endID)) {
-      this.results.get(startID).put(endID, dijkstraHelper(startID,endID, graph));
+      this.results.get(startID).put(endID, dijkstraHelper(startID, endID, graph));
     }
     return this.results.get(startID).get(endID);
   }
@@ -292,7 +307,8 @@ public class GraphAlgorithms<Node extends GraphNode, Edge extends GraphEdge,
    * @throws InvalidAlgorithmParameterException if either the start node or the end node is not
    * contained in the graph
    */
-  public List<List<Edge>> pathway(List<String> introCourses, G courseGraph) throws InvalidAlgorithmParameterException {
+  public List<List<Edge>> pathway(List<String> introCourses, G courseGraph)
+      throws InvalidAlgorithmParameterException {
     List<List<List<Edge>>> toMerge = new ArrayList<>();
     for (String introClassID : introCourses) {
       List<List<Edge>> l = dijkstraPathTree(introClassID, courseGraph);

@@ -29,8 +29,13 @@ public class UserDataHandlers {
     private static final Gson GSON = new Gson();
     private Connection conn;
 
-    public CheckUsernameHandler(Connection c) {
-      this.conn = c;
+    /**
+     * Constructor for the username check handler.
+     *
+     * @param uDB the connection to the user info database
+     */
+    public CheckUsernameHandler(Connection uDB) {
+      this.conn = uDB;
     }
 
     @Override
@@ -53,8 +58,10 @@ public class UserDataHandlers {
         }
         variables = ImmutableMap.of("isTaken", isTaken);
       } catch (JSONException | SQLException e) {
-        variables = ImmutableMap.of("message", "ERROR: SignUpHandler", "isTaken", true);
-        System.out.println("ERROR: in UserDataHandlers.java - error w/ json/SQL in CheckUsernameHandler");
+        variables = ImmutableMap.of(
+            "message", "ERROR: SignUpHandler", "isTaken", true);
+        System.out.println(
+            "ERROR: in UserDataHandlers.java - error w/ json/SQL in CheckUsernameHandler");
       }
       return GSON.toJson(variables);
     }
@@ -67,8 +74,13 @@ public class UserDataHandlers {
     private static final Gson GSON = new Gson();
     private Connection conn;
 
-    public SignUpHandler(Connection c) {
-      this.conn = c;
+    /**
+     * Constructor for the user signup handler.
+     *
+     * @param uDB the connection to the user info database
+     */
+    public SignUpHandler(Connection uDB) {
+      this.conn = uDB;
     }
 
     @Override
@@ -111,7 +123,8 @@ public class UserDataHandlers {
         variables = ImmutableMap.of("message", msg, "presets", presets);
         System.out.println("Inserted user!");
       } catch (JSONException | SQLException e) {
-        variables = ImmutableMap.of("message", "ERROR: SignUpHandler", "presets", new HashMap<>());
+        variables = ImmutableMap.of(
+            "message", "ERROR: SignUpHandler", "presets", new HashMap<>());
         e.printStackTrace();
         System.out.println("ERROR: in UserDataHandlers.java - error w/ json/SQL in SignUpHandler");
       }
@@ -126,8 +139,13 @@ public class UserDataHandlers {
     private static final Gson GSON = new Gson();
     private Connection conn;
 
-    public LoginHandler(Connection c) {
-      this.conn = c;
+    /**
+     * Constructor for the user login handler.
+     *
+     * @param uDB the connection to the user info database
+     */
+    public LoginHandler(Connection uDB) {
+      this.conn = uDB;
     }
 
     @Override
@@ -174,7 +192,8 @@ public class UserDataHandlers {
       } catch (JSONException | SQLException e) {
         e.printStackTrace();
       }
-      Map<String, Object> variables = ImmutableMap.of("isValid", isValid, "message", msg, "presets", presets);
+      Map<String, Object> variables = ImmutableMap.of(
+          "isValid", isValid, "message", msg, "presets", presets);
       return GSON.toJson(variables);
     }
   }
@@ -186,8 +205,13 @@ public class UserDataHandlers {
     private static final Gson GSON = new Gson();
     private Connection conn;
 
-    public WriteCourseHandler(Connection c) {
-      this.conn = c;
+    /**
+     * Constructor for the course writing handler.
+     *
+     * @param uDB the connection to the user info database
+     */
+    public WriteCourseHandler(Connection uDB) {
+      this.conn = uDB;
     }
 
     @Override
@@ -202,7 +226,7 @@ public class UserDataHandlers {
         Base64.Encoder coder = Base64.getEncoder();
         String hashedUsername = coder.encodeToString(curUser.getBytes());
 
-        String query = "SELECT "+ colToAppend + " FROM user_data WHERE username = ?;";
+        String query = "SELECT " + colToAppend + " FROM user_data WHERE username = ?;";
         PreparedStatement prep = conn.prepareStatement(query);
         prep.setString(1, hashedUsername);
         ResultSet rs = prep.executeQuery();
@@ -238,8 +262,13 @@ public class UserDataHandlers {
     private static final Gson GSON = new Gson();
     private Connection conn;
 
-    public RemoveCourseHandler(Connection c) {
-      this.conn = c;
+    /**
+     * Constructor for the course remover handler.
+     *
+     * @param uDB the connection to the user info database
+     */
+    public RemoveCourseHandler(Connection uDB) {
+      this.conn = uDB;
     }
 
     @Override
@@ -290,9 +319,15 @@ public class UserDataHandlers {
     private static final Gson GSON = new Gson();
     private Connection conn;
 
-    public SetPreferenceHandler(Connection c) {
-      this.conn = c;
+    /**
+     * Constructor for the preference setting handler.
+     *
+     * @param uDB the connection to the user info database
+     */
+    public SetPreferenceHandler(Connection uDB) {
+      this.conn = uDB;
     }
+
     @Override
     public Object handle(Request request, Response response) {
       String msg = "";
@@ -303,7 +338,8 @@ public class UserDataHandlers {
         JSONObject pref = data.getJSONObject("pref");
         Base64.Encoder coder = Base64.getEncoder();
         String hashedUsername = coder.encodeToString(curUser.getBytes());
-        String query = "UPDATE user_data SET course_rating_pref=?, avg_hrs_pref=?, max_hrs_pref=?, class_size_pref=?, prof_rating_pref=? WHERE username = ?;";
+        String query = "UPDATE user_data SET course_rating_pref=?, avg_hrs_pref=?, "
+            + "max_hrs_pref=?, class_size_pref=?, prof_rating_pref=? WHERE username = ?;";
         PreparedStatement prep = conn.prepareStatement(query);
         prep.setDouble(1, pref.getDouble("crsRatingPref"));
         prep.setDouble(2, pref.getDouble("avgHoursPref"));
@@ -329,6 +365,12 @@ public class UserDataHandlers {
     private Connection userConn;
     private Connection courseConn;
 
+    /**
+     * Constructor for the user data loading handler.
+     *
+     * @param uDB the connection to the user info database
+     * @param cDB the connection to the course info database
+     */
     public LoadUserHandler(Connection uDB, Connection cDB) {
       this.userConn = uDB;
       this.courseConn = cDB;
@@ -387,7 +429,8 @@ public class UserDataHandlers {
             String[] takenCourses = tknCourses.split(",");
             takenCourseInfo = getCourseInfo(takenCourses);
           }
-          Map<String, Object> variables = ImmutableMap.of("user", userData, "taken", takenCourseInfo, "saved", savedCourseInfo);
+          Map<String, Object> variables = ImmutableMap.of("user", userData, "taken",
+              takenCourseInfo, "saved", savedCourseInfo);
           return GSON.toJson(variables);
         } else {
           System.out.println("ERROR: error in LoadUserHandler");
@@ -402,7 +445,8 @@ public class UserDataHandlers {
     private Map<String, Object>[] getCourseInfo(String[] courses) {
       Map<String, Map<String, Object>> courseInfo = new HashMap<>();
       try {
-        String query = "SELECT * FROM courseData INNER JOIN courseCR ON courseData.id=courseCR.id WHERE (courseData.id = ?";
+        String query = "SELECT * FROM courseData INNER JOIN courseCR ON "
+            + "courseData.id=courseCR.id WHERE (courseData.id = ?";
         for (int i = 1; i < courses.length; i++) {
           query = query + " OR courseData.id = ?";
         }
@@ -422,7 +466,8 @@ public class UserDataHandlers {
           if (prereqString == null) {
             prereqString = "";
           }
-          String[] prereqInfo = prereqString.replaceAll("[&|()]+", ",").split(",");
+          String[] prereqInfo =
+              prereqString.replaceAll("[&|()]+", ",").split(",");
           prereqInfo = Arrays.stream(prereqInfo).filter(s -> !s.isEmpty()).toArray(String[]::new);
           curCourseInfo.put("prereqs", prereqInfo);
           curCourseInfo.put("description", rs.getString(7));
@@ -448,6 +493,11 @@ public class UserDataHandlers {
     private static final Gson GSON = new Gson();
     private Connection userConn;
 
+    /**
+     * Constructor for the user data deletion handler.
+     *
+     * @param uDB the connection to the user info database
+     */
     public DeleteUserHandler(Connection uDB) {
       this.userConn = uDB;
     }

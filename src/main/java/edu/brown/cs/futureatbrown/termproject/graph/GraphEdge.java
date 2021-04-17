@@ -57,7 +57,7 @@ public abstract class GraphEdge<Node extends GraphNode> {
   public abstract Node getEnd();
 
   /**
-   * Creates a copy of the Edge
+   * Creates a copy of the Edge.
    *
    * @return a copy of the Edge
    */
@@ -65,16 +65,23 @@ public abstract class GraphEdge<Node extends GraphNode> {
 
   /**
    * Force implementation to override equals.
+   *
+   * @param other the object to compare to
+   * @return a boolean signifying whether the two objects are equal
    */
   public abstract boolean equals(Object other);
 
   /**
    * Force implementation to override hashCode.
+   *
+   * @return a hash representation of the Edge
    */
   public abstract int hashCode();
 
   /**
    * Force implementation to override toString.
+   *
+   * @return a string representation of the Edge
    */
   public abstract String toString();
 }

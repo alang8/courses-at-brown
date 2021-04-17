@@ -8,12 +8,18 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import com.google.common.collect.ImmutableMap;
 import com.google.gson.Gson;
-import edu.brown.cs.futureatbrown.termproject.course.*;
-import edu.brown.cs.futureatbrown.termproject.graph.Graph;
+import edu.brown.cs.futureatbrown.termproject.course.CourseEdge;
+import edu.brown.cs.futureatbrown.termproject.course.CourseGraph;
+import edu.brown.cs.futureatbrown.termproject.course.CourseNode;
+import edu.brown.cs.futureatbrown.termproject.course.CourseWay;
+import edu.brown.cs.futureatbrown.termproject.course.Database;
 import edu.brown.cs.futureatbrown.termproject.graph.GraphAlgorithms;
 import joptsimple.OptionParser;
 import joptsimple.OptionSet;
@@ -26,8 +32,6 @@ import spark.Route;
 import spark.Spark;
 import spark.template.freemarker.FreeMarkerEngine;
 import freemarker.template.Configuration;
-import edu.brown.cs.futureatbrown.termproject.repl.CommandParser;
-import edu.brown.cs.futureatbrown.termproject.repl.REPL;
 
 /**
  * The Main class of our project. This is where execution begins.
@@ -109,7 +113,8 @@ public final class Main {
       Connection userDataConn = DriverManager.getConnection(loginDBUrl);
       String courseDBUrl = "jdbc:sqlite:" + courseDBPath;
       Connection courseDataConn = DriverManager.getConnection(courseDBUrl);
-      Spark.before((request, response) -> response.header("Access-Control-Allow-Origin", "*"));
+      Spark.before((request, response) ->
+          response.header("Access-Control-Allow-Origin", "*"));
 
       Database.init(courseDBPath);
       GraphAlgorithms<CourseNode, CourseEdge, CourseGraph> graphAlg = new GraphAlgorithms<>();
@@ -124,7 +129,8 @@ public final class Main {
       Spark.post("/writecourse", new UserDataHandlers.WriteCourseHandler(userDataConn));
       Spark.post("/removecourse", new UserDataHandlers.RemoveCourseHandler(userDataConn));
       Spark.post("/setpreference", new UserDataHandlers.SetPreferenceHandler(userDataConn));
-      Spark.post("/loaduser", new UserDataHandlers.LoadUserHandler(userDataConn, courseDataConn));
+      Spark.post("/loaduser",
+          new UserDataHandlers.LoadUserHandler(userDataConn, courseDataConn));
       Spark.post("/deleteuser", new UserDataHandlers.DeleteUserHandler(userDataConn));
       Spark.post("/path", new GetPathHandler(courseDataConn, graphAlg));
     } catch (ClassNotFoundException | SQLException e) {
@@ -194,7 +200,7 @@ public final class Main {
         JSONArray takenArray = data.getJSONArray("taken");
         List<String> takenCourses = new ArrayList<>();
 
-        for(int i = 0; i < takenArray.length(); i++) {
+        for (int i = 0; i < takenArray.length(); i++) {
           takenCourses.add((String) takenArray.get(i));
         }
 
@@ -202,7 +208,8 @@ public final class Main {
         CourseGraph theGraph = Database.getGraph();
 
         System.out.println("setting params and getting path: ");
-        theGraph.setGlobalParams(cRP, pRP, aHP, aHI, minNumCourses, maxNumCourses, bFP, mHI, cSP, cSI, cSM, gData, cWays);
+        theGraph.setGlobalParams(cRP, pRP, aHP, aHI, minNumCourses, maxNumCourses, bFP, mHI, cSP,
+            cSI, cSM, gData, cWays);
         List<List<CourseEdge>> paths = graphAlg.pathway(introCourses, theGraph);
 
         System.out.println("best paths: ");
@@ -213,20 +220,20 @@ public final class Main {
         int currentOverallSem = 0;
         int prevCourseSem = 1;
 
-        for (int i =0; i< bestPath.size(); i++) {
+        for (int i = 0; i < bestPath.size(); i++) {
           CourseEdge curEdge = bestPath.get(i);
           CourseNode curNode = curEdge.getStart();
-          if(curNode.getSem() != prevCourseSem && curNode.getSem() != 0) {
+          if (curNode.getSem() != prevCourseSem && curNode.getSem() != 0) {
             currentOverallSem = Math.min(currentOverallSem + 1, 9);
-            prevCourseSem = (prevCourseSem == 1) ? 2:1;
+            prevCourseSem = (prevCourseSem == 1) ? 2 : 1;
           }
           thePath.put(curNode.getID(), currentOverallSem);
 
-          if(i == bestPath.size() - 1) {
+          if (i == bestPath.size() - 1) {
             curNode = curEdge.getEnd();
-            if(curNode.getSem() != prevCourseSem && curNode.getSem() != 0) {
+            if (curNode.getSem() != prevCourseSem && curNode.getSem() != 0) {
               currentOverallSem = Math.min(currentOverallSem + 1, 9);
-              prevCourseSem = (prevCourseSem == 1) ? 2:1;
+              prevCourseSem = (prevCourseSem == 1) ? 2 : 1;
             }
             thePath.put(curNode.getID(), currentOverallSem);
           }

@@ -2,7 +2,12 @@ package edu.brown.cs.futureatbrown.termproject.course;
 
 import edu.brown.cs.futureatbrown.termproject.graph.GraphEdge;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 /**
@@ -47,8 +52,7 @@ public class CourseEdge extends GraphEdge<CourseNode> {
 
   // GLOBAL Dijkstra Specific Inputs
   private CourseNode globalEnd;
-  private Set<List<CourseNode>> prereqs; //Global Prerequisites of the target end node
-
+  private Set<List<CourseNode>> prereqs; // Global Prerequisites of the target end node
 
   /**
    * Constructs a CourseEdge with the given id, start id, and end id.
@@ -91,33 +95,41 @@ public class CourseEdge extends GraphEdge<CourseNode> {
   }
 
   /**
-   * Sets up all the global parameters of the graph in this edge
-   * RECALL that all of these are relative so Preferences of all 10s are the same as Preferences of all 1s
-   * @param crsRatingPref Course Rating Preference: How Important is the Course Rating (0 - 10)
-   * @param profRatingPref Professor Rating Preference: How Important is the Professor Rating (0 - 10)
-   * @param avgHoursPref Average Hours Preference: How Important is the Avg Hours of the Class (0 - 10)
- * Penalty applied when the Total Sum of Avg Hours of all courses in the pathway exceed the total Acceptable
- * Avg Hours. Penalty based on how much it goes over.
-   * @param avgHoursInput Average Hours Input: User Inputted Optimal Avg Hours per class
-   * @param minNumClasses Minimum Number of Courses the pathway must contain
-   * @param maxNumClasses Maximum Number of Courses the pathway must contain
-   * @param balanceFactorPref Balance Factor Preference: How Important is it that each individual course in the
-* pathway are close to the Average Hours Input (See Above)
-   * @param totalMaxHoursInput Total Acceptable Max Number of Hours, Will shut down any pathways that exceed the
-* max number of hours. Use Double.POSITIVE_INFINITY if you want to nullify this check.
-   * @param classSizePref Class Size Preference: How Important is the Class Size (0 - 10)
-   * @param classSizeInput User Inputted Optimal Class Size, Penalized for distance from Input.
-   * @param classSizeMax User Inputted Max Class size, Penalty decreases if user can tolerate a larger class size
-* and increases if the user cannot.
-   * @param groupData Map of Group ID to number of courses required to satisify in that group for the particular pathway
-   * @param courseWayData Map of Course ID to the courseWay (CourseID, Sequence, GroupID)
+   * Sets up all the global parameters of the graph in this edge.
+   * <p>
+   * RECALL that all of these are relative so preferences of all 10s are the same as Preferences of
+   * all 1s.
+   *
+   * @param crsRatingPref Course Rating Preference: How important is the Course Rating (0 - 10)?
+   * @param profRatingPref Professor Rating Preference: How important is the professor rating
+   *                       (0 - 10)?
+   * @param avgHoursPref Average Hours Preference: How important is the average hours of the class
+   *                     (0 - 10)? A penalty is applied when the total sum of average hours of all
+   *                     courses in the pathway exceed the total acceptable average hours. This
+   *                     penalty is based on how much it goes over.
+   * @param avgHoursInput Average Hours Input: User inputted optimal average hours per class.
+   * @param minNumClasses Min Number of Classes: Minimum number of courses the pathway must contain.
+   * @param maxNumClasses Max Number of Classes: Maximum number of courses the pathway must contain.
+   * @param balanceFactorPref Balance Factor Preference: How important is it that each individual
+   *                          course in the pathway are close to the Average Hours Input?
+   * @param totalMaxHoursInput Total Acceptable Max Number of Hours: Will shut down any pathways
+   *                           that exceed the max number of hours. Use Double.POSITIVE_INFINITY if
+   *                           you want to nullify this check.
+   * @param classSizePref Class Size Preference: How important is the class size (0 - 10)?
+   * @param classSizeInput Class Size Input: Penalized for distance from input.
+   * @param classSizeMax Max Class Size Input: Penalty decreases if user can tolerate a larger class
+   *                     size and increases if the user cannot.
+   * @param groupData Group Data: Map of group id to number of courses required to satisfy in that
+   *                  group for the particular pathway.
+   * @param courseWayData CourseWay Data: Map of course id to the CourseWay in the format
+   *                      (CourseID, Sequence, GroupID).
    */
-
   public void setGlobalParams(double crsRatingPref, double profRatingPref, double avgHoursPref,
                               double avgHoursInput, int minNumClasses, int maxNumClasses,
                               double balanceFactorPref, double totalMaxHoursInput,
                               double classSizePref, int classSizeInput, int classSizeMax,
-                              Map<String, Integer> groupData, Map<String, CourseWay> courseWayData) {
+                              Map<String, Integer> groupData,
+                              Map<String, CourseWay> courseWayData) {
     // SLIDER PREFERENCES
     this.crsRatingPref = crsRatingPref;
     this.profRatingPref = profRatingPref;
@@ -137,25 +149,28 @@ public class CourseEdge extends GraphEdge<CourseNode> {
   }
 
   /**
-   * Sets up the Global Prerequisites and overall requirements
-   * @param prereqs Set of Groups of Coures that contain the prereqs to the end Node
+   * Sets up the global prerequisites and overall requirements.
+   *
+   * @param prereqs Set of groups of courses that contain the prereqs to the end node
    */
   public void setGlobalPrereqs(Set<List<CourseNode>> prereqs) {
     this.prereqs = prereqs;
   }
 
   /**
-   * Sets up the Global End Node for the specific dijkstra run
-   * @param end the end node of the current dijkstra run
+   * Sets up the global end node for the specific Dijkstra run.
+   *
+   * @param end the end node of the current Dijkstra run
    */
   public void setGlobalEnd(CourseNode end) {
     this.globalEnd = end;
   }
 
   /**
-   * Converts a path of edges into a path of nodes
-   * @param path - Path of edges up to the node
-   * @return Path of nodeIDs up to the node
+   * Converts a path of edges into a path of nodes.
+   *
+   * @param path path of edges up to the node
+   * @return path of nodeIDs up to the node
    */
   private List<String> convertPath(List<CourseEdge> path) {
     List<String> nodes = new ArrayList<>();
@@ -169,21 +184,25 @@ public class CourseEdge extends GraphEdge<CourseNode> {
   }
 
   /**
-   * Calculates the weight of the edge based on Penalties and Sliders
-   * The rating preferences are all within the bounds of 1 - 10
-   * The Course and Professor scores are all withing the bounds of 0 - 5
-   * The Avg Hours, Max Hours, Number of Classes scores are dependent on distance from global input
-   * @return weight - Calculated weight
+   * Calculates the weight of the edge based on penalties and sliders.
+   * <p>
+   * The rating preferences are all within the bounds of 1 - 10.
+   * <p>
+   * The course and professor scores are all within the bounds of 0 - 5.
+   * <p>
+   * The avg hours, max hours, number of classes scores are dependent on distance from global input.
+   *
+   * @return weight the final calculated weight
    */
   private double calculateWeight() {
-    double AVG_RATING_PREF = (MIN_RATING_PREF + MAX_RATING_PREF) / 2;
-    double AVG_RATING = (MIN_RATING + MAX_RATING) / 2;
+    final double avgRatingPref = (MIN_RATING_PREF + MAX_RATING_PREF) / 2;
+    final double avgRating = (MIN_RATING + MAX_RATING) / 2;
 
     //////////////////////////////////////
     // OVERRIDE: MANUAL WEIGHT INPUTTED //
     //////////////////////////////////////
     if (this.overrideWeightCalc) {
-//      System.out.println("OVERRIDE WEIGHT");
+//    System.out.println("OVERRIDE WEIGHT");
       return this.weight;
     }
 
@@ -199,13 +218,15 @@ public class CourseEdge extends GraphEdge<CourseNode> {
     List<String> previousPath = convertPath(this.start.getPreviousPath());
     previousPath.add(this.start.getID()); // Make sure to add the from node to the path
     List<CourseNode> coursesTaken = this.start.getPreviousCourses();
-    List<String> coursesTakenID = coursesTaken.stream().map(CourseNode::getID).collect(Collectors.toList());
+    List<String> coursesTakenID =
+        coursesTaken.stream().map(CourseNode::getID).collect(Collectors.toList());
 
     // Check to make sure that all prerequisites are satisfied
     boolean satisfiedAllPrereqs = true;
 
     for (List<String> group : preReqs) {
-      boolean satisfiedPrereq = !Collections.disjoint(group, previousPath) || !Collections.disjoint(group, coursesTakenID);
+      boolean satisfiedPrereq = !Collections.disjoint(group, previousPath)
+          || !Collections.disjoint(group, coursesTakenID);
       if (!satisfiedPrereq) {
         satisfiedAllPrereqs = false;
         break;
@@ -214,16 +235,16 @@ public class CourseEdge extends GraphEdge<CourseNode> {
 
     // If they aren't satisfied then nullify the path
     if (!satisfiedAllPrereqs) {
-//      System.out.println("FAILED PREREQS");
+//    System.out.println("FAILED PREREQS");
       return Double.POSITIVE_INFINITY;
     }
 
     ///////////////////////////////////////////////
     // PENALTY: MUST REACH MIN NUMBER OF CLASSES //
     ///////////////////////////////////////////////
-    if (null != this.minNumClasses &&
-        previousPath.size() + coursesTaken.size() < this.minNumClasses &&
-        this.end.equals(this.globalEnd)) {
+    if (null != this.minNumClasses
+        && previousPath.size() + coursesTaken.size() < this.minNumClasses
+        && this.end.equals(this.globalEnd)) {
 //      System.out.println("ENDING BUT HASN'T REACHED MIN EDGE");
       return Double.POSITIVE_INFINITY;
     }
@@ -233,7 +254,7 @@ public class CourseEdge extends GraphEdge<CourseNode> {
     //////////////////////////////////////////////////
     if (null != this.maxNumClasses) {
       if (previousPath.size() + coursesTaken.size() > this.maxNumClasses) {
-//        System.out.println("EXCEEDED MAX NUM CLASSES");
+//      System.out.println("EXCEEDED MAX NUM CLASSES");
         return Double.POSITIVE_INFINITY;
       }
     }
@@ -245,18 +266,18 @@ public class CourseEdge extends GraphEdge<CourseNode> {
 
     // Default Course Rating Preference to 5 if null (Halfway between 0 - 10)
     if (null == this.crsRatingPref) {
-      this.crsRatingPref = AVG_RATING_PREF;
+      this.crsRatingPref = avgRatingPref;
     }
 
     // Default Course Rating to 2.5 if null (Halfway between 0 - 5)
-    if (null == this.end.getCourse_rating()) {
-      courseRating = AVG_RATING;
+    if (null == this.end.getCourseRating()) {
+      courseRating = avgRating;
     } else {
-      courseRating = this.end.getCourse_rating();
+      courseRating = this.end.getCourseRating();
     }
 
     // Calculate the Slider Weight
-//    System.out.println("COURSE RATING INCORPORATED");
+//  System.out.println("COURSE RATING INCORPORATED");
     this.weight +=  Math.pow(2, this.crsRatingPref) / courseRating;
 
     ////////////////////////////////////////
@@ -266,18 +287,18 @@ public class CourseEdge extends GraphEdge<CourseNode> {
 
     // Default Professor Rating Preference to 5 if null (Halfway between 0 - 10)
     if (null == this.profRatingPref) {
-      this.profRatingPref = AVG_RATING_PREF;
+      this.profRatingPref = avgRatingPref;
     }
 
     // Default Professor Rating to 2.5 if null (Halfway between 0 - 5)
-    if (null == this.end.getProf_rating()) {
-      professorRating = AVG_RATING;
+    if (null == this.end.getProfRating()) {
+      professorRating = avgRating;
     } else {
-      professorRating = this.end.getProf_rating();
+      professorRating = this.end.getProfRating();
     }
 
     // Calculate the Slider Weight
-//    System.out.println("PROFESSOR RATING INCORPORATED");
+//  System.out.println("PROFESSOR RATING INCORPORATED");
     this.weight += Math.pow(2, this.profRatingPref) / professorRating;
 
     /////////////////////////////////
@@ -289,11 +310,11 @@ public class CourseEdge extends GraphEdge<CourseNode> {
 
     // Default Average Hours Preference to 5 if null (Halfway between 0 - 10)
     if (null == this.avgHoursPref) {
-      this.avgHoursPref = AVG_RATING_PREF;
+      this.avgHoursPref = avgRatingPref;
     }
 
     if (null == this.balanceFactorPref) {
-      this.balanceFactorPref = AVG_RATING_PREF;
+      this.balanceFactorPref = avgRatingPref;
     }
 
     // Initialize the total avg hours to 0 if null
@@ -315,10 +336,10 @@ public class CourseEdge extends GraphEdge<CourseNode> {
 
     // According to the credit hour guidance average hours per class should
     // be 12 hours (4 hours class + 8 hours out of class)
-    if (null == this.end.getAvg_hours()) {
+    if (null == this.end.getAvgHours()) {
       classAvgHours = 12;
     } else  {
-      classAvgHours =  this.end.getAvg_hours();
+      classAvgHours =  this.end.getAvgHours();
     }
 
     if (null == this.avgHoursInput) {
@@ -335,11 +356,11 @@ public class CourseEdge extends GraphEdge<CourseNode> {
 
     // Penalize by distance if it goes over, Penalize by balance if it is under
     if (totalAvgHours > desiredTotalAvgHours) {
-//      System.out.println("AVG HOURS RAN OVER LIMIT");
+//    System.out.println("AVG HOURS RAN OVER LIMIT");
       this.weight += Math.pow(2, this.avgHoursPref) * 0.2 * (totalAvgHours - desiredTotalAvgHours)
           / desiredTotalAvgHours;
     } else {
-//      System.out.println("BALANCE OF AVG HOURS - CLASSES SELECTED");
+//    System.out.println("BALANCE OF AVG HOURS - CLASSES SELECTED");
       this.weight += Math.pow(2, this.balanceFactorPref) * 0.2
           * Math.abs(classAvgHours - this.avgHoursInput) / this.avgHoursInput;
     }
@@ -356,10 +377,10 @@ public class CourseEdge extends GraphEdge<CourseNode> {
       prevMaxHours = this.start.getPrevTotalMaxHours();
     }
 
-    if (null == this.end.getMax_hours()) {
+    if (null == this.end.getMaxHours()) {
       classMaxHours = 0;
     } else {
-      classMaxHours = this.end.getMax_hours();
+      classMaxHours = this.end.getMaxHours();
     }
 
     if (null != this.totalMaxHoursInput) {
@@ -369,7 +390,7 @@ public class CourseEdge extends GraphEdge<CourseNode> {
       this.end.setPrevTotalMaxHours(totalMaxHours);
 
       if (totalMaxHours > this.totalMaxHoursInput) {
-//        System.out.println("EXCEEDED MAX HOURS");
+//      System.out.println("EXCEEDED MAX HOURS");
         return Double.POSITIVE_INFINITY;
       }
     }
@@ -380,13 +401,13 @@ public class CourseEdge extends GraphEdge<CourseNode> {
     int courseClassSize;
 
     if (null == this.classSizePref) {
-      this.classSizePref = AVG_RATING_PREF;
+      this.classSizePref = avgRatingPref;
     }
 
-    if (null == this.end.getClass_size()) {
+    if (null == this.end.getClassSize()) {
       courseClassSize = 0;
     } else {
-      courseClassSize = this.end.getClass_size();
+      courseClassSize = this.end.getClassSize();
     }
 
     if (null == this.classSizeInput) {
@@ -397,7 +418,7 @@ public class CourseEdge extends GraphEdge<CourseNode> {
       this.classSizeMax = 500;
     }
 
-//    System.out.println("CLASS SIZE CONSIDERED");
+//  System.out.println("CLASS SIZE CONSIDERED");
     this.weight += Math.pow(2, this.classSizePref) * 0.2
         * Math.abs(courseClassSize - this.classSizeInput) / this.classSizeMax;
 
@@ -410,7 +431,8 @@ public class CourseEdge extends GraphEdge<CourseNode> {
             .filter(Objects::nonNull)
             .map(CourseNode::getID)
             .collect(Collectors.toList());
-        if (!Collections.disjoint(groupIDs, previousPath) || !Collections.disjoint(groupIDs,coursesTakenID)) {
+        if (!Collections.disjoint(groupIDs, previousPath)
+            || !Collections.disjoint(groupIDs, coursesTakenID)) {
           continue;
         }
         if (group.contains(this.end)) {
@@ -430,13 +452,13 @@ public class CourseEdge extends GraphEdge<CourseNode> {
     int currentGroup = this.start.getCurrentGroup();
     int currentNumInGroup = this.start.getCurrentNumInGroup();
     List<List<String>> coursesAccountedFor = this.start.getCoursesTakenAccountedFor();
-//    System.out.println("CURRENT GROUP: " + currentGroup);
+//  System.out.println("CURRENT GROUP: " + currentGroup);
     boolean satisfiedAllPathwayReqs = true;
-//    System.out.println("Total Path: " + totalPath);
+//  System.out.println("Total Path: " + totalPath);
 
     if (null != this.courseWayData && null != this.groupData) {
       // REWARD IT FOR SATISFYING PATHWAY REQUIREMENTS
-      for(String courseID : this.courseWayData.keySet()) {
+      for (String courseID : this.courseWayData.keySet()) {
 
         CourseWay courseway = this.courseWayData.get(courseID);
         String coursewayGroupID = Integer.toString(courseway.getGroupID());
@@ -446,49 +468,52 @@ public class CourseEdge extends GraphEdge<CourseNode> {
           if (readyForProcessing) {
             List<String> sequence = new ArrayList<>(courseway.getSequence());
             sequence.add(courseID);
-//            System.out.println("SEQUENCE: " + sequence);
+//          System.out.println("SEQUENCE: " + sequence);
 
             if (previousPath.containsAll(sequence)) {
               continue;
             }
             if (coursesTakenID.containsAll(sequence) && !coursesAccountedFor.contains(sequence)) {
               currentNumInGroup += 1;
-//              System.out.println("CURRENT GROUP " + currentGroup + " UPDATING NUM TO " + currentNumInGroup);
+//            System.out.println("CURRENT GROUP " + currentGroup + " UPDATING NUM TO "
+//            + currentNumInGroup);
               coursesAccountedFor.add(sequence);
             } else if (totalPath.containsAll(sequence)) {
               currentNumInGroup += 1;
-//              System.out.println("CURRENT GROUP " + currentGroup + " UPDATING NUM TO " + currentNumInGroup);
+//            System.out.println("CURRENT GROUP " + currentGroup + " UPDATING NUM TO "
+//            + currentNumInGroup);
               this.weight -= 5000;
             }
-              int numReq = this.groupData.get(coursewayGroupID);
+            int numReq = this.groupData.get(coursewayGroupID);
 
-              if (numReq <= currentNumInGroup) {
-                currentGroup += 1;
-                currentNumInGroup = 0;
-//                System.out.println("NUM REQUIREMENTS: " + numReq);
-//                System.out.println("CURRENT GROUP UPDATING TO " + currentGroup);
-              }
+            if (numReq <= currentNumInGroup) {
+              currentGroup += 1;
+              currentNumInGroup = 0;
+//            System.out.println("NUM REQUIREMENTS: " + numReq);
+//            System.out.println("CURRENT GROUP UPDATING TO " + currentGroup);
             }
           }
         }
-        this.end.setCurrentGroup(currentGroup);
-        this.end.setCurrentNumInGroup(currentNumInGroup);
-        this.end.setCoursesTakenAccountedFor(coursesAccountedFor);
       }
+      this.end.setCurrentGroup(currentGroup);
+      this.end.setCurrentNumInGroup(currentNumInGroup);
+      this.end.setCoursesTakenAccountedFor(coursesAccountedFor);
+    }
 
-      // PENALTY: STOP IT FROM FINISHING IF IT DOESN'T SATISFY ALL PATHWAY REQUIREMENTS
-//      System.out.println("SATISFIED ALL PATHWAYS? - " + satisfiedAllPathwayReqs);
-      if (!satisfiedAllPathwayReqs && this.end.equals(this.globalEnd)) {
-//        System.out.println("CURRENT GROUP: " + currentGroup);
-//        System.out.println("PATHWAY BLOCK");
-        return Double.POSITIVE_INFINITY;
-      }
+    // PENALTY: STOP IT FROM FINISHING IF IT DOESN'T SATISFY ALL PATHWAY REQUIREMENTS
+//  System.out.println("SATISFIED ALL PATHWAYS? - " + satisfiedAllPathwayReqs);
+    if (!satisfiedAllPathwayReqs && this.end.equals(this.globalEnd)) {
+//    System.out.println("CURRENT GROUP: " + currentGroup);
+//    System.out.println("PATHWAY BLOCK");
+      return Double.POSITIVE_INFINITY;
+    }
 
     return this.weight;
   }
 
   /**
-   * Sets and Overrides the weight of this CourseEdge.
+   * Sets and overrides the weight of this CourseEdge.
+   *
    * @param weight weight of the edge
    */
   @Override
@@ -538,31 +563,46 @@ public class CourseEdge extends GraphEdge<CourseNode> {
   }
 
   /**
-   * Returns a copy of the edge
-   * @return a copy of the edge
+   * Returns a copy of the CourseEdge.
+   *
+   * @return a copy of the CourseEdge
    */
   @Override
   public GraphEdge<?> copy() {
     return new CourseEdge(this.id, this.start.copy(), this.end.copy());
   }
 
+  /**
+   * Checks if this CourseEdge is equal to another object.
+   *
+   * @return a boolean signifying if the objects are equal
+   */
   @Override
   public boolean equals(Object o) {
-    if (this == o) return true;
-    if (o == null || getClass() != o.getClass()) return false;
+    if (this == o) {
+      return true;
+    }
+    if (o == null || getClass() != o.getClass()) {
+      return false;
+    }
     CourseEdge that = (CourseEdge) o;
     return Objects.equals(id, that.id);
   }
 
+  /**
+   * Returns a hash representation of CourseEdge.
+   *
+   * @return the hash code
+   */
   @Override
   public int hashCode() {
     return Objects.hash(id);
   }
 
   /**
-   * Creates a String representation for this CourseEdge.
+   * Creates a string representation for this CourseEdge.
    *
-   * @return a String representing this CourseEdge
+   * @return a string representing this CourseEdge
    */
   @Override
   public String toString() {

@@ -8,19 +8,19 @@ import java.util.Set;
 public class CourseWay {
   private final String id;
   private Set<String> sequence;
-  private int group_id;
+  private int groupId;
 
   /**
    * Constructs a new CourseWay with the given parameters.
    *
    * @param id the unique id
    * @param sequence the sequence of courses
-   * @param group_id the group id
+   * @param groupId the group id
    */
-  public CourseWay(String id, Set<String> sequence, int group_id) {
+  public CourseWay(String id, Set<String> sequence, int groupId) {
     this.id = id;
     this.sequence = sequence;
-    this.group_id = group_id;
+    this.groupId = groupId;
   }
 
   /**
@@ -47,7 +47,7 @@ public class CourseWay {
    * @return the group id
    */
   public int getGroupID() {
-    return group_id;
+    return groupId;
   }
 
   /**
@@ -84,6 +84,6 @@ public class CourseWay {
     for (String courseID : sequence) {
       sequenceStr = sequenceStr + courseID + ", ";
     }
-    return id + ": " + sequenceStr + group_id;
+    return id + ": " + sequenceStr + groupId;
   }
 }

@@ -33,7 +33,7 @@ public abstract class GraphNode<Edge extends GraphEdge> {
   /**
    * Sets a boolean signifying if the Node was visited.
    *
-   * @param visited
+   * @param visited the boolean
    */
   public abstract void setVisited(Boolean visited);
 
@@ -67,16 +67,23 @@ public abstract class GraphNode<Edge extends GraphEdge> {
 
   /**
    * Force implementation to override equals.
+   *
+   * @param other the object to compare to
+   * @return a boolean signifying whether the two objects are equal
    */
   public abstract boolean equals(Object other);
 
   /**
    * Force implementation to override hashCode.
+   *
+   * @return a hash representation of the Node
    */
   public abstract int hashCode();
 
   /**
    * Force implementation to override toString.
+   *
+   * @return a string representation of the Node
    */
   public abstract String toString();
 }

@@ -93,7 +93,8 @@ public class CourseDataHandlers {
         code = data.getString("code");
         String courseCode = dept + " " + code;
         System.out.println("coursecode: " + courseCode);
-        String query = "SELECT * FROM courseData INNER JOIN courseCR ON courseData.id=courseCR.id WHERE courseData.id = ?;";
+        String query = "SELECT * FROM courseData INNER JOIN courseCR ON "
+            + "courseData.id=courseCR.id WHERE courseData.id = ?;";
         PreparedStatement prep = conn.prepareStatement(query);
         prep.setString(1, courseCode);
         ResultSet rs = prep.executeQuery();
@@ -148,7 +149,7 @@ public class CourseDataHandlers {
         PreparedStatement prep = conn.prepareStatement(query);
         ResultSet rs = prep.executeQuery();
 
-        while(rs.next()) {
+        while (rs.next()) {
           concs.put(rs.getString(1), rs.getString(2));
         }
       } catch (SQLException e) {

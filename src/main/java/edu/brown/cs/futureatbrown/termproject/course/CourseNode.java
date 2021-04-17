@@ -2,12 +2,13 @@ package edu.brown.cs.futureatbrown.termproject.course;
 
 import edu.brown.cs.futureatbrown.termproject.graph.GraphNode;
 
-import java.util.*;
 import edu.brown.cs.futureatbrown.termproject.kdtree.Locatable;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -22,11 +23,11 @@ public class CourseNode extends GraphNode<CourseEdge> implements Locatable {
   private final String rawprereq;
   private final String prereq;
   private final String description;
-  private final Double course_rating;
-  private final Double prof_rating;
-  private final Double avg_hours;
-  private final Double max_hours;
-  private final Integer class_size;
+  private final Double courseRating;
+  private final Double profRating;
+  private final Double avgHours;
+  private final Double maxHours;
+  private final Integer classSize;
   private double weight;
   private boolean visited;
   private List<CourseEdge> prevPath;
@@ -47,15 +48,15 @@ public class CourseNode extends GraphNode<CourseEdge> implements Locatable {
    * @param rawprereq the raw prerequisite
    * @param prereq the prerequisite
    * @param description the description
-   * @param course_rating the course rating
-   * @param prof_rating the professor rating
-   * @param avg_hours the average hours
-   * @param max_hours the max hours
-   * @param class_size the class size
+   * @param courseRating the course rating
+   * @param profRating the professor rating
+   * @param avgHours the average hours
+   * @param maxHours the max hours
+   * @param classSize the class size
    */
   public CourseNode(String id, String name, String instr, int sem, String rawprereq, String prereq,
-                    String description, Double course_rating, Double prof_rating, Double avg_hours,
-                    Double max_hours, Integer class_size) {
+                    String description, Double courseRating, Double profRating, Double avgHours,
+                    Double maxHours, Integer classSize) {
     this.id = id;
     this.name = name;
     this.instr = instr;
@@ -63,16 +64,16 @@ public class CourseNode extends GraphNode<CourseEdge> implements Locatable {
     this.rawprereq = rawprereq;
     this.prereq = prereq;
     this.description = description;
-    this.course_rating = course_rating;
-    this.prof_rating = prof_rating;
-    this.avg_hours = avg_hours;
-    this.max_hours = max_hours;
-    this.class_size = class_size;
+    this.courseRating = courseRating;
+    this.profRating = profRating;
+    this.avgHours = avgHours;
+    this.maxHours = maxHours;
+    this.classSize = classSize;
     this.weight = 0; // Change this after creating weight formula
     this.visited = false;
     this.prevPath = new ArrayList<>();
-    if (null != course_rating && null != prof_rating) {
-      this.coordinates = new double[] {course_rating, prof_rating};
+    if (null != courseRating && null != profRating) {
+      this.coordinates = new double[] {courseRating, profRating};
       // Change this after creating scoring
     } else {
       this.coordinates = new double[0];
@@ -212,8 +213,8 @@ public class CourseNode extends GraphNode<CourseEdge> implements Locatable {
    *
    * @return the course rating
    */
-  public Double getCourse_rating() {
-    return course_rating;
+  public Double getCourseRating() {
+    return courseRating;
   }
 
   /**
@@ -221,8 +222,8 @@ public class CourseNode extends GraphNode<CourseEdge> implements Locatable {
    *
    * @return the professor rating
    */
-  public Double getProf_rating() {
-    return prof_rating;
+  public Double getProfRating() {
+    return profRating;
   }
 
   /**
@@ -230,8 +231,8 @@ public class CourseNode extends GraphNode<CourseEdge> implements Locatable {
    *
    * @return the average hours
    */
-  public Double getAvg_hours() {
-    return avg_hours;
+  public Double getAvgHours() {
+    return avgHours;
   }
 
   /**
@@ -239,8 +240,8 @@ public class CourseNode extends GraphNode<CourseEdge> implements Locatable {
    *
    * @return the max hours
    */
-  public Double getMax_hours() {
-    return max_hours;
+  public Double getMaxHours() {
+    return maxHours;
   }
 
   /**
@@ -248,8 +249,8 @@ public class CourseNode extends GraphNode<CourseEdge> implements Locatable {
    *
    * @return the class size
    */
-  public Integer getClass_size() {
-    return class_size;
+  public Integer getClassSize() {
+    return classSize;
   }
 
 
@@ -423,8 +424,12 @@ public class CourseNode extends GraphNode<CourseEdge> implements Locatable {
    */
   @Override
   public boolean equals(Object o) {
-    if (this == o) return true;
-    if (o == null || getClass() != o.getClass()) return false;
+    if (this == o) {
+      return true;
+    }
+    if (o == null || getClass() != o.getClass()) {
+      return false;
+    }
     CourseNode that = (CourseNode) o;
 //  WHEN NODES ARE NOT EQUAL IDENTIFY THE OFFENDING COMPONENT
 //    if (!Objects.equals(id, that.id)) {
@@ -439,20 +444,21 @@ public class CourseNode extends GraphNode<CourseEdge> implements Locatable {
 //    if (!Objects.equals(sem, that.sem)) {
 //      System.out.println("SEMESTER: Expected " + sem + ", GOT " + that.sem);
 //    }
-//    if (!Objects.equals(course_rating, that.course_rating)) {
-//      System.out.println("COURSE RATING: Expected " + course_rating + ", GOT " + that.course_rating);
+//    if (!Objects.equals(courseRating, that.courseRating)) {
+//      System.out.println("COURSE RATING: Expected " + courseRating + ", GOT "
+//      + that.courseRating);
 //    }
-//    if (!Objects.equals(prof_rating, that.prof_rating)) {
-//      System.out.println("PROF RATING: Expected " + prof_rating + ", GOT " + that.prof_rating);
+//    if (!Objects.equals(profRating, that.profRating)) {
+//      System.out.println("PROF RATING: Expected " + profRating + ", GOT " + that.profRating);
 //    }
-//    if (!Objects.equals(avg_hours, that.avg_hours)) {
-//      System.out.println("AVG HOURS: Expected " + avg_hours + ", GOT " + that.avg_hours);
+//    if (!Objects.equals(avgHours, that.avgHours)) {
+//      System.out.println("AVG HOURS: Expected " + avgHours + ", GOT " + that.avgHours);
 //    }
-//    if (!Objects.equals(max_hours, that.max_hours)) {
-//      System.out.println("MAX HOURS: Expected " + max_hours + ", GOT " + that.max_hours);
+//    if (!Objects.equals(maxHours, that.maxHours)) {
+//      System.out.println("MAX HOURS: Expected " + maxHours + ", GOT " + that.maxHours);
 //    }
-//    if (!Objects.equals(class_size, that.class_size)) {
-//      System.out.println("CLASS SIZE: Expected " + class_size + ", GOT " + that.class_size);
+//    if (!Objects.equals(classSize, that.classSize)) {
+//      System.out.println("CLASS SIZE: Expected " + classSize + ", GOT " + that.classSize);
 //    }
 //    if (!(Double.compare(that.weight, weight) == 0)){
 //      System.out.println("WEIGHT: EXPECTED " + weight + ", GOT " + that.weight);
@@ -464,22 +470,23 @@ public class CourseNode extends GraphNode<CourseEdge> implements Locatable {
 //      System.out.println("PREVIOUS PATH: Expected " + prevPath + ", GOT " + that.prevPath);
 //    }
 //    if (!Arrays.equals(coordinates, that.coordinates)) {
-//      System.out.println("COORDINATES: Expected " + Arrays.toString(coordinates) + ", GOT " + Arrays.toString(that.coordinates));
+//      System.out.println("COORDINATES: Expected " + Arrays.toString(coordinates) + ", GOT "
+//      + Arrays.toString(that.coordinates));
 //    }
-    return Objects.equals(sem, that.sem) &&
-        Objects.equals(course_rating, that.course_rating) &&
-        Objects.equals(prof_rating, that.prof_rating) &&
-        Objects.equals(avg_hours, that.avg_hours) &&
-        Objects.equals(max_hours, that.max_hours) &&
-        Objects.equals(class_size, that.class_size) &&
-        Objects.equals(id, that.id) &&
-        Objects.equals(name, that.name) &&
-        Objects.equals(instr, that.instr) &&
-        Objects.equals(prereq, that.prereq) &&
-        Objects.equals(prevPath, that.prevPath) &&
-        Double.compare(that.weight, weight) == 0 &&
-        visited == that.visited &&
-        Arrays.equals(coordinates, that.coordinates);
+    return Objects.equals(sem, that.sem)
+        && Objects.equals(courseRating, that.courseRating)
+        && Objects.equals(profRating, that.profRating)
+        && Objects.equals(avgHours, that.avgHours)
+        && Objects.equals(maxHours, that.maxHours)
+        && Objects.equals(classSize, that.classSize)
+        && Objects.equals(id, that.id)
+        && Objects.equals(name, that.name)
+        && Objects.equals(instr, that.instr)
+        && Objects.equals(prereq, that.prereq)
+        && Objects.equals(prevPath, that.prevPath)
+        && Double.compare(that.weight, weight) == 0
+        && visited == that.visited
+        && Arrays.equals(coordinates, that.coordinates);
   }
 
   /**
@@ -495,7 +502,7 @@ public class CourseNode extends GraphNode<CourseEdge> implements Locatable {
   /**
    * Returns a string representing a CourseNode.
    *
-   * @return A string representing a CourseNode.
+   * @return a string representing a CourseNode
    */
   @Override
   public String toString() {
@@ -510,7 +517,7 @@ public class CourseNode extends GraphNode<CourseEdge> implements Locatable {
   @Override
   public CourseNode copy() {
     return new CourseNode(this.id, this.name, this.instr, this.sem, this.rawprereq, this.prereq,
-        this.description, this.course_rating, this.prof_rating, this.avg_hours, this.max_hours,
-        this.class_size);
+        this.description, this.courseRating, this.profRating, this.avgHours, this.maxHours,
+        this.classSize);
   }
 }

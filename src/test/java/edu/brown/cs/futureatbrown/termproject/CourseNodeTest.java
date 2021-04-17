@@ -52,11 +52,11 @@ public class CourseNodeTest {
     Assert.assertEquals(math190.getRawprereq(), "Covers roughly the same material and has the same prerequisites as MATH 0170, but is intended for students with a special interest in physics or engineering");
     Assert.assertNull(math190.getPrereq());
     Assert.assertEquals(math190.getDescription(), "Covers roughly the same material and has the same prerequisites as MATH 0170, but is intended for students with a special interest in physics or engineering. The main topics are: calculus of vectors and paths in two and three dimensions; differential equations of the first and second order; and infinite series, including power series and Fourier series. The extra hour is a weekly problem session.");
-    Assert.assertEquals(math190.getCourse_rating(), 4.31, TOLERANCE);
-    Assert.assertEquals(math190.getProf_rating(), 4.6, TOLERANCE);
-    Assert.assertEquals(math190.getAvg_hours(), 7.65, TOLERANCE);
-    Assert.assertEquals(math190.getMax_hours(), 12.11, TOLERANCE);
-    Assert.assertEquals(math190.getClass_size(), 44, TOLERANCE);
+    Assert.assertEquals(math190.getCourseRating(), 4.31, TOLERANCE);
+    Assert.assertEquals(math190.getProfRating(), 4.6, TOLERANCE);
+    Assert.assertEquals(math190.getAvgHours(), 7.65, TOLERANCE);
+    Assert.assertEquals(math190.getMaxHours(), 12.11, TOLERANCE);
+    Assert.assertEquals(math190.getClassSize(), 44, TOLERANCE);
     Assert.assertEquals(math190.getNumOfDimensions(), 2);
     Assert.assertArrayEquals(math190.getCoordinates(), new double[] {4.31, 4.6}, TOLERANCE);
     Assert.assertEquals(math190.getCoordinate(0), 4.31, TOLERANCE);
