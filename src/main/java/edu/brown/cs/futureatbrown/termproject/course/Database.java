@@ -83,7 +83,7 @@ public final class Database {
    * Sets up a k-complete graph connecting all of the courses in the database
    *
    */
-   public static void setupGraph(List<String> prevCoursesID) throws SQLException {
+   public static void setupGraph(List<String> prevCoursesID, double sensitivity) throws SQLException {
      List<CourseNode> courseNodes = new ArrayList<>();
      List<CourseNode> prevCourses = new ArrayList<>();
 
@@ -98,12 +98,16 @@ public final class Database {
 
      // Add Nodes to the Graph
      for (CourseNode startNode : courseNodes) {
-       graph.addNode(startNode,
-         new HashSet<>(courseNodes
+       List<CourseEdge> edgesFromStartNode = courseNodes
            .stream()
            .filter(node -> !node.equals(startNode))
            .map(node -> new CourseEdge(startNode.getID() + " - " + node.getID(), startNode, node))
-           .collect(Collectors.toList())));
+           .collect(Collectors.toList());
+       for (CourseEdge edge : edgesFromStartNode) {
+         edge.setSensitivity(sensitivity);
+       }
+       graph.addNode(startNode,
+         new HashSet<>(edgesFromStartNode));
        startNode.setPreviousCourses(prevCourses);
      }
    }
@@ -143,16 +147,16 @@ public final class Database {
    * Queries a HashMap of CourseWays based on the user inputted id. Returns null if not found.
    *
    * @param id the id of the Pathway
-   * @return the found HashMap of CourseWays
+   * @return the found HashMap of CourseWays of form <GroupID, <CourseID, CourseWay>>>
    */
-  public static HashMap<String, CourseWay> getCourseWays(String id) {
+  public static Map<Integer, HashMap<String, CourseWay>> getCourseWays(String id) {
     if (ALLOWED_COURSES.contains(id)) {
       try (PreparedStatement statement = conn.prepareStatement("SELECT * FROM " + id)) {
         try (ResultSet results = statement.executeQuery()) {
           if (results.isClosed()) {
             return null;
           }
-          return CourseConversions.resultToCourseWayMap(results);
+          return CourseConversions.resultToCourseWayGroup(results, graph);
         }
       } catch (SQLException e) {
         throw new SQLRuntimeException(e);

@@ -32,7 +32,7 @@ public class CourseGraph implements Graph<CourseNode, CourseEdge> {
   private Integer minNumClasses; // Minimum Number of Classes
   private Integer maxNumClasses; // Maximum Number of Classes
   private Map<String, Integer> groupData;
-  private Map<String, CourseWay> courseWayData;
+  private Map<Integer, HashMap<String, CourseWay>> courseWayData;
 
   private Set<List<CourseNode>> prereqs; //Global Prerequisites of the target end node
 
@@ -70,19 +70,19 @@ public class CourseGraph implements Graph<CourseNode, CourseEdge> {
    * @param crsRatingPref Course Rating Preference: How Important is the Course Rating (0 - 10)
    * @param profRatingPref Professor Rating Preference: How Important is the Professor Rating (0 - 10)
    * @param avgHoursPref Average Hours Preference: How Important is the Avg Hours of the Class (0 - 10)
-   * Penalty applied when the Total Sum of Avg Hours of all courses in the pathway exceed the total Acceptable
-   * Avg Hours. Penalty based on how much it goes over.
+ * Penalty applied when the Total Sum of Avg Hours of all courses in the pathway exceed the total Acceptable
+ * Avg Hours. Penalty based on how much it goes over.
    * @param avgHoursInput Average Hours Input: User Inputted Optimal Avg Hours per class
    * @param minNumClasses Minimum Number of Courses the pathway must contain
    * @param maxNumClasses Maximum Number of Courses the pathway must contain
    * @param balanceFactorPref Balance Factor Preference: How Important is it that each individual course in the
-   * pathway are close to the Average Hours Input (See Above)
+* pathway are close to the Average Hours Input (See Above)
    * @param totalMaxHoursInput Total Acceptable Max Number of Hours, Will shut down any pathways that exceed the
-   * max number of hours. Use Double.POSITIVE_INFINITY if you want to nullify this check.
+* max number of hours. Use Double.POSITIVE_INFINITY if you want to nullify this check.
    * @param classSizePref Class Size Preference: How Important is the Class Size (0 - 10)
    * @param classSizeInput User Inputted Optimal Class Size, Penalized for distance from Input.
    * @param classSizeMax User Inputted Max Class size, Penalty decreases if user can tolerate a larger class size
-   * and increases if the user cannot.
+* and increases if the user cannot.
    * @param groupData Map of Group ID to number of courses required to satisify in that group for the particular pathway
    * @param courseWayData Map of Course ID to the courseWay (CourseID, Sequence, GroupID)
    */
@@ -90,7 +90,7 @@ public class CourseGraph implements Graph<CourseNode, CourseEdge> {
                               double avgHoursInput, int minNumClasses, int maxNumClasses,
                               double balanceFactorPref, double totalMaxHoursInput,
                               double classSizePref, int classSizeInput, int classSizeMax,
-                              Map<String, Integer> groupData, Map<String, CourseWay> courseWayData) {
+                              Map<String, Integer> groupData, Map<Integer, HashMap<String, CourseWay>> courseWayData) {
     // SLIDER PREFERENCES
     this.crsRatingPref = crsRatingPref;
     this.profRatingPref = profRatingPref;

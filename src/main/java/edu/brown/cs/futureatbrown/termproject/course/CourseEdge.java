@@ -23,6 +23,9 @@ public class CourseEdge extends GraphEdge<CourseNode> {
   private CourseNode end;
   private double weight;
   private boolean overrideWeightCalc;
+  private int currentGroup;
+  private int currentNumInGroup;
+  private double sensitivity = 2;
 
   //////////////////////
   // Global Variables //
@@ -43,7 +46,7 @@ public class CourseEdge extends GraphEdge<CourseNode> {
   private Integer minNumClasses; // Minimum Number of Classes
   private Integer maxNumClasses; // Maximum Number of Classes
   private Map<String, Integer> groupData;
-  private Map<String, CourseWay> courseWayData;
+  private Map<Integer, HashMap<String, CourseWay>> courseWayData;
 
   // GLOBAL Dijkstra Specific Inputs
   private CourseNode globalEnd;
@@ -96,8 +99,8 @@ public class CourseEdge extends GraphEdge<CourseNode> {
    * @param crsRatingPref Course Rating Preference: How Important is the Course Rating (0 - 10)
    * @param profRatingPref Professor Rating Preference: How Important is the Professor Rating (0 - 10)
    * @param avgHoursPref Average Hours Preference: How Important is the Avg Hours of the Class (0 - 10)
- * Penalty applied when the Total Sum of Avg Hours of all courses in the pathway exceed the total Acceptable
- * Avg Hours. Penalty based on how much it goes over.
+* Penalty applied when the Total Sum of Avg Hours of all courses in the pathway exceed the total Acceptable
+* Avg Hours. Penalty based on how much it goes over.
    * @param avgHoursInput Average Hours Input: User Inputted Optimal Avg Hours per class
    * @param minNumClasses Minimum Number of Courses the pathway must contain
    * @param maxNumClasses Maximum Number of Courses the pathway must contain
@@ -109,7 +112,7 @@ public class CourseEdge extends GraphEdge<CourseNode> {
    * @param classSizeInput User Inputted Optimal Class Size, Penalized for distance from Input.
    * @param classSizeMax User Inputted Max Class size, Penalty decreases if user can tolerate a larger class size
 * and increases if the user cannot.
-   * @param groupData Map of Group ID to number of courses required to satisify in that group for the particular pathway
+   * @param groupData Map of Group ID to number of courses required to satisfy in that group for the particular pathway
    * @param courseWayData Map of Course ID to the courseWay (CourseID, Sequence, GroupID)
    */
 
@@ -117,7 +120,7 @@ public class CourseEdge extends GraphEdge<CourseNode> {
                               double avgHoursInput, int minNumClasses, int maxNumClasses,
                               double balanceFactorPref, double totalMaxHoursInput,
                               double classSizePref, int classSizeInput, int classSizeMax,
-                              Map<String, Integer> groupData, Map<String, CourseWay> courseWayData) {
+                              Map<String, Integer> groupData, Map<Integer, HashMap<String, CourseWay>> courseWayData) {
     // SLIDER PREFERENCES
     this.crsRatingPref = crsRatingPref;
     this.profRatingPref = profRatingPref;
@@ -138,7 +141,7 @@ public class CourseEdge extends GraphEdge<CourseNode> {
 
   /**
    * Sets up the Global Prerequisites and overall requirements
-   * @param prereqs Set of Groups of Coures that contain the prereqs to the end Node
+   * @param prereqs Set of Groups of Courses that contain the prereqs to the end Node
    */
   public void setGlobalPrereqs(Set<List<CourseNode>> prereqs) {
     this.prereqs = prereqs;
@@ -167,6 +170,89 @@ public class CourseEdge extends GraphEdge<CourseNode> {
     }
     return nodes;
   }
+
+  /**
+   * Runs through the given path to see if the requirements are fulfilled
+   * and gives a reward to weight fulfilled
+   * currentGroup - Current Group within the pathway to be satisfied
+   * currentNumInGroup - Amount of requirements currently satisfied in the group
+   * @param pathToInclude - List of Nodes to check for requirements in and to reward if fulfilled
+   * @param pathToExclude - List of Nodes to check for requirements in, but not to reward.
+   * Represents the path that has been explored before!
+   * @param reward - Amount to be rewarded if requirements fulfilled
+   * @param nullify - Whether or not to nullify future group fulfillment
+   * @return a boolean representing whether or not all pathway requirements have been satisfied
+   */
+   private boolean pathwayRequirementUpdate(List<String> pathToInclude, List<String> pathToExclude, double reward, boolean nullify) {
+     boolean satisfiedAllPathwayReqs = true;
+     if (null != this.courseWayData && null != this.groupData) {
+       boolean checkNextGroup = true;
+       while (checkNextGroup) {
+         checkNextGroup = false;
+         if (this.courseWayData.containsKey(currentGroup)) {
+           Map<String, CourseWay> courseWayHashMap = this.courseWayData.get(currentGroup);
+           Set<CourseWay> totalWayPrereqs = new HashSet<>();
+           for (String courseID : courseWayHashMap.keySet()) {
+             CourseWay courseway = courseWayHashMap.get(courseID);
+             String coursewayGroupID = Integer.toString(courseway.getGroupID());
+             boolean readyForProcessing = Integer.parseInt(coursewayGroupID) == currentGroup;
+             Set<CourseWay> courseWayPrereqs = courseway.getPrerequisites();
+             if (courseWayPrereqs != null) {
+               totalWayPrereqs.addAll(courseWayPrereqs);
+             }
+             if (Integer.parseInt(coursewayGroupID) >= currentGroup) {
+               satisfiedAllPathwayReqs = false;
+               if (readyForProcessing) {
+                 List<String> sequence = new ArrayList<>(courseway.getSequence());
+                 sequence.add(courseID);
+//                 System.out.println("SEQUENCE: " + sequence);
+
+                 if (pathToInclude.containsAll(sequence) && !pathToExclude.containsAll(sequence)) {
+                   currentNumInGroup += 1;
+//                   System.out.println("CURRENT GROUP " + currentGroup + " UPDATING NUM TO " + currentNumInGroup);
+                   this.weight -= reward;
+                 }
+
+                 int numReq = this.groupData.get(coursewayGroupID);
+
+                 if (numReq <= currentNumInGroup) {
+                   checkNextGroup = true;
+                   currentGroup += 1;
+                   currentNumInGroup = 0;
+//                   System.out.println("NUM REQUIREMENTS: " + numReq);
+//                   System.out.println("CURRENT GROUP UPDATING TO " + currentGroup);
+                 }
+               }
+             }
+           }
+           if (nullify) {
+             for (Integer groupID : this.courseWayData.keySet()) {
+//               System.out.println("CURRENT GROUP: " + currentGroup);
+               if (groupID > currentGroup) {
+                 for (String futureID : this.courseWayData.get(groupID).keySet()) {
+                   boolean notAPrereq = true;
+                   for (CourseWay prereqGroup : totalWayPrereqs) {
+                     if (prereqGroup.getSequence().contains(futureID)) {
+                       notAPrereq = false;
+                       break;
+                     }
+                   }
+                   // NULLIFY THE EDGE BECAUSE OF OUT OF ORDER EXPLORATION
+                   if (this.end.getID().equals(futureID) && notAPrereq) {
+//                     System.out.println("NULLABLE COURSE ID: " + futureID);
+//                     System.out.println("SEARCH SPACE: " + this.courseWayData.get(groupID));
+                     this.weight = Double.POSITIVE_INFINITY;
+                     break;
+                   }
+                 }
+               }
+             }
+           }
+         }
+       }
+     }
+     return satisfiedAllPathwayReqs;
+   }
 
   /**
    * Calculates the weight of the edge based on Penalties and Sliders
@@ -257,7 +343,7 @@ public class CourseEdge extends GraphEdge<CourseNode> {
 
     // Calculate the Slider Weight
 //    System.out.println("COURSE RATING INCORPORATED");
-    this.weight +=  Math.pow(2, this.crsRatingPref) / courseRating;
+    this.weight +=  Math.pow(sensitivity, this.crsRatingPref) / courseRating;
 
     ////////////////////////////////////////
     // SLIDER COMPONENT: PROFESSOR RATING //
@@ -278,7 +364,7 @@ public class CourseEdge extends GraphEdge<CourseNode> {
 
     // Calculate the Slider Weight
 //    System.out.println("PROFESSOR RATING INCORPORATED");
-    this.weight += Math.pow(2, this.profRatingPref) / professorRating;
+    this.weight += Math.pow(sensitivity, this.profRatingPref) / professorRating;
 
     /////////////////////////////////
     // SLIDER COMPONENT: AVG HOURS //
@@ -336,11 +422,11 @@ public class CourseEdge extends GraphEdge<CourseNode> {
     // Penalize by distance if it goes over, Penalize by balance if it is under
     if (totalAvgHours > desiredTotalAvgHours) {
 //      System.out.println("AVG HOURS RAN OVER LIMIT");
-      this.weight += Math.pow(2, this.avgHoursPref) * 0.2 * (totalAvgHours - desiredTotalAvgHours)
+      this.weight += Math.pow(sensitivity, this.avgHoursPref) * 0.2 * (totalAvgHours - desiredTotalAvgHours)
           / desiredTotalAvgHours;
     } else {
 //      System.out.println("BALANCE OF AVG HOURS - CLASSES SELECTED");
-      this.weight += Math.pow(2, this.balanceFactorPref) * 0.2
+      this.weight += Math.pow(sensitivity, this.balanceFactorPref) * 0.2
           * Math.abs(classAvgHours - this.avgHoursInput) / this.avgHoursInput;
     }
 
@@ -398,7 +484,7 @@ public class CourseEdge extends GraphEdge<CourseNode> {
     }
 
 //    System.out.println("CLASS SIZE CONSIDERED");
-    this.weight += Math.pow(2, this.classSizePref) * 0.2
+    this.weight += Math.pow(sensitivity, this.classSizePref) * 0.2
         * Math.abs(courseClassSize - this.classSizeInput) / this.classSizeMax;
 
     /////////////////////////////////////////////////////
@@ -424,65 +510,32 @@ public class CourseEdge extends GraphEdge<CourseNode> {
     /////////////////////////////////////////////////////
 
     // FROM NOW ON INCLUDE END NODE IN PREVIOUS PATH
+
+    // SETUP TOTAL PATH EXPLORED AND CURRENT GROUP OF REQUIREMENTS TO FULFILL
     List<String> totalPath = new ArrayList<>(previousPath);
     totalPath.addAll(coursesTakenID);
+    List<String> pathCheckedBefore = new ArrayList<>(totalPath);
     totalPath.add(this.end.getID());
-    int currentGroup = this.start.getCurrentGroup();
-    int currentNumInGroup = this.start.getCurrentNumInGroup();
-    List<List<String>> coursesAccountedFor = this.start.getCoursesTakenAccountedFor();
-//    System.out.println("CURRENT GROUP: " + currentGroup);
-    boolean satisfiedAllPathwayReqs = true;
-//    System.out.println("Total Path: " + totalPath);
 
-    if (null != this.courseWayData && null != this.groupData) {
-      // REWARD IT FOR SATISFYING PATHWAY REQUIREMENTS
-      for(String courseID : this.courseWayData.keySet()) {
+    this.currentGroup = this.start.getCurrentGroup();
+    this.currentNumInGroup = 0;
 
-        CourseWay courseway = this.courseWayData.get(courseID);
-        String coursewayGroupID = Integer.toString(courseway.getGroupID());
-        boolean readyForProcessing = Integer.parseInt(coursewayGroupID) == currentGroup;
-        if (Integer.parseInt(coursewayGroupID) >= currentGroup) {
-          satisfiedAllPathwayReqs = false;
-          if (readyForProcessing) {
-            List<String> sequence = new ArrayList<>(courseway.getSequence());
-            sequence.add(courseID);
-//            System.out.println("SEQUENCE: " + sequence);
+    // DEFENSIVELY CHECK THAT PATHWAY REQUIREMENTS ARE SATISFIED
+    // GIVE REWARD IF THE NEW NODE CAUSES A NEW REQUIREMENT TO BE SATISFIED>
+    pathwayRequirementUpdate(pathCheckedBefore, new ArrayList<>(), 0, false);
+    boolean satisfiedAllPathwayReqs = pathwayRequirementUpdate(totalPath, pathCheckedBefore, 5000, true);
 
-            if (previousPath.containsAll(sequence)) {
-              continue;
-            }
-            if (coursesTakenID.containsAll(sequence) && !coursesAccountedFor.contains(sequence)) {
-              currentNumInGroup += 1;
-//              System.out.println("CURRENT GROUP " + currentGroup + " UPDATING NUM TO " + currentNumInGroup);
-              coursesAccountedFor.add(sequence);
-            } else if (totalPath.containsAll(sequence)) {
-              currentNumInGroup += 1;
-//              System.out.println("CURRENT GROUP " + currentGroup + " UPDATING NUM TO " + currentNumInGroup);
-              this.weight -= 5000;
-            }
-              int numReq = this.groupData.get(coursewayGroupID);
 
-              if (numReq <= currentNumInGroup) {
-                currentGroup += 1;
-                currentNumInGroup = 0;
-//                System.out.println("NUM REQUIREMENTS: " + numReq);
-//                System.out.println("CURRENT GROUP UPDATING TO " + currentGroup);
-              }
-            }
-          }
-        }
-        this.end.setCurrentGroup(currentGroup);
-        this.end.setCurrentNumInGroup(currentNumInGroup);
-        this.end.setCoursesTakenAccountedFor(coursesAccountedFor);
-      }
+//    System.out.println("GOING TO SET " + this.end.getID() + " CURRENT GROUP TO " + currentGroup);
+    this.end.setCurrentGroup(currentGroup);
+//    System.out.println("NEXT CURRENT GROUP SET TO " + this.end.getCurrentGroup());
 
-      // PENALTY: STOP IT FROM FINISHING IF IT DOESN'T SATISFY ALL PATHWAY REQUIREMENTS
-//      System.out.println("SATISFIED ALL PATHWAYS? - " + satisfiedAllPathwayReqs);
-      if (!satisfiedAllPathwayReqs && this.end.equals(this.globalEnd)) {
-//        System.out.println("CURRENT GROUP: " + currentGroup);
-//        System.out.println("PATHWAY BLOCK");
-        return Double.POSITIVE_INFINITY;
-      }
+    // PENALTY: STOP IT FROM FINISHING IF IT DOESN'T SATISFY ALL PATHWAY REQUIREMENTS
+    if (!satisfiedAllPathwayReqs && this.end.equals(this.globalEnd)) {
+//      System.out.println("CURRENT GROUP: " + currentGroup);
+//      System.out.println("PATHWAY BLOCK");
+      return Double.POSITIVE_INFINITY;
+    }
 
     return this.weight;
   }
@@ -535,6 +588,14 @@ public class CourseEdge extends GraphEdge<CourseNode> {
   @Override
   public CourseNode getEnd() {
     return end;
+  }
+
+  /**
+   * Sets the sensitivity of the sliders
+   * @param sensitivity - sensitivity of the sliders
+   */
+  public void setSensitivity(double sensitivity) {
+    this.sensitivity = sensitivity;
   }
 
   /**

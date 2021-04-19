@@ -196,7 +196,7 @@ public final class Main {
           class size: 72.3703703703704
            */
 
-        Map<String, CourseWay> cWays = Database.getCourseWays(conc + "Courses");
+        Map<Integer, HashMap<String, CourseWay>> cWays = Database.getCourseWays(conc + "Courses");
         Map<String, Integer> gData = Database.getGroups(conc + "Groups");
 
         JSONArray takenArray = data.getJSONArray("taken");
@@ -206,7 +206,7 @@ public final class Main {
           takenCourses.add((String) takenArray.get(i));
         }
 
-        Database.setupGraph(new ArrayList<>());
+        Database.setupGraph(new ArrayList<>(), 2);
         CourseGraph theGraph = Database.getGraph();
 
         System.out.println("setting params and getting path: ");

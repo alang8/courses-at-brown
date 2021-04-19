@@ -314,33 +314,110 @@ public class CourseAlgorithmTest {
   @Test
   public void PathwayRequirementTests() throws InvalidAlgorithmParameterException, SQLException {
     setup();
-    Database.setupGraph(new ArrayList<>());
-    CourseGraph finalGraph = Database.getGraph();
-    finalGraph.setGlobalParams(1, 1, 1,
-      10, 0, 18, 1,
+    Database.setupGraph(new ArrayList<>(),2);
+    CourseGraph finalCSCIABMLGraph = Database.getGraph();
+    finalCSCIABMLGraph.setGlobalParams(1, 1, 1,
+      10, 0, 30, 1,
       Double.POSITIVE_INFINITY, 1, 50, 500,
       Database.getGroups("csciABMLGroups"), Database.getCourseWays("csciABMLCourses"));
 
-    List<CourseEdge> pathWithRequirements = courseAlgorithms.dijkstraPath("CSCI 0150", "CSCI 0170", finalGraph);
+    List<CourseEdge> csciABMLPathWithRequirements = courseAlgorithms.dijkstraPath("CSCI 0150", "CSCI 0170", finalCSCIABMLGraph);
 
-    Assert.assertEquals(pathWithRequirements, List.of(
-      finalGraph.getEdgeSet().get("CSCI 0150").get("CSCI 0190"),
-      finalGraph.getEdgeSet().get("CSCI 0190").get("MATH 0190"),
-      finalGraph.getEdgeSet().get("MATH 0190").get("CSCI 1430"),
-      finalGraph.getEdgeSet().get("CSCI 1430").get("CSCI 1850"),
-      finalGraph.getEdgeSet().get("CSCI 1850").get("CSCI 1951K"),
-      finalGraph.getEdgeSet().get("CSCI 1951K").get("CSCI 0530"),
-      finalGraph.getEdgeSet().get("CSCI 0530").get("CSCI 0320"),
-      finalGraph.getEdgeSet().get("CSCI 0320").get("CSCI 1310"),
-      finalGraph.getEdgeSet().get("CSCI 1310").get("CSCI 1250"),
-      finalGraph.getEdgeSet().get("CSCI 1250").get("CSCI 0170")
+    Assert.assertEquals(csciABMLPathWithRequirements, List.of(
+      finalCSCIABMLGraph.getEdgeSet().get("CSCI 0150").get("CSCI 0190"),
+      finalCSCIABMLGraph.getEdgeSet().get("CSCI 0190").get("MATH 0190"),
+      finalCSCIABMLGraph.getEdgeSet().get("MATH 0190").get("CSCI 1430"),
+      finalCSCIABMLGraph.getEdgeSet().get("CSCI 1430").get("CSCI 1951C"),
+      finalCSCIABMLGraph.getEdgeSet().get("CSCI 1951C").get("CSCI 1951A"),
+      finalCSCIABMLGraph.getEdgeSet().get("CSCI 1951A").get("CSCI 0530"),
+      finalCSCIABMLGraph.getEdgeSet().get("CSCI 0530").get("CSCI 0320"),
+      finalCSCIABMLGraph.getEdgeSet().get("CSCI 0320").get("CSCI 1310"),
+      finalCSCIABMLGraph.getEdgeSet().get("CSCI 1310").get("CSCI 1250"),
+      finalCSCIABMLGraph.getEdgeSet().get("CSCI 1250").get("CSCI 0170")
+    ));
+    teardown();
+
+    setup();
+    Database.setupGraph(new ArrayList<>(), 2);
+    CourseGraph finalMATHSCBGraph = Database.getGraph();
+    finalMATHSCBGraph.setGlobalParams(1, 1, 1,
+      10, 0, 18, 1,
+      Double.POSITIVE_INFINITY, 1, 50, 500,
+      Database.getGroups("mathSCBGroups"), Database.getCourseWays("mathSCBCourses"));
+
+    List<CourseEdge> mathSCBPathWithRequirements = courseAlgorithms.dijkstraPath("CSCI 0150", "CSCI 0170", finalMATHSCBGraph);
+
+    Assert.assertEquals(mathSCBPathWithRequirements, List.of(
+      finalMATHSCBGraph.getEdgeSet().get("CSCI 0150").get("MATH 0190"),
+      finalMATHSCBGraph.getEdgeSet().get("MATH 0190").get("MATH 0540"),
+      finalMATHSCBGraph.getEdgeSet().get("MATH 0540").get("MATH 0200"),
+      finalMATHSCBGraph.getEdgeSet().get("MATH 0200").get("MATH 1010"),
+      finalMATHSCBGraph.getEdgeSet().get("MATH 1010").get("MATH 1130"),
+      finalMATHSCBGraph.getEdgeSet().get("MATH 1130").get("MATH 1140"),
+      finalMATHSCBGraph.getEdgeSet().get("MATH 1140").get("MATH 1530"),
+      finalMATHSCBGraph.getEdgeSet().get("MATH 1530").get("MATH 1540"),
+      finalMATHSCBGraph.getEdgeSet().get("MATH 1540").get("MATH 1110"),
+      finalMATHSCBGraph.getEdgeSet().get("MATH 1110").get("MATH 1610"),
+      finalMATHSCBGraph.getEdgeSet().get("MATH 1610").get("MATH 1580"),
+      finalMATHSCBGraph.getEdgeSet().get("MATH 1580").get("MATH 1040"),
+      finalMATHSCBGraph.getEdgeSet().get("MATH 1040").get("MATH 1120"),
+      finalMATHSCBGraph.getEdgeSet().get("MATH 1120").get("MATH 1410"),
+      finalMATHSCBGraph.getEdgeSet().get("MATH 1410").get("MATH 1230"),
+      finalMATHSCBGraph.getEdgeSet().get("MATH 1230").get("CSCI 0170")
+    ));
+    teardown();
+
+    setup();
+    Database.setupGraph(new ArrayList<>(), 2);
+    CourseGraph finalMATHABGraph = Database.getGraph();
+    finalMATHABGraph.setGlobalParams(1, 1, 1,
+      10, 0, 18, 1,
+      Double.POSITIVE_INFINITY, 1, 50, 500,
+      Database.getGroups("mathABGroups"), Database.getCourseWays("mathABCourses"));
+
+    List<CourseEdge> mathABPathWithRequirements = courseAlgorithms.dijkstraPath("CSCI 0150", "CSCI 0170", finalMATHABGraph);
+
+    Assert.assertEquals(mathABPathWithRequirements, List.of(
+      finalMATHABGraph.getEdgeSet().get("CSCI 0150").get("MATH 0190"),
+      finalMATHABGraph.getEdgeSet().get("MATH 0190").get("MATH 0540"),
+      finalMATHABGraph.getEdgeSet().get("MATH 0540").get("MATH 1530"),
+      finalMATHABGraph.getEdgeSet().get("MATH 1530").get("MATH 1410"),
+      finalMATHABGraph.getEdgeSet().get("MATH 1410").get("MATH 1120"),
+      finalMATHABGraph.getEdgeSet().get("MATH 1120").get("MATH 1970"),
+      finalMATHABGraph.getEdgeSet().get("MATH 1970").get("MATH 1580"),
+      finalMATHABGraph.getEdgeSet().get("MATH 1580").get("MATH 1540"),
+      finalMATHABGraph.getEdgeSet().get("MATH 1540").get("CSCI 0170")
+    ));
+    teardown();
+
+    setup();
+    Database.setupGraph(new ArrayList<>(), 2);
+    CourseGraph finalAPMAABGraph = Database.getGraph();
+    finalAPMAABGraph.setGlobalParams(1, 1, 1,
+      10, 0, 18, 1,
+      Double.POSITIVE_INFINITY, 1, 50, 500,
+      Database.getGroups("apmaABGroups"), Database.getCourseWays("apmaABCourses"));
+
+    List<CourseEdge> apmaABPathWithRequirements = courseAlgorithms.dijkstraPath("CSCI 0150", "CSCI 0170", finalAPMAABGraph);
+
+    Assert.assertEquals(apmaABPathWithRequirements, List.of(
+      finalAPMAABGraph.getEdgeSet().get("CSCI 0150").get("MATH 0190"),
+      finalAPMAABGraph.getEdgeSet().get("MATH 0190").get("MATH 0540"),
+      finalAPMAABGraph.getEdgeSet().get("MATH 0540").get("APMA 0350"),
+      finalAPMAABGraph.getEdgeSet().get("APMA 0350").get("APMA 0360"),
+      finalAPMAABGraph.getEdgeSet().get("APMA 0360").get("APMA 1360"),
+      finalAPMAABGraph.getEdgeSet().get("APMA 1360").get("APMA 1655"),
+      finalAPMAABGraph.getEdgeSet().get("APMA 1655").get("APMA 1330"),
+      finalAPMAABGraph.getEdgeSet().get("APMA 1330").get("APMA 1740"),
+      finalAPMAABGraph.getEdgeSet().get("APMA 1740").get("APMA 1660"),
+      finalAPMAABGraph.getEdgeSet().get("APMA 1660").get("CSCI 0170")
     ));
     teardown();
 
 
     // PRESET COURSES
     setup();
-    Database.setupGraph(List.of("CSCI 0150", "CSCI 0160"));
+    Database.setupGraph(List.of("CSCI 0150", "CSCI 0160"), 2);
     CourseGraph presetGraph = Database.getGraph();
     presetGraph.setGlobalParams(1, 1, 1,
       10, 0, 18, 1,
@@ -359,6 +436,77 @@ public class CourseAlgorithmTest {
       presetGraph.getEdgeSet().get("CSCI 0220").get("CSCI 1310"),
       presetGraph.getEdgeSet().get("CSCI 1310").get("CSCI 1250"),
       presetGraph.getEdgeSet().get("CSCI 1250").get("CSCI 0170")
+    ));
+    teardown();
+
+    setup();
+    Database.setupGraph(List.of("MATH 0190", "MATH 1110", "MATH 1410"), 2);
+    CourseGraph presetfinalMATHSCBGraph = Database.getGraph();
+    presetfinalMATHSCBGraph.setGlobalParams(1, 1, 1,
+      10, 0, 18, 1,
+      Double.POSITIVE_INFINITY, 1, 50, 500,
+      Database.getGroups("mathSCBGroups"), Database.getCourseWays("mathSCBCourses"));
+
+    List<CourseEdge> presetmathSCBPathWithRequirements = courseAlgorithms.dijkstraPath("CSCI 0150", "CSCI 0170", presetfinalMATHSCBGraph);
+
+    Assert.assertEquals(presetmathSCBPathWithRequirements, List.of(
+      presetfinalMATHSCBGraph.getEdgeSet().get("CSCI 0150").get("MATH 0540"),
+      presetfinalMATHSCBGraph.getEdgeSet().get("MATH 0540").get("MATH 0200"),
+      presetfinalMATHSCBGraph.getEdgeSet().get("MATH 0200").get("MATH 1010"),
+      presetfinalMATHSCBGraph.getEdgeSet().get("MATH 1010").get("MATH 1130"),
+      presetfinalMATHSCBGraph.getEdgeSet().get("MATH 1130").get("MATH 1140"),
+      presetfinalMATHSCBGraph.getEdgeSet().get("MATH 1140").get("MATH 1530"),
+      presetfinalMATHSCBGraph.getEdgeSet().get("MATH 1530").get("MATH 1540"),
+      presetfinalMATHSCBGraph.getEdgeSet().get("MATH 1540").get("MATH 1580"),
+      presetfinalMATHSCBGraph.getEdgeSet().get("MATH 1580").get("MATH 1610"),
+      presetfinalMATHSCBGraph.getEdgeSet().get("MATH 1610").get("MATH 1040"),
+      presetfinalMATHSCBGraph.getEdgeSet().get("MATH 1040").get("MATH 1620"),
+      presetfinalMATHSCBGraph.getEdgeSet().get("MATH 1620").get("MATH 1120"),
+      presetfinalMATHSCBGraph.getEdgeSet().get("MATH 1120").get("CSCI 0170")
+    ));
+    teardown();
+
+    setup();
+    Database.setupGraph(List.of("MATH 0180"), 2);
+    CourseGraph presetfinalMATHABGraph = Database.getGraph();
+    presetfinalMATHABGraph.setGlobalParams(1, 1, 1,
+      10, 0, 18, 1,
+      Double.POSITIVE_INFINITY, 1, 50, 500,
+      Database.getGroups("mathABGroups"), Database.getCourseWays("mathABCourses"));
+
+    List<CourseEdge> presetmathABPathWithRequirements = courseAlgorithms.dijkstraPath("CSCI 0150", "CSCI 0170", presetfinalMATHABGraph);
+
+    Assert.assertEquals(presetmathABPathWithRequirements, List.of(
+      presetfinalMATHABGraph.getEdgeSet().get("CSCI 0150").get("MATH 0540"),
+      presetfinalMATHABGraph.getEdgeSet().get("MATH 0540").get("MATH 1530"),
+      presetfinalMATHABGraph.getEdgeSet().get("MATH 1530").get("MATH 1410"),
+      presetfinalMATHABGraph.getEdgeSet().get("MATH 1410").get("MATH 1010"),
+      presetfinalMATHABGraph.getEdgeSet().get("MATH 1010").get("MATH 1230"),
+      presetfinalMATHABGraph.getEdgeSet().get("MATH 1230").get("MATH 1120"),
+      presetfinalMATHABGraph.getEdgeSet().get("MATH 1120").get("MATH 1580"),
+      presetfinalMATHABGraph.getEdgeSet().get("MATH 1580").get("CSCI 0170")
+    ));
+    teardown();
+
+    setup();
+    Database.setupGraph(List.of("APMA 1330", "APMA 1650"), 2);
+    CourseGraph presetfinalAPMAABGraph = Database.getGraph();
+    presetfinalAPMAABGraph.setGlobalParams(1, 1, 1,
+      10, 0, 18, 1,
+      Double.POSITIVE_INFINITY, 1, 50, 500,
+      Database.getGroups("apmaABGroups"), Database.getCourseWays("apmaABCourses"));
+
+    List<CourseEdge> presetapmaABPathWithRequirements = courseAlgorithms.dijkstraPath("CSCI 0150", "CSCI 0170", presetfinalAPMAABGraph);
+
+    Assert.assertEquals(presetapmaABPathWithRequirements, List.of(
+      presetfinalAPMAABGraph.getEdgeSet().get("CSCI 0150").get("MATH 0190"),
+      presetfinalAPMAABGraph.getEdgeSet().get("MATH 0190").get("MATH 0540"),
+      presetfinalAPMAABGraph.getEdgeSet().get("MATH 0540").get("APMA 0350"),
+      presetfinalAPMAABGraph.getEdgeSet().get("APMA 0350").get("APMA 0360"),
+      presetfinalAPMAABGraph.getEdgeSet().get("APMA 0360").get("APMA 1360"),
+      presetfinalAPMAABGraph.getEdgeSet().get("APMA 1360").get("APMA 1655"),
+      presetfinalAPMAABGraph.getEdgeSet().get("APMA 1655").get("APMA 1740"),
+      presetfinalAPMAABGraph.getEdgeSet().get("APMA 1740").get("CSCI 0170")
     ));
     teardown();
   }

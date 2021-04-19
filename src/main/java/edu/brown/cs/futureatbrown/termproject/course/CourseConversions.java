@@ -4,12 +4,7 @@ import com.google.common.collect.Iterators;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.NoSuchElementException;
-import java.util.Set;
+import java.util.*;
 
 import static edu.brown.cs.futureatbrown.termproject.exception.SQLRuntimeException.unwrap;
 import static edu.brown.cs.futureatbrown.termproject.exception.SQLRuntimeException.wrap;
@@ -155,7 +150,7 @@ public final class CourseConversions {
    * @return the converted ResultSet
    * @throws SQLException if the ResultSet's data cannot be queried
    */
-  public static HashMap<String, CourseWay> resultToCourseWayMap(ResultSet results)
+  public static HashMap<String, CourseWay> resultToCourseWayMap(ResultSet results, CourseGraph graph)
       throws SQLException {
     if (results.isClosed()) {
       throw new SQLException("Closed results");
@@ -173,13 +168,33 @@ public final class CourseConversions {
         }
 
         int group_id = Integer.parseInt(results.getString("group_id"));
-        courseWays.put(id, new CourseWay(id, sequence, group_id));
+        courseWays.put(id, new CourseWay(id, sequence, group_id, graph));
       }
     } catch (NumberFormatException e) {
       throw new SQLException("Invalid number format");
     }
     return courseWays;
   }
+
+  /**
+   * Converts the ResultSet to a Group Hashmap of a HashMap of CourseWays.
+   *
+   * @param results a ResultSet with CourseWay data
+   * @return the converted ResultSet
+   * @throws SQLException if the ResultSet's data cannot be queried
+   */
+   public static Map<Integer, HashMap<String, CourseWay>> resultToCourseWayGroup(ResultSet results, CourseGraph graph)
+    throws SQLException {
+    HashMap<String, CourseWay> courseIDCourseWayMap = resultToCourseWayMap(results, graph);
+    HashMap<Integer, HashMap<String, CourseWay>> groupCourseWayMap = new HashMap<>();
+    for (CourseWay cw : courseIDCourseWayMap.values()) {
+      if (!groupCourseWayMap.containsKey(cw.getGroupID())) {
+        groupCourseWayMap.put(cw.getGroupID(), new HashMap<>());
+      }
+      groupCourseWayMap.get(cw.getGroupID()).put(cw.getID(),cw);
+    }
+    return groupCourseWayMap;
+   }
 
   /**
    * Uses a function to query all rows of a ResultSet.

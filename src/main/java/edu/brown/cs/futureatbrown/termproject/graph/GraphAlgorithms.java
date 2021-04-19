@@ -83,6 +83,7 @@ public class GraphAlgorithms<Node extends GraphNode, Edge extends GraphEdge,
       // Pop off the minHeap
       Node currNode = minHeap.remove();
       String currID = currNode.getID();
+
       // Process Node only if it hasn't been visited yet
       if (!currNode.visited()) {
         // Iterate through all of the neighbors of the current node
@@ -90,6 +91,7 @@ public class GraphAlgorithms<Node extends GraphNode, Edge extends GraphEdge,
           // Get Neighbor and calculate score to neighbor from currrent node
           Node neighbor = (Node) E.getEnd();
           List<Edge> prevPath = new ArrayList<>(nodeSet.get(currID).getPreviousPath());
+
           double newWeight = currNode.getWeight() + E.getWeight();
           // Update hashMap and add to minHeap if neighbor can be reached betterly
           if (nodeSet.get(neighbor.getID()).getWeight() > newWeight) {
