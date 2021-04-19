@@ -19,12 +19,12 @@ public class CourseWay {
    *
    * @param id the unique id
    * @param sequence the sequence of courses
-   * @param group_id the group id
+   * @param groupId the group id
    */
-  public CourseWay(String id, Set<String> sequence, int group_id) {
+  public CourseWay(String id, Set<String> sequence, int groupId) {
     this.id = id;
     this.sequence = sequence;
-    this.group_id = group_id;
+    this.group_id = groupId;
   }
 
   /**
@@ -44,7 +44,7 @@ public class CourseWay {
   /**
    * Returns the ID of this CourseWay. This value should be unique.
    *
-   * @return the ID
+   * @return the id
    */
   public String getID() {
     return id;
@@ -60,9 +60,9 @@ public class CourseWay {
   }
 
   /**
-   * Returns the group ID of this CourseWay.
+   * Returns the group id of this CourseWay.
    *
-   * @return the group ID
+   * @return the group id
    */
   public int getGroupID() {
     return group_id;

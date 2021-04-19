@@ -80,7 +80,7 @@ public class TokenParser {
     // Read all remaining tokens
     while (scanner.hasNext()) {
       Set<TokenType> possibleNextTypes = currentNode.getChildValues();
-      String nextToken; // will be added to the token list
+      String nextToken; // Will be added to the token list
       // Determine the type of the next token
       if (possibleNextTypes.contains(TokenType.NUMBER) && scanner.hasNextBigDecimal()) {
         // Read a BigDecimal, but as a String

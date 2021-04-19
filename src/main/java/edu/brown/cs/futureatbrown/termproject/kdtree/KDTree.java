@@ -16,7 +16,7 @@ public class KDTree<T extends Locatable> {
    * Takes in an ArrayList of Locatables called inputList, and creates a balanced KD tree using
    * those Locatables as nodes.
    *
-   * @param inputList A list of Locatables to be turned into a balanced KD Tree.
+   * @param inputList a list of Locatables to be turned into a balanced KD Tree
    */
   public KDTree(List<T> inputList) {
     if (inputList.size() != 0) {
@@ -28,10 +28,10 @@ public class KDTree<T extends Locatable> {
   /**
    * Creates a balanced KD Tree based on the input list.
    *
-   * @param inputList the data to be input into the balanced KD Tree.
-   * @param layer the depth of the current node in the KD Tree.
-   * @param numOfDimensions the number of dimensions K in the KD Tree.
-   * @return A balanced KD Tree using the data from the input list.
+   * @param inputList the data to be input into the balanced KD Tree
+   * @param layer the depth of the current node in the KD Tree
+   * @param numOfDimensions the number of dimensions K in the KD Tree
+   * @return a balanced KD Tree using the data from the input list
    */
   private KDNode<T> createKDTree(List<T> inputList, int layer, int numOfDimensions) {
     if (inputList.size() == 0) {
@@ -68,7 +68,7 @@ public class KDTree<T extends Locatable> {
   /**
    * Returns the root of this KD tree.
    *
-   * @return the root of this KD tree. May be null.
+   * @return the root of this KD tree; it may be null
    */
   public KDNode<T> getRoot() {
     return root;
@@ -77,7 +77,7 @@ public class KDTree<T extends Locatable> {
   /**
    * Converts a KD tree to a string. Overrides the toString() method.
    *
-   * @return the current KD tree as a String.
+   * @return the current KD tree as a String
    */
   @Override
   public String toString() {

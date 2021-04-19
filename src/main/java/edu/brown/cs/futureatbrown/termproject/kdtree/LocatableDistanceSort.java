@@ -15,9 +15,9 @@ public class LocatableDistanceSort<T extends Locatable> implements Comparator<T>
    * Creates an instance of the distance sort. The distance sort will sort locatables by distance
    * from the given point.
    *
-   * @param xCoordinate The xCoordinate to calculate the distance from.
-   * @param yCoordinate The yCoordinate to calculate the distance from.
-   * @param zCoordinate The zCoordinate to calculate the distance from.
+   * @param xCoordinate the xCoordinate to calculate the distance from
+   * @param yCoordinate the yCoordinate to calculate the distance from
+   * @param zCoordinate the zCoordinate to calculate the distance from
    */
   public LocatableDistanceSort(double xCoordinate, double yCoordinate, double zCoordinate) {
     this.xCoordinate = xCoordinate;
@@ -29,10 +29,10 @@ public class LocatableDistanceSort<T extends Locatable> implements Comparator<T>
    * Implements compare from comparator. Takes in two locatables as input and sorts them based on
    * their distance from the given point.
    *
-   * @param locatable1 A locatable with three dimensions.
-   * @param locatable2 A second locatable with three dimensions.
-   * @return An integer that is greater than one if the first locatable is farther, less than one if
-   * the second locatable is farther, and 0 if they are the same distance from the target point.
+   * @param locatable1 a locatable with three dimensions.
+   * @param locatable2 a second locatable with three dimensions.
+   * @return an integer that is greater than one if the first locatable is farther, less than one if
+   * the second locatable is farther, and 0 if they are the same distance from the target point
    */
   public int compare(T locatable1, T locatable2) {
     double l1Distance = (locatable1.getCoordinate(0) - xCoordinate)

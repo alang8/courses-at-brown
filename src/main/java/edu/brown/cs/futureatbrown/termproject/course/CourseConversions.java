@@ -53,41 +53,41 @@ public final class CourseConversions {
     if (results.wasNull()) {
       description = null;
     }
-    Double course_rating;
-    Double prof_rating;
-    Double avg_hours;
-    Double max_hours;
-    Integer class_size;
+    Double courseRating;
+    Double profRating;
+    Double avgHours;
+    Double maxHours;
+    Integer classSize;
     try {
       sem = results.getInt("sem");
       if (results.wasNull()) {
         sem = null;
       }
-      course_rating = results.getDouble("course_rating");
+      courseRating = results.getDouble("course_rating");
       if (results.wasNull()) {
-        course_rating = null;
+        courseRating = null;
       }
-      prof_rating = results.getDouble("prof_rating");
+      profRating = results.getDouble("prof_rating");
       if (results.wasNull()) {
-        prof_rating = null;
+        profRating = null;
       }
-      avg_hours = results.getDouble("avg_hours");
+      avgHours = results.getDouble("avg_hours");
       if (results.wasNull()) {
-        avg_hours = null;
+        avgHours = null;
       }
-      max_hours = results.getDouble("max_hours");
+      maxHours = results.getDouble("max_hours");
       if (results.wasNull()) {
-        max_hours = null;
+        maxHours = null;
       }
-      class_size = results.getInt("class_size");
+      classSize = results.getInt("class_size");
       if (results.wasNull()) {
-        class_size = null;
+        classSize = null;
       }
     } catch (NumberFormatException e) {
       throw new SQLException("Invalid number format");
     }
-    return new CourseNode(id, name, instr, sem, rawprereq, prereq, description, course_rating,
-        prof_rating, avg_hours, max_hours, class_size);
+    return new CourseNode(id, name, instr, sem, rawprereq, prereq, description, courseRating,
+        profRating, avgHours, maxHours, classSize);
   }
 
   /**

@@ -8,8 +8,9 @@ package edu.brown.cs.futureatbrown.termproject.course;
  */
 @FunctionalInterface
 public interface RiskySupplier<R, E extends Throwable> {
+
   /**
-   * Gets a value.
+   * Gets a value. Throws an exception of choice if there is an error.
    *
    * @return a generated value
    * @throws E if an error occurs

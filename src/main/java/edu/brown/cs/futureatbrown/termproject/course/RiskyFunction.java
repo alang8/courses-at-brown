@@ -9,6 +9,7 @@ package edu.brown.cs.futureatbrown.termproject.course;
  */
 @FunctionalInterface
 public interface RiskyFunction<T, R, E extends Throwable> {
+
   /**
    * Applies this function to an input.
    *

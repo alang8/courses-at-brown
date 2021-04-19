@@ -42,7 +42,7 @@ public class CourseDataHandlers {
         String query = "SELECT * FROM courseData INNER JOIN courseCR ON courseData.id=courseCR.id;";
         PreparedStatement prep = conn.prepareStatement(query);
         ResultSet rs = prep.executeQuery();
-        //cols are: id,name,instr,sem,rawprereq,prereq,desc,id,crsrat,profrat,avghr,maxhr,classsz
+        // id, name, instr, sem, rawpre, prereq, desc, id, crsrat, profrat, avghr, maxhr, classsz
         while (rs.next()) {
           Map<String, String> thisCourseData = new HashMap<>();
           thisCourseData.put("id", rs.getString(1));
@@ -93,12 +93,13 @@ public class CourseDataHandlers {
         code = data.getString("code");
         String courseCode = dept + " " + code;
         System.out.println("coursecode: " + courseCode);
-        String query = "SELECT * FROM courseData INNER JOIN courseCR ON courseData.id=courseCR.id WHERE courseData.id = ?;";
+        String query = "SELECT * FROM courseData INNER JOIN courseCR ON "
+            + "courseData.id=courseCR.id WHERE courseData.id = ?;";
         PreparedStatement prep = conn.prepareStatement(query);
         prep.setString(1, courseCode);
         ResultSet rs = prep.executeQuery();
 
-        //cols are: id,name,instr,sem,rawprereq,prereq,desc,id,crsrat,profrat,avghr,maxhr,classsz
+        // id, name, instr, sem, rawpre, prereq, desc, id, crsrat, profrat, avghr, maxhr, classsz
         if (rs.next()) {
           thisCourseData.put("code", rs.getString(1).substring(5));
           thisCourseData.put("dept", rs.getString(1).substring(0, 4));
@@ -148,7 +149,7 @@ public class CourseDataHandlers {
         PreparedStatement prep = conn.prepareStatement(query);
         ResultSet rs = prep.executeQuery();
 
-        while(rs.next()) {
+        while (rs.next()) {
           concs.put(rs.getString(1), rs.getString(2));
         }
       } catch (SQLException e) {

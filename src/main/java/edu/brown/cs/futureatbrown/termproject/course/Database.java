@@ -16,13 +16,17 @@ import java.util.stream.Collectors;
  */
 public final class Database {
   private static Connection conn = null;
-  private static final CourseGraph graph = new CourseGraph();
+  private static final CourseGraph COURSE_GRAPH = new CourseGraph();
   private static final List<String> ALLOWED_GROUPS =
-    List.of("apmaABGroups", "csciABMLGroups", "mathABGroups", "mathSCBGroups");
+      List.of("apmaABGroups", "csciABMLGroups", "mathABGroups", "mathSCBGroups");
   private static final List<String> ALLOWED_COURSES =
-    List.of("apmaABCourses", "csciABMLCourses", "mathABCourses", "mathSCBCourses");
+      List.of("apmaABCourses", "csciABMLCourses", "mathABCourses", "mathSCBCourses");
 
-  public Database() {}
+  /**
+   * Constructor that instantiates a new Database object.
+   */
+  public Database() {
+  }
 
   /**
    * Constructor that instantiates the database and creates tables.
@@ -53,8 +57,8 @@ public final class Database {
    * @return the found CourseNode
    */
   public static CourseNode getCourseNode(String id) {
-    try (PreparedStatement statement = conn.prepareStatement("SELECT * FROM courseCR JOIN " +
-        "courseData ON courseCR.id = ? AND courseCR.id = courseData.id")) {
+    try (PreparedStatement statement = conn.prepareStatement("SELECT * FROM courseCR JOIN "
+        + "courseData ON courseCR.id = ? AND courseCR.id = courseData.id")) {
       statement.setString(1, id);
       try (ResultSet results = statement.executeQuery()) {
         if (null == results || results.isClosed()) {
@@ -74,14 +78,16 @@ public final class Database {
    */
   private static Iterator<CourseNode> iterateAllCourseNodes() throws SQLException {
     Statement query = conn.createStatement();
-    ResultSet res = query.executeQuery("SELECT * FROM courseCR JOIN courseData " +
-        "ON courseCR.id = courseData.id");
+    ResultSet res = query.executeQuery("SELECT * FROM courseCR JOIN courseData "
+        + "ON courseCR.id = courseData.id");
     return CourseConversions.iterateResults(res, CourseConversions::resultToCourseNode);
   }
 
   /**
-   * Sets up a k-complete graph connecting all of the courses in the database
+   * Sets up a k-complete Graph connecting all of the CourseNodes in the database.
    *
+   * @param prevCoursesID a list of the previous courses ids
+   * @throws SQLException if an error occurs in any SQL query
    */
    public static void setupGraph(List<String> prevCoursesID, double sensitivity) throws SQLException {
      List<CourseNode> courseNodes = new ArrayList<>();
@@ -106,19 +112,21 @@ public final class Database {
        for (CourseEdge edge : edgesFromStartNode) {
          edge.setSensitivity(sensitivity);
        }
-       graph.addNode(startNode,
+       COURSE_GRAPH.addNode(startNode,
          new HashSet<>(edgesFromStartNode));
        startNode.setPreviousCourses(prevCourses);
      }
    }
 
+
   /**
-   * Returns the Graph that was set up.
-   * @return the graph from the nodes in the database
+   * Returns the Graph that was set up from the above method.
+   *
+   * @return the Graph from the CourseNodes in the database
    */
-   public static CourseGraph getGraph() {
-    return graph;
-   }
+  public static CourseGraph getGraph() {
+    return COURSE_GRAPH;
+  }
 
   /**
    * Queries a HashMap of a Pathway groups based on the user inputted id. Returns null if not found.
@@ -156,13 +164,13 @@ public final class Database {
           if (results.isClosed()) {
             return null;
           }
-          return CourseConversions.resultToCourseWayGroup(results, graph);
+          return CourseConversions.resultToCourseWayGroup(results, COURSE_GRAPH);
         }
       } catch (SQLException e) {
         throw new SQLRuntimeException(e);
       }
     } else {
-      throw new IllegalArgumentException("Invalid Courses Table! Must be one of " + ALLOWED_COURSES);
+      throw new IllegalArgumentException("Invalid Courses! Must be one of " + ALLOWED_COURSES);
     }
 
   }
